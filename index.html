@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedRecon // Utilidades • CCBE</title>
+  <link rel="icon" type="image/jpeg" href="assets/CCBE_MEDRECON.jpg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ef4444">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MedRecon">
+  <link rel="apple-touch-icon" href="assets/CCBE_MEDRECON.jpg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+    :root {
+      --bg: #060913;
+      --card-bg: rgba(13, 19, 36, 0.82);
+      --border: rgba(239, 68, 68, 0.25);
+      --primary: #ef4444;
+      --cyan: #38bdf8;
+      --emerald: #10b981;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(circle at 15% 20%, rgba(239, 68, 68, 0.12) 0%, transparent 35%),
+        radial-gradient(circle at 85% 80%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+      color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .glass-panel {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .card-tool {
+      transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .card-tool:hover {
+      transform: translateY(-8px);
+      border-color: rgba(239, 68, 68, 0.5);
+      box-shadow: 0 20px 45px rgba(239, 68, 68, 0.2), 0 0 25px rgba(239, 68, 68, 0.1);
+    }
+
+    .card-tool.card-radar:hover {
+      border-color: rgba(56, 189, 248, 0.5);
+      box-shadow: 0 20px 45px rgba(56, 189, 248, 0.2), 0 0 25px rgba(56, 189, 248, 0.1);
+    }
+  </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+  <!-- TOP BRAND HEADER -->
+  <header class="max-w-6xl w-full mx-auto text-center mt-2 mb-8 animate-fadeIn">
+    <div class="inline-flex items-center gap-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/50 border border-red-500/30 text-red-400 text-xs font-bold tracking-widest uppercase mb-4">
+        <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+        CCBE • División M.E.R.R.
+      </div>
+      <button id="btnPwaInstall" type="button" class="hidden mb-4 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-bold mono items-center gap-1.5 transition hover:bg-cyan-900 shadow active:scale-95">
+        📲 Instalar App (PWA)
+      </button>
+    </div>
+
+    <!-- Official Emblem Display -->
+    <div class="flex justify-center mb-5">
+      <div class="relative group">
+        <div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-red-600 to-cyan-600 opacity-30 blur-lg group-hover:opacity-60 transition duration-500"></div>
+        <img src="assets/CCBE_MEDRECON.jpg" alt="MedRecon Emblem" class="relative w-24 h-24 md:w-28 md:md:h-28 object-cover rounded-2xl border-2 border-red-500/50 shadow-2xl transition duration-300 transform group-hover:scale-105">
+      </div>
+    </div>
+
+    <!-- Main Title & Subtitle Requested -->
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-1 uppercase">
+      MedRecon
+    </h1>
+    <h2 class="text-sm md:text-base font-semibold tracking-widest text-slate-400 uppercase mono">
+      Utilidades
+    </h2>
+    <p class="text-slate-400 text-sm max-w-xl mx-auto mt-3">
+      Suite operativa y táctica de combate para la unidad especial de medicina de emergencia, reconocimiento y rescate.
+    </p>
+  </header>
+
+  <!-- SUITE APPS GRID (2 CARDS) -->
+  <main class="max-w-5xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+
+    <!-- CARD 1: RADAR DE TRIANGULACIÓN -->
+    <section class="glass-panel card-tool card-radar rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group">
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-emerald-500"></div>
+      
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-bold mono uppercase tracking-wider text-cyan-400 bg-cyan-950/60 border border-cyan-500/30 px-2.5 py-1 rounded-md">
+            MÓDULO 01 // ISR & RECON
+          </span>
+          <span class="text-xs mono text-slate-500">RADIO 3.0 KM</span>
+        </div>
+
+        <h3 class="text-2xl font-extrabold text-white mb-2 flex items-center gap-2">
+          Grid Táctico & Radar
+        </h3>
+        
+        <p class="text-slate-300 text-sm leading-relaxed mb-6">
+          Sistema de triangulación balística en tiempo real sobre pantalla de radar 360°. Calcula la posición exacta de objetivos (HVT) mediante **Azimuts Cruzados** de dos observadores o **Modo Polar** con telémetro óptico. Incluye calculadora doctrinal de T.S.O. y reporte militar para Discord.
+        </p>
+
+        <!-- Feature chips -->
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="text-[11px] mono bg-slate-900/90 text-slate-300 border border-slate-800 px-2.5 py-1 rounded">📐 2 Observadores (P.O.)</span>
+          <span class="text-[11px] mono bg-slate-900/90 text-slate-300 border border-slate-800 px-2.5 py-1 rounded">🎯 Modo Polar</span>
+          <span class="text-[11px] mono bg-slate-900/90 text-slate-300 border border-slate-800 px-2.5 py-1 rounded">⏱️ T.S.O. Doctrinal</span>
+          <span class="text-[11px] mono bg-slate-900/90 text-slate-300 border border-slate-800 px-2.5 py-1 rounded">🔴 Target Lock</span>
+        </div>
+      </div>
+
+      <a href="triangulacion/index.html" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-lg shadow-cyan-500/20 active:scale-[0.98]">
+        Abrir Radar Táctico
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </a>
+    </section>
+
+    <!-- CARD 2: PLANIFICADOR DE OPERACIONES TÁCTICAS -->
+    <section class="glass-panel card-tool rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group">
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-600 to-amber-500"></div>
+
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-bold mono uppercase tracking-wider text-red-400 bg-red-950/60 border border-red-500/30 px-2.5 py-1 rounded-md">
+            MÓDULO 02 // OPORD & FLOTA
+          </span>
+          <span class="text-xs mono text-slate-500">DISPATCH UNIVERSAL</span>
+        </div>
+
+        <h3 class="text-2xl font-extrabold text-white mb-2 flex items-center gap-2">
+          Planificador de Operaciones
+        </h3>
+
+        <p class="text-slate-300 text-sm leading-relaxed mb-6">
+          Despacho táctico universal para todo tipo de operativos. Permite estructurar **cualquier combinación de equipos** (binomios, trinomios, 2x4, etc.), asignar **múltiples naves con buscador predictivo** (incluyendo *Starlancer TAC*, *Cutlass Red*, *Ursa* y capitales), seleccionar ubicaciones de **Verse Guide**, definir directivas de misión en texto libre y exportar la **OPORD** lista para Discord.
+        </p>
+
+        <!-- Feature chips -->
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="text-[11px] mono bg-slate-900/90 text-slate-300 border border-slate-800 px-2.5 py-1 rounded">👥 Equipos 100% Flexibles</span>
+          <span class="text-[11px] mono bg-slate-900/90 text-slate-300 border border-slate-800 px-2.5 py-1 rounded">🚀 Flota Multi-Nave</span>
+          <span class="text-[11px] mono bg-slate-900/90 text-slate-300 border border-slate-800 px-2.5 py-1 rounded">📍 Verse Guide A.O.</span>
+          <span class="text-[11px] mono bg-slate-900/90 text-slate-300 border border-slate-800 px-2.5 py-1 rounded">📜 Directivas Libres</span>
+          <span class="text-[11px] mono bg-slate-900/90 text-slate-300 border border-slate-800 px-2.5 py-1 rounded">📋 OPORD Discord</span>
+        </div>
+      </div>
+
+      <a href="planificador-sar/index.html" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-lg shadow-red-600/25 active:scale-[0.98]">
+        Abrir Planificador Táctico
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </a>
+    </section>
+
+  </main>
+
+  <!-- SUITE FOOTER -->
+  <footer class="max-w-6xl w-full mx-auto text-center mt-12 mb-4 pt-6 border-t border-slate-800/80 flex flex-col items-center gap-2 text-xs text-slate-500 mono">
+    <div class="flex items-center gap-2 text-slate-400">
+      <span>COMPAÑÍA COMERCIAL DEL BORDE EXTERIOR</span>
+      <span>•</span>
+      <span class="text-red-400 font-semibold">DIVISIÓN M.E.R.R.</span>
+      <span>•</span>
+      <span>MEDRECON</span>
+    </div>
+    <div>
+      Desarrollado para operaciones tácticas en el Universo Persistente de Star Citizen
+    </div>
+  </footer>
+
+  <script>
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('MedRecon PWA ServiceWorker registrado', reg.scope))
+          .catch(err => console.log('SW registration error:', err));
+      });
+    }
+
+    // PWA Install Prompt Handler
+    let deferredPrompt;
+    const btnPwaInstall = document.getElementById('btnPwaInstall');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (btnPwaInstall) {
+        btnPwaInstall.classList.remove('hidden');
+        btnPwaInstall.classList.add('inline-flex');
+      }
+    });
+
+    if (btnPwaInstall) {
+      btnPwaInstall.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          btnPwaInstall.classList.add('hidden');
+        }
+        deferredPrompt = null;
+      });
+    }
+  </script>
+</body>
+
+</html>

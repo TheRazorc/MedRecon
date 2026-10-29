@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radar de Triangulación // MedRecon Utilidades</title>
+  <link rel="icon" type="image/jpeg" href="../assets/CCBE_MEDRECON.jpg">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#38bdf8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="../assets/CCBE_MEDRECON.jpg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;600;700;800&display=swap');
+    
+    :root {
+      --bg: #070a12;
+      --panel: rgba(14, 21, 37, 0.85);
+      --border: rgba(56, 189, 248, 0.2);
+      --po1: #10b981;
+      --po2: #38bdf8;
+      --hvt: #ef4444;
+      --accent: #f59e0b;
+    }
+    
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 20% 15%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 85%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+      color: #e2e8f0;
+    }
+    
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .glass-card {
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+    
+    .glow-cyan {
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+    }
+    
+    .glow-green {
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+    }
+    
+    .glow-red {
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.35);
+    }
+
+    input[type=range] {
+      accent-color: #38bdf8;
+    }
+
+    @keyframes ping-slow {
+      0% { transform: scale(0.9); opacity: 0.9; }
+      50% { transform: scale(1.25); opacity: 0.3; }
+      100% { transform: scale(0.9); opacity: 0.9; }
+    }
+    
+    .pulse-target {
+      animation: ping-slow 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 lg:p-6 flex flex-col justify-between">
+
+  <!-- TOP BREADCRUMB / NAV -->
+  <div class="max-w-7xl w-full mx-auto mb-3">
+    <a href="../index.html" class="inline-flex items-center gap-2 text-xs mono font-bold text-slate-400 hover:text-white transition">
+      <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+      Volver a MedRecon // Utilidades
+    </a>
+  </div>
+
+  <!-- TOP HEADER -->
+  <header class="max-w-7xl w-full mx-auto mb-6 flex flex-wrap items-center justify-between gap-4 glass-card p-4 rounded-2xl">
+    <div class="flex items-center gap-4">
+      <img src="../assets/CCBE_MEDRECON.jpg" alt="MedRecon Emblem" class="w-14 h-14 object-cover rounded-xl border border-red-500/40 glow-red shadow-xl transition-transform hover:scale-105">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold tracking-widest text-emerald-400 uppercase bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">M.E.R.R. • MedRecon</span>
+          <span class="text-xs text-slate-400 font-mono">SYS-VER 2.956.1</span>
+        </div>
+        <h1 class="text-xl lg:text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
+          Grid Táctico de Triangulación
+        </h1>
+      </div>
+    </div>
+
+    <!-- PRESETS & STATUS -->
+    <div class="flex items-center gap-3">
+      <div class="hidden sm:flex flex-col text-right text-xs mono">
+        <span class="text-emerald-400 flex items-center gap-1 justify-end font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> RADAR VINCULADO
+        </span>
+        <span class="text-slate-400">MODO: WEAPON HOLD</span>
+      </div>
+
+      <select id="presetSelect" class="bg-slate-900/90 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2 outline-none focus:border-cyan-400">
+        <option value="minlo">Preset: Minlo Spire (Daymar)</option>
+        <option value="cutter">Preset: Cutter's Rig (Hurston)</option>
+        <option value="kareah">Preset: SP Kareah (Cerrado)</option>
+        <option value="custom">Preset: Posiciones Libres</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- MAIN INTERFACE: 2 COLUMNS (RADAR + CONTROLS) -->
+  <main class="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
+    
+    <!-- LEFT COLUMN: TACTICAL CANVAS RADAR (7 cols) -->
+    <div class="lg:col-span-7 flex flex-col gap-4">
+      <div class="glass-card rounded-2xl p-4 flex-grow flex flex-col relative overflow-hidden">
+        
+        <!-- Radar Toolbar -->
+        <div class="flex items-center justify-between mb-3 text-xs mono text-slate-400 border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-3">
+            <span class="text-white font-bold flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>
+              RADAR TÁCTICO 360°
+            </span>
+            <span class="text-slate-500">|</span>
+            <span id="scaleIndicator">ESCALA: 3.0 km (RADIO)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btnZoomIn" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-slate-200 border border-slate-700">+</button>
+            <button id="btnZoomOut" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-slate-200 border border-slate-700">-</button>
+            <button id="btnResetView" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-slate-200 border border-slate-700">Centrar</button>
+          </div>
+        </div>
+
+        <!-- Radar Canvas Container -->
+        <div class="relative flex-grow flex items-center justify-center min-h-[380px] lg:min-h-[460px] bg-slate-950/80 rounded-xl border border-slate-900 overflow-hidden cursor-crosshair">
+          <canvas id="radarCanvas" class="w-full h-full block"></canvas>
+          
+          <!-- Tactical HUD Overlay Info -->
+          <div class="absolute top-3 left-3 pointer-events-none text-[11px] mono bg-slate-900/80 backdrop-blur border border-slate-800 p-2 rounded-lg space-y-0.5">
+            <div class="text-emerald-400 font-bold">🟢 P.O. 1 (Alfa): <span id="hudPO1">[-650m, +400m]</span></div>
+            <div class="text-cyan-400 font-bold">🔵 P.O. 2 (Bravo): <span id="hudPO2">[+750m, +300m]</span></div>
+            <div class="text-red-400 font-bold">🔴 HVT TARGET: <span id="hudTarget">Calculando...</span></div>
+          </div>
+
+          <!-- Bottom Coordinates readout -->
+          <div class="absolute bottom-3 right-3 pointer-events-none text-[11px] mono bg-slate-900/80 backdrop-blur border border-slate-800 px-2 py-1 rounded-lg text-slate-400">
+            PUNTO CERO: <span class="text-white font-semibold">LZ / P.I.T. [0,0]</span>
+          </div>
+        </div>
+
+        <!-- Canvas legend -->
+        <div class="flex items-center justify-between text-xs text-slate-400 mt-3 pt-2 border-t border-slate-800">
+          <div class="flex items-center gap-4 text-[12px]">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> P.O. 1 (Observador A)</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> P.O. 2 (Observador B)</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> HVT / Blanco</span>
+          </div>
+          <span class="text-[11px] text-slate-500 hidden sm:inline">Arrastra los marcadores en el mapa</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: CONTROLS & RADIO REPORT (5 cols) -->
+    <div class="lg:col-span-5 flex flex-col gap-4">
+      
+      <!-- MODE TABS -->
+      <div class="glass-card rounded-2xl p-4 flex flex-col gap-4">
+        
+        <div class="flex p-1 bg-slate-950/80 rounded-xl border border-slate-800 text-xs font-semibold">
+          <button id="tabAzimuts" class="flex-1 py-2 rounded-lg bg-cyan-500 text-slate-950 shadow-md font-bold transition">
+            📐 Azimuts Cruzados (2 P.O.)
+          </button>
+          <button id="tabPolar" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition">
+            🎯 Polar (1 P.O. + Telémetro)
+          </button>
+          <button id="tabTSO" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition">
+            ⏱️ T.S.O.
+          </button>
+        </div>
+
+        <!-- PANEL 1: AZIMUTS CRUZADOS -->
+        <div id="panelAzimuts" class="space-y-4">
+          
+          <!-- P.O. 1 CARD -->
+          <div class="bg-emerald-950/20 border border-emerald-500/30 rounded-xl p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5 uppercase tracking-wider">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Puesto Observación 1 (Alfa)
+              </span>
+              <span class="text-xs mono font-bold text-white bg-emerald-900/50 px-2 py-0.5 rounded border border-emerald-500/40" id="valAz1">
+                140°
+              </span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2 text-xs mono">
+              <div>
+                <label class="text-slate-400 block mb-0.5 text-[11px]">X (Este/Oeste):</label>
+                <input type="number" id="po1X" value="-650" step="50" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white">
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-0.5 text-[11px]">Y (Norte/Sur):</label>
+                <input type="number" id="po1Y" value="400" step="50" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white">
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs text-slate-400 mb-1">
+                <span>Azimut hacia Objetivo:</span>
+                <span class="mono text-emerald-400 font-bold" id="az1Label">140° [SE]</span>
+              </div>
+              <input type="range" id="sliderAz1" min="0" max="359" value="140" class="w-full cursor-pointer">
+              <div class="flex justify-between text-[11px] text-slate-500 mono mt-0.5">
+                <span>000° (N)</span>
+                <span>090° (E)</span>
+                <span>180° (S)</span>
+                <span>270° (W)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- P.O. 2 CARD -->
+          <div class="bg-cyan-950/20 border border-cyan-500/30 rounded-xl p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-cyan-400 flex items-center gap-1.5 uppercase tracking-wider">
+                <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Puesto Observación 2 (Bravo)
+              </span>
+              <span class="text-xs mono font-bold text-white bg-cyan-900/50 px-2 py-0.5 rounded border border-cyan-500/40" id="valAz2">
+                220°
+              </span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2 text-xs mono">
+              <div>
+                <label class="text-slate-400 block mb-0.5 text-[11px]">X (Este/Oeste):</label>
+                <input type="number" id="po2X" value="750" step="50" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white">
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-0.5 text-[11px]">Y (Norte/Sur):</label>
+                <input type="number" id="po2Y" value="300" step="50" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white">
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs text-slate-400 mb-1">
+                <span>Azimut hacia Objetivo:</span>
+                <span class="mono text-cyan-400 font-bold" id="az2Label">220° [SO]</span>
+              </div>
+              <input type="range" id="sliderAz2" min="0" max="359" value="220" class="w-full cursor-pointer">
+              <div class="flex justify-between text-[11px] text-slate-500 mono mt-0.5">
+                <span>000° (N)</span>
+                <span>090° (E)</span>
+                <span>180° (S)</span>
+                <span>270° (W)</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- PANEL 2: POLAR (1 OBSERVER) -->
+        <div id="panelPolar" class="space-y-4 hidden">
+          <div class="bg-slate-900/60 border border-slate-700 rounded-xl p-4 space-y-3">
+            <div class="text-xs font-bold text-amber-400 uppercase tracking-wider">
+              🔭 Medición Única (Rangefinder + Brújula)
+            </div>
+            <p class="text-xs text-slate-400">
+              Usa este modo si un solo operador tiene visión directa con prismáticos de aumento y telémetro óptico.
+            </p>
+            <div class="space-y-2">
+              <label class="text-xs text-slate-300 block">Distancia Telémetro (metros):</label>
+              <input type="number" id="polarDist" value="1200" step="50" min="50" max="4000" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono font-bold">
+            </div>
+            <div class="space-y-1">
+              <label class="text-xs text-slate-300 block">Azimut Telémetro (°):</label>
+              <input type="range" id="polarAz" min="0" max="359" value="180" class="w-full">
+              <div class="text-right text-xs mono text-amber-400 font-bold" id="polarAzLabel">180° [Sur]</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 3: T.S.O. CALCULATOR -->
+        <div id="panelTSO" class="space-y-3 hidden">
+          <div class="bg-slate-900/60 border border-slate-700 rounded-xl p-4 space-y-3">
+            <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center justify-between">
+              <span>⏱️ Fórmula T.S.O. Doctrinal</span>
+              <span class="text-[11px] text-slate-400 mono">MERR-DOC-RECON</span>
+            </div>
+            <p class="text-xs text-slate-400">
+              <code class="text-emerald-300">T.S.O. = Verse-Guide + Atmosférico + Sigilo + Contingencia</code>
+            </p>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div>
+                <label class="text-slate-400 block text-[11px]">1. Verse-Guide (QT):</label>
+                <input type="number" id="tsoQT" value="4" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white mono">
+              </div>
+              <div>
+                <label class="text-slate-400 block text-[11px]">2. Vuelo Atmosférico:</label>
+                <input type="number" id="tsoAtm" value="3" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white mono">
+              </div>
+              <div>
+                <label class="text-slate-400 block text-[11px]">3. Avance Sigiloso:</label>
+                <input type="number" id="tsoSigilo" value="5" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white mono">
+              </div>
+              <div>
+                <label class="text-slate-400 block text-[11px]">4. Margen Contingencia:</label>
+                <input type="number" id="tsoCont" value="3" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white mono">
+              </div>
+            </div>
+            <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+              <span class="text-xs text-slate-300">Tiempo Sobre Objetivo:</span>
+              <span class="mono text-base font-bold text-amber-400" id="totalTSO">15 min</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TRIANGULATION RESULT BADGE -->
+        <div id="solutionBox" class="p-3.5 rounded-xl border bg-slate-900/90 border-slate-800 space-y-1.5 transition">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> Solución de Blanco
+            </span>
+            <span id="solutionStatus" class="mono text-[11px] font-bold text-emerald-400 bg-emerald-950/70 border border-emerald-500/30 px-2 py-0.5 rounded">
+              INTERSECCIÓN CONFIRMADA
+            </span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs mono pt-1">
+            <div class="text-slate-400">Coordenada Relativa: <br><span class="text-white font-bold text-sm" id="resCoords">X: +92m, Y: -484m</span></div>
+            <div class="text-slate-400">Vector desde Base/LZ: <br><span class="text-cyan-400 font-bold text-sm" id="resVector">169° // 493m</span></div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[11px] mono text-slate-400 border-t border-slate-800 pt-1.5">
+            <div>Dist. desde P.O.1: <span class="text-emerald-300 font-semibold" id="resDist1">1154 m</span></div>
+            <div>Dist. desde P.O.2: <span class="text-cyan-300 font-semibold" id="resDist2">1024 m</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TRANSMISSION REPORT BOX (DISCORD / RADIO TRANSMISSION) -->
+      <div class="glass-card rounded-2xl p-4 flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            Reporte de Radio Táctico (Malla MedRecon)
+          </h3>
+          <span class="text-[11px] text-slate-400 mono">DISCORD READY</span>
+        </div>
+
+        <textarea id="radioTransmissionText" readonly rows="4" class="w-full bg-slate-950/90 border border-slate-800 rounded-xl p-2.5 text-xs mono text-emerald-400 font-medium leading-relaxed resize-none focus:outline-none focus:border-cyan-500"></textarea>
+
+        <button id="btnCopyReport" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-lg shadow-cyan-500/20 active:scale-[0.98]">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar Reporte a Portapapeles
+        </button>
+
+        <button id="btnTransferToPlanner" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-lg shadow-red-600/30 active:scale-[0.98]">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          Transferir Coordenadas a Planificador
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-cyan-500 text-slate-950 px-5 py-2.5 rounded-full font-bold text-xs shadow-2xl flex items-center gap-2 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none z-50">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+    <span id="toastMsg">Reporte militar copiado con éxito</span>
+  </div>
+
+  <!-- INTERACTIVE LOGIC & RADAR CANVAS ENGINE -->
+  <script>
+    const state = {
+      zoom: 1.0,
+      panX: 0,
+      panY: 0,
+      maxRadius: 3000,
+      po1: { x: -650, y: 400, az: 140 },
+      po2: { x: 750, y: 300, az: 220 },
+      target: { x: 92, y: -484, valid: true },
+      mode: 'azimuts',
+      dragging: null
+    };
+
+    const canvas = document.getElementById('radarCanvas');
+    const ctx = canvas.getContext('2d');
+    const sliderAz1 = document.getElementById('sliderAz1');
+    const sliderAz2 = document.getElementById('sliderAz2');
+    const valAz1 = document.getElementById('valAz1');
+    const valAz2 = document.getElementById('valAz2');
+    const az1Label = document.getElementById('az1Label');
+    const az2Label = document.getElementById('az2Label');
+    const po1X = document.getElementById('po1X');
+    const po1Y = document.getElementById('po1Y');
+    const po2X = document.getElementById('po2X');
+    const po2Y = document.getElementById('po2Y');
+    
+    const resCoords = document.getElementById('resCoords');
+    const resVector = document.getElementById('resVector');
+    const resDist1 = document.getElementById('resDist1');
+    const resDist2 = document.getElementById('resDist2');
+    const solutionStatus = document.getElementById('solutionStatus');
+    const solutionBox = document.getElementById('solutionBox');
+    const radioTransmissionText = document.getElementById('radioTransmissionText');
+    const hudPO1 = document.getElementById('hudPO1');
+    const hudPO2 = document.getElementById('hudPO2');
+    const hudTarget = document.getElementById('hudTarget');
+
+    function getCardinal(deg) {
+      const cardinals = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSO', 'SO', 'OSO', 'O', 'ONO', 'NO', 'NNO'];
+      const index = Math.round((deg % 360) / 22.5) % 16;
+      return cardinals[index];
+    }
+
+    function calculateIntersection() {
+      if (state.mode === 'polar') {
+        const dist = parseFloat(document.getElementById('polarDist').value) || 1200;
+        const az = parseFloat(document.getElementById('polarAz').value) || 180;
+        const rad = az * Math.PI / 180;
+        state.target.x = state.po1.x + dist * Math.sin(rad);
+        state.target.y = state.po1.y + dist * Math.cos(rad);
+        state.target.valid = true;
+        state.target.dist1 = dist;
+        state.target.dist2 = Math.hypot(state.target.x - state.po2.x, state.target.y - state.po2.y);
+        return;
+      }
+
+      const rad1 = state.po1.az * Math.PI / 180;
+      const rad2 = state.po2.az * Math.PI / 180;
+
+      const dx1 = Math.sin(rad1), dy1 = Math.cos(rad1);
+      const dx2 = Math.sin(rad2), dy2 = Math.cos(rad2);
+
+      const D = dx1 * (-dy2) - dy1 * (-dx2);
+
+      if (Math.abs(D) < 0.0001) {
+        state.target.valid = false;
+        return;
+      }
+
+      const x21 = state.po2.x - state.po1.x;
+      const y21 = state.po2.y - state.po1.y;
+
+      const t1 = (-x21 * dy2 + y21 * dx2) / D;
+      const t2 = (dx1 * y21 - dy1 * x21) / D;
+
+      if (t1 > 0 && t2 > 0) {
+        state.target.valid = true;
+        state.target.x = state.po1.x + t1 * dx1;
+        state.target.y = state.po1.y + t1 * dy1;
+        state.target.dist1 = t1;
+        state.target.dist2 = t2;
+      } else {
+        state.target.valid = false;
+        state.target.x = state.po1.x + t1 * dx1;
+        state.target.y = state.po1.y + t1 * dy1;
+      }
+    }
+
+    function updateReadouts() {
+      calculateIntersection();
+
+      valAz1.textContent = `${state.po1.az}°`;
+      az1Label.textContent = `${state.po1.az}° [${getCardinal(state.po1.az)}]`;
+      hudPO1.textContent = `[${Math.round(state.po1.x)}m, ${Math.round(state.po1.y)}m] // ${state.po1.az}°`;
+
+      valAz2.textContent = `${state.po2.az}°`;
+      az2Label.textContent = `${state.po2.az}° [${getCardinal(state.po2.az)}]`;
+      hudPO2.textContent = `[${Math.round(state.po2.x)}m, ${Math.round(state.po2.y)}m] // ${state.po2.az}°`;
+
+      if (state.target.valid) {
+        const tx = Math.round(state.target.x);
+        const ty = Math.round(state.target.y);
+        const distLZ = Math.round(Math.hypot(tx, ty));
+        let azLZ = Math.round((Math.atan2(tx, ty) * 180 / Math.PI + 360) % 360);
+
+        resCoords.textContent = `X: ${tx > 0 ? '+' : ''}${tx}m, Y: ${ty > 0 ? '+' : ''}${ty}m`;
+        resVector.textContent = `${azLZ}° [${getCardinal(azLZ)}] // ${distLZ}m`;
+        resDist1.textContent = `${Math.round(state.target.dist1)} m`;
+        resDist2.textContent = `${Math.round(state.target.dist2)} m`;
+
+        solutionStatus.textContent = 'BLANCO FIJADO (LOCK)';
+        solutionStatus.className = 'mono text-[11px] font-bold text-emerald-400 bg-emerald-950/70 border border-emerald-500/30 px-2 py-0.5 rounded';
+        solutionBox.className = 'p-3.5 rounded-xl border bg-slate-900/90 border-emerald-500/40 glow-green space-y-1.5 transition';
+        hudTarget.textContent = `[${tx}m, ${ty}m] // ${distLZ}m de LZ`;
+
+        radioTransmissionText.value = 
+`[MEDRECON INTEL] // HVT FIJADO
+• Grid-Ref: X: ${tx > 0 ? '+' : ''}${tx}m, Y: ${ty > 0 ? '+' : ''}${ty}m
+• Azimuts: P.O.1 Alfa (${state.po1.az}°) + P.O.2 Bravo (${state.po2.az}°)
+• Vector desde LZ/Base: Rumbo ${azLZ}° a ${distLZ} metros
+• Distancias: ${Math.round(state.target.dist1)}m (P.O.1) // ${Math.round(state.target.dist2)}m (P.O.2)
+• Protocolo: WEAPON HOLD // Confirmar vector de aproximación.`;
+
+      } else {
+        resCoords.textContent = 'FUERA DE CONVERGENCIA';
+        resVector.textContent = 'Líneas no cruzan al frente';
+        resDist1.textContent = '---';
+        resDist2.textContent = '---';
+        solutionStatus.textContent = 'ERROR DE CRUCE';
+        solutionStatus.className = 'mono text-[11px] font-bold text-red-400 bg-red-950/70 border border-red-500/30 px-2 py-0.5 rounded';
+        solutionBox.className = 'p-3.5 rounded-xl border bg-slate-900/90 border-red-500/40 glow-red space-y-1.5 transition';
+        hudTarget.textContent = `SIN INTERSECCIÓN`;
+        radioTransmissionText.value = `[MEDRECON INTEL] // ALERTA: Azimuts divergentes. Revisar líneas de visión de P.O.1 y P.O.2.`;
+      }
+
+      drawRadar();
+    }
+
+    function drawRadar() {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      const w = rect.width;
+      const h = rect.height;
+      const cx = w / 2 + state.panX;
+      const cy = h / 2 + state.panY;
+      const scale = (Math.min(w, h) * 0.44 * state.zoom) / state.maxRadius;
+
+      ctx.fillStyle = '#060913';
+      ctx.fillRect(0, 0, w, h);
+
+      const rings = [500, 1000, 1500, 2000, 2500, 3000];
+      ctx.lineWidth = 1;
+      
+      rings.forEach((r, idx) => {
+        const radPix = r * scale;
+        ctx.beginPath();
+        ctx.arc(cx, cy, radPix, 0, Math.PI * 2);
+        ctx.strokeStyle = idx === rings.length - 1 ? 'rgba(56, 189, 248, 0.4)' : 'rgba(56, 189, 248, 0.12)';
+        ctx.stroke();
+
+        ctx.font = '10px "JetBrains Mono"';
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.55)';
+        const label = r >= 1000 ? `${(r / 1000).toFixed(1)}km` : `${r}m`;
+        ctx.fillText(label, cx + 6, cy - radPix + 12);
+      });
+
+      ctx.beginPath();
+      ctx.moveTo(cx, 0); ctx.lineTo(cx, h);
+      ctx.moveTo(0, cy); ctx.lineTo(w, cy);
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.15)';
+      ctx.setLineDash([4, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      const outerRad = state.maxRadius * scale;
+      for (let deg = 0; deg < 360; deg += 10) {
+        const rad = deg * Math.PI / 180;
+        const tickLen = deg % 30 === 0 ? 8 : 4;
+        const x1 = cx + (outerRad - tickLen) * Math.sin(rad);
+        const y1 = cy - (outerRad - tickLen) * Math.cos(rad);
+        const x2 = cx + outerRad * Math.sin(rad);
+        const y2 = cy - outerRad * Math.cos(rad);
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = deg % 90 === 0 ? 'rgba(56, 189, 248, 0.8)' : 'rgba(56, 189, 248, 0.25)';
+        ctx.stroke();
+
+        if (deg % 30 === 0) {
+          const tx = cx + (outerRad + 12) * Math.sin(rad);
+          const ty = cy - (outerRad + 12) * Math.cos(rad);
+          ctx.font = '9px "JetBrains Mono"';
+          ctx.fillStyle = deg % 90 === 0 ? '#38bdf8' : 'rgba(148, 163, 184, 0.6)';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          let label = deg === 0 ? 'N' : deg === 90 ? 'E' : deg === 180 ? 'S' : deg === 270 ? 'W' : `${deg}°`;
+          ctx.fillText(label, tx, ty);
+        }
+      }
+
+      function toPix(x, y) {
+        return {
+          x: cx + x * scale,
+          y: cy - y * scale
+        };
+      }
+
+      const lzPix = toPix(0, 0);
+      ctx.beginPath();
+      ctx.arc(lzPix.x, lzPix.y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+      ctx.font = '10px "JetBrains Mono"';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('LZ / CERO', lzPix.x + 8, lzPix.y + 4);
+
+      const p1Pix = toPix(state.po1.x, state.po1.y);
+      const rad1 = state.po1.az * Math.PI / 180;
+      const rayLen = 4500;
+      const p1RayEnd = toPix(state.po1.x + rayLen * Math.sin(rad1), state.po1.y + rayLen * Math.cos(rad1));
+
+      ctx.beginPath();
+      ctx.moveTo(p1Pix.x, p1Pix.y);
+      ctx.lineTo(p1RayEnd.x, p1RayEnd.y);
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.save();
+      ctx.translate(p1Pix.x, p1Pix.y);
+      ctx.rotate(rad1);
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath();
+      ctx.moveTo(0, -9); ctx.lineTo(6, 6); ctx.lineTo(-6, 6); ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = '#10b981';
+      ctx.font = 'bold 11px "JetBrains Mono"';
+      ctx.fillText('P.O. 1 Alfa', p1Pix.x + 10, p1Pix.y - 6);
+
+      const p2Pix = toPix(state.po2.x, state.po2.y);
+      const rad2 = state.po2.az * Math.PI / 180;
+      const p2RayEnd = toPix(state.po2.x + rayLen * Math.sin(rad2), state.po2.y + rayLen * Math.cos(rad2));
+
+      ctx.beginPath();
+      ctx.moveTo(p2Pix.x, p2Pix.y);
+      ctx.lineTo(p2RayEnd.x, p2RayEnd.y);
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.save();
+      ctx.translate(p2Pix.x, p2Pix.y);
+      ctx.rotate(rad2);
+      ctx.fillStyle = '#38bdf8';
+      ctx.beginPath();
+      ctx.moveTo(0, -9); ctx.lineTo(6, 6); ctx.lineTo(-6, 6); ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'bold 11px "JetBrains Mono"';
+      ctx.fillText('P.O. 2 Bravo', p2Pix.x + 10, p2Pix.y - 6);
+
+      if (state.target.valid) {
+        const tPix = toPix(state.target.x, state.target.y);
+
+        ctx.beginPath();
+        ctx.moveTo(lzPix.x, lzPix.y);
+        ctx.lineTo(tPix.x, tPix.y);
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.35)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(tPix.x, tPix.y, 14, 0, Math.PI * 2);
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(tPix.x, tPix.y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#ef4444';
+        ctx.fill();
+
+        const sz = 20;
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(tPix.x - sz, tPix.y - sz + 6); ctx.lineTo(tPix.x - sz, tPix.y - sz); ctx.lineTo(tPix.x - sz + 6, tPix.y - sz); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(tPix.x + sz, tPix.y - sz + 6); ctx.lineTo(tPix.x + sz, tPix.y - sz); ctx.lineTo(tPix.x + sz - 6, tPix.y - sz); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(tPix.x - sz, tPix.y + sz - 6); ctx.lineTo(tPix.x - sz, tPix.y + sz); ctx.lineTo(tPix.x - sz + 6, tPix.y + sz); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(tPix.x + sz, tPix.y + sz - 6); ctx.lineTo(tPix.x + sz, tPix.y + sz); ctx.lineTo(tPix.x + sz - 6, tPix.y + sz); ctx.stroke();
+
+        ctx.font = 'bold 11px "JetBrains Mono"';
+        ctx.fillStyle = '#ef4444';
+        ctx.fillText('TARGET LOCK (HVT)', tPix.x + sz + 6, tPix.y + 4);
+      }
+    }
+
+    sliderAz1.addEventListener('input', (e) => {
+      state.po1.az = parseInt(e.target.value);
+      updateReadouts();
+    });
+
+    sliderAz2.addEventListener('input', (e) => {
+      state.po2.az = parseInt(e.target.value);
+      updateReadouts();
+    });
+
+    po1X.addEventListener('input', (e) => {
+      state.po1.x = parseFloat(e.target.value) || 0;
+      updateReadouts();
+    });
+    po1Y.addEventListener('input', (e) => {
+      state.po1.y = parseFloat(e.target.value) || 0;
+      updateReadouts();
+    });
+    po2X.addEventListener('input', (e) => {
+      state.po2.x = parseFloat(e.target.value) || 0;
+      updateReadouts();
+    });
+    po2Y.addEventListener('input', (e) => {
+      state.po2.y = parseFloat(e.target.value) || 0;
+      updateReadouts();
+    });
+
+    function updateScaleIndicator() {
+      const curRadius = state.maxRadius / state.zoom;
+      if (curRadius >= 1000) {
+        document.getElementById('scaleIndicator').textContent = `ESCALA: ${(curRadius / 1000).toFixed(1)} km`;
+      } else {
+        document.getElementById('scaleIndicator').textContent = `ESCALA: ${Math.round(curRadius)} m`;
+      }
+    }
+
+    document.getElementById('btnZoomIn').addEventListener('click', () => {
+      state.zoom = Math.min(state.zoom * 1.25, 4.0);
+      updateScaleIndicator();
+      drawRadar();
+    });
+    document.getElementById('btnZoomOut').addEventListener('click', () => {
+      state.zoom = Math.max(state.zoom / 1.25, 0.4);
+      updateScaleIndicator();
+      drawRadar();
+    });
+    document.getElementById('btnResetView').addEventListener('click', () => {
+      state.zoom = 1.0;
+      state.panX = 0;
+      state.panY = 0;
+      document.getElementById('scaleIndicator').textContent = 'ESCALA: 3.0 km (RADIO)';
+      drawRadar();
+    });
+
+    const tabAzimuts = document.getElementById('tabAzimuts');
+    const tabPolar = document.getElementById('tabPolar');
+    const tabTSO = document.getElementById('tabTSO');
+    const panelAzimuts = document.getElementById('panelAzimuts');
+    const panelPolar = document.getElementById('panelPolar');
+    const panelTSO = document.getElementById('panelTSO');
+
+    function resetTabs() {
+      [tabAzimuts, tabPolar, tabTSO].forEach(b => {
+        b.className = 'flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition';
+      });
+      [panelAzimuts, panelPolar, panelTSO].forEach(p => p.classList.add('hidden'));
+    }
+
+    tabAzimuts.addEventListener('click', () => {
+      resetTabs();
+      tabAzimuts.className = 'flex-1 py-2 rounded-lg bg-cyan-500 text-slate-950 font-bold shadow-md transition';
+      panelAzimuts.classList.remove('hidden');
+      state.mode = 'azimuts';
+      updateReadouts();
+    });
+
+    tabPolar.addEventListener('click', () => {
+      resetTabs();
+      tabPolar.className = 'flex-1 py-2 rounded-lg bg-amber-500 text-slate-950 font-bold shadow-md transition';
+      panelPolar.classList.remove('hidden');
+      state.mode = 'polar';
+      updateReadouts();
+    });
+
+    tabTSO.addEventListener('click', () => {
+      resetTabs();
+      tabTSO.className = 'flex-1 py-2 rounded-lg bg-emerald-500 text-slate-950 font-bold shadow-md transition';
+      panelTSO.classList.remove('hidden');
+      state.mode = 'tso';
+    });
+
+    const polarDist = document.getElementById('polarDist');
+    const polarAz = document.getElementById('polarAz');
+    const polarAzLabel = document.getElementById('polarAzLabel');
+
+    polarDist.addEventListener('input', updateReadouts);
+    polarAz.addEventListener('input', (e) => {
+      polarAzLabel.textContent = `${e.target.value}° [${getCardinal(parseInt(e.target.value))}]`;
+      updateReadouts();
+    });
+
+    ['tsoQT', 'tsoAtm', 'tsoSigilo', 'tsoCont'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        const sum = (parseFloat(document.getElementById('tsoQT').value) || 0) +
+                    (parseFloat(document.getElementById('tsoAtm').value) || 0) +
+                    (parseFloat(document.getElementById('tsoSigilo').value) || 0) +
+                    (parseFloat(document.getElementById('tsoCont').value) || 0);
+        document.getElementById('totalTSO').textContent = `${sum} min`;
+      });
+    });
+
+    document.getElementById('presetSelect').addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (val === 'minlo') {
+        state.po1 = { x: -650, y: 400, az: 140 };
+        state.po2 = { x: 750, y: 300, az: 220 };
+      } else if (val === 'cutter') {
+        state.po1 = { x: -900, y: 550, az: 135 };
+        state.po2 = { x: 500, y: -700, az: 335 };
+      } else if (val === 'kareah') {
+        state.po1 = { x: -300, y: 200, az: 120 };
+        state.po2 = { x: 350, y: 250, az: 240 };
+      }
+      sliderAz1.value = state.po1.az;
+      sliderAz2.value = state.po2.az;
+      po1X.value = state.po1.x;
+      po1Y.value = state.po1.y;
+      po2X.value = state.po2.x;
+      po2Y.value = state.po2.y;
+      updateReadouts();
+    });
+
+    const btnCopyReport = document.getElementById('btnCopyReport');
+    const toast = document.getElementById('toast');
+
+    btnCopyReport.addEventListener('click', () => {
+      navigator.clipboard.writeText(radioTransmissionText.value).then(() => {
+        toast.classList.remove('translate-y-24', 'opacity-0');
+        setTimeout(() => {
+          toast.classList.add('translate-y-24', 'opacity-0');
+        }, 2500);
+      });
+    });
+
+    let isDragging = false;
+    let dragTarget = null;
+
+    function getCanvasCoords(evt) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = evt.clientX || (evt.touches && evt.touches[0].clientX);
+      const clientY = evt.clientY || (evt.touches && evt.touches[0].clientY);
+      const px = clientX - rect.left;
+      const py = clientY - rect.top;
+      
+      const cx = rect.width / 2 + state.panX;
+      const cy = rect.height / 2 + state.panY;
+      const scale = (Math.min(rect.width, rect.height) * 0.44 * state.zoom) / state.maxRadius;
+
+      return {
+        x: (px - cx) / scale,
+        y: -(py - cy) / scale
+      };
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      const pos = getCanvasCoords(e);
+      const d1 = Math.hypot(pos.x - state.po1.x, pos.y - state.po1.y);
+      const d2 = Math.hypot(pos.x - state.po2.x, pos.y - state.po2.y);
+      const rect = canvas.getBoundingClientRect();
+      const scale = (Math.min(rect.width, rect.height) * 0.44 * state.zoom) / state.maxRadius;
+      const hitRadius = Math.max(150, 30 / scale);
+
+      if (d1 < hitRadius) {
+        dragTarget = 'po1';
+        isDragging = true;
+      } else if (d2 < hitRadius) {
+        dragTarget = 'po2';
+        isDragging = true;
+      }
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const pos = getCanvasCoords(e);
+      if (dragTarget === 'po1') {
+        state.po1.x = Math.round(pos.x);
+        state.po1.y = Math.round(pos.y);
+        po1X.value = state.po1.x;
+        po1Y.value = state.po1.y;
+      } else if (dragTarget === 'po2') {
+        state.po2.x = Math.round(pos.x);
+        state.po2.y = Math.round(pos.y);
+        po2X.value = state.po2.x;
+        po2Y.value = state.po2.y;
+      }
+      updateReadouts();
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+      dragTarget = null;
+    });
+
+    window.addEventListener('resize', drawRadar);
+    updateReadouts();
+
+    // Transfer Coordinates to Planificador
+    const btnTransferToPlanner = document.getElementById('btnTransferToPlanner');
+    if (btnTransferToPlanner) {
+      btnTransferToPlanner.addEventListener('click', () => {
+        if (!state.target || !state.target.valid) {
+          alert('Debes fijar una solución válida de blanco antes de transferir.');
+          return;
+        }
+        const transferPayload = {
+          timestamp: Date.now(),
+          targetX: Math.round(state.target.x),
+          targetY: Math.round(state.target.y),
+          vector: resVector.textContent.trim(),
+          dist1: resDist1.textContent.trim(),
+          dist2: resDist2.textContent.trim(),
+          mode: state.mode,
+          notes: `Blanco fijado por Radar Táctico MedRecon [Vector: ${resVector.textContent.trim()} | Coord: X:${Math.round(state.target.x)}m, Y:${Math.round(state.target.y)}m]`
+        };
+        localStorage.setItem('medrecon_radar_transfer', JSON.stringify(transferPayload));
+        window.location.href = '../planificador-sar/index.html?fromRadar=1';
+      });
+    }
+
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('../sw.js')
+          .then(reg => console.log('Triangulacion SW registrado', reg.scope))
+          .catch(err => console.log('SW registration error:', err));
+      });
+    }
+  </script>
+</body>
+</html>
