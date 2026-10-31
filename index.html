@@ -67,6 +67,11 @@
       border-color: rgba(56, 189, 248, 0.5);
       box-shadow: 0 20px 45px rgba(56, 189, 248, 0.2), 0 0 25px rgba(56, 189, 248, 0.1);
     }
+
+    .card-tool.card-nav:hover {
+      border-color: rgba(14, 165, 233, 0.5);
+      box-shadow: 0 20px 45px rgba(14, 165, 233, 0.2), 0 0 25px rgba(14, 165, 233, 0.1);
+    }
   </style>
 </head>
 
@@ -104,8 +109,8 @@
     </p>
   </header>
 
-  <!-- SUITE APPS GRID (2 CARDS) -->
-  <main class="max-w-5xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+  <!-- SUITE APPS GRID (3 CARDS) -->
+  <main class="max-w-7xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-auto">
 
     <!-- CARD 1: RADAR DE TRIANGULACIÓN -->
     <section class="glass-panel card-tool card-radar rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group">
@@ -174,6 +179,42 @@
 
       <a href="planificador-sar/index.html" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-lg shadow-red-600/25 active:scale-[0.98]">
         Abrir Planificador Táctico
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </a>
+    </section>
+
+    <!-- CARD 3: NAVEGACIÓN TÁCTICA & MAPA ORBITAL -->
+    <section class="glass-panel card-tool card-nav rounded-2xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group">
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500"></div>
+
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-bold mono uppercase tracking-wider text-cyan-300 bg-cyan-950/70 border border-cyan-400/40 px-2.5 py-1 rounded-md">
+            MÓDULO 03 // NAV & ORBITAL
+          </span>
+          <span class="text-xs mono text-slate-500">STANTON • PYRO • NYX</span>
+        </div>
+
+        <h3 class="text-2xl font-extrabold text-white mb-2 flex items-center gap-2">
+          Navegación Táctica & Mapa
+        </h3>
+
+        <p class="text-slate-300 text-sm leading-relaxed mb-6">
+          Solucionador de telemetría orbital para coordenadas <code>/showlocation</code>. Proyección 2D equirrectangular con <strong>ciclo solar y sombra en tiempo real</strong> (motor calibrado VerseGuide), matriz de distancias a los <strong>6 marcadores orbitales (OMs)</strong>, rumbo de salida (bearing), base de datos de puestos tácticos y auto-detección multi-sistema.
+        </p>
+
+        <!-- Feature chips -->
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="text-[11px] mono bg-slate-900/90 text-slate-300 border border-slate-800 px-2.5 py-1 rounded">🗺️ Mapamundi 2D</span>
+          <span class="text-[11px] mono bg-slate-900/90 text-slate-300 border border-slate-800 px-2.5 py-1 rounded">☀️ Ciclo Solar Vivo</span>
+          <span class="text-[11px] mono bg-slate-900/90 text-slate-300 border border-slate-800 px-2.5 py-1 rounded">📡 Matriz 6 OMs</span>
+          <span class="text-[11px] mono bg-slate-900/90 text-slate-300 border border-slate-800 px-2.5 py-1 rounded">🎯 /showlocation</span>
+          <span class="text-[11px] mono bg-slate-900/90 text-slate-300 border border-slate-800 px-2.5 py-1 rounded">🌌 Stanton / Pyro / Nyx</span>
+        </div>
+      </div>
+
+      <a href="navegacion/index.html" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:via-blue-500 hover:to-indigo-500 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-lg shadow-cyan-500/20 active:scale-[0.98]">
+        Abrir Navegación Táctica
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
       </a>
     </section>
