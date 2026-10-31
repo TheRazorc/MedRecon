@@ -1,10 +1,12 @@
-const CACHE_NAME = 'medrecon-suite-v2';
+const CACHE_NAME = 'medrecon-suite-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './triangulacion/index.html',
   './planificador-sar/index.html',
   './navegacion/index.html',
+  './navegacion/three.min.js',
+  './navegacion/OrbitControls.js',
   './assets/CCBE_MEDRECON.jpg',
   './manifest.json'
 ];

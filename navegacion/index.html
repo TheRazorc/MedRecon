@@ -1023,7 +1023,176 @@
       font-size: 11px;
       color: var(--text-muted);
     }
+    /* ========================================================= */
+    /* DEEP SPACE SURVEY & PROSPECCIÓN RELATIVA (MÓDULO 03)      */
+    /* ========================================================= */
+    .dss-anchor-banner {
+      background: rgba(10, 18, 30, 0.9);
+      border: 1px solid rgba(0, 255, 170, 0.35);
+      border-left: 4px solid var(--accent-green);
+      border-radius: 4px;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .dss-form-box {
+      background: rgba(8, 14, 24, 0.75);
+      border: 1px solid var(--border-hud);
+      border-radius: 4px;
+      padding: 16px;
+    }
+
+    .dss-mode-btn {
+      background: rgba(14, 23, 38, 0.9);
+      border: 1px solid var(--border-hud);
+      color: var(--text-muted);
+      padding: 5px 12px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dss-mode-btn:hover {
+      color: var(--text-main);
+      border-color: var(--accent-cyan);
+    }
+
+    .dss-mode-btn.active {
+      background: rgba(0, 210, 255, 0.15);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-weight: bold;
+    }
+
+    .dss-tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dss-tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .dss-tab-btn.active {
+      color: var(--accent-cyan);
+      border-bottom-color: var(--accent-cyan);
+    }
+
+    .dss-range-btn {
+      transition: all 0.2s;
+    }
+
+    .dss-range-btn.active {
+      background: var(--accent-cyan) !important;
+      color: #070b12 !important;
+      font-weight: bold;
+      border-color: var(--accent-cyan) !important;
+    }
+
+    .dss-cam-btn {
+      background: rgba(14, 23, 38, 0.85);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dss-cam-btn:hover {
+      color: var(--text-main);
+      border-color: var(--accent-cyan);
+      background: rgba(0, 210, 255, 0.15);
+    }
+
+    .dss-cam-btn.active {
+      background: rgba(0, 210, 255, 0.25);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-weight: bold;
+    }
+
+    .dss-card {
+      background: rgba(12, 19, 32, 0.9);
+      border: 1px solid var(--border-hud);
+      border-radius: 4px;
+      padding: 14px;
+      margin-bottom: 10px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    @media (max-width: 768px) {
+      .dss-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dss-card:hover {
+      border-color: rgba(0, 210, 255, 0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .dss-card.cat-dss-quant { border-left: 3px solid #00ffff; }
+    .dss-card.cat-dss-mining { border-left: 3px solid var(--accent-amber); }
+    .dss-card.cat-dss-salvage { border-left: 3px solid #c084fc; }
+    .dss-card.cat-dss-rescue { border-left: 3px solid var(--accent-red); }
+    .dss-card.cat-dss-waypoint { border-left: 3px solid var(--accent-green); }
+
+    .dss-vector-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0, 210, 255, 0.08);
+      border: 1px solid rgba(0, 210, 255, 0.25);
+      border-radius: 4px;
+      padding: 5px 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent-cyan);
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .dss-status-badge {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      font-weight: bold;
+      padding: 2px 7px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .dss-status-available { background: rgba(0, 255, 170, 0.15); color: #00ffaa; border: 1px solid rgba(0, 255, 170, 0.4); }
+    .dss-status-extracting { background: rgba(245, 166, 35, 0.15); color: #f5a623; border: 1px solid rgba(245, 166, 35, 0.4); }
+    .dss-status-exhausted { background: rgba(126, 149, 176, 0.15); color: #7e95b0; border: 1px solid rgba(126, 149, 176, 0.4); }
+
   </style>
+  <script src="three.min.js"></script>
+  <script src="OrbitControls.js"></script>
 </head>
 <body>
 
@@ -1321,6 +1490,226 @@
         </div>
       </div>
     </div>
+
+    <!-- DEEP SPACE SURVEY // PROSPECCIÓN Y TRIANGULACIÓN RELATIVA EN ESPACIO PROFUNDO (FULL WIDTH) -->
+    <div class="panel col-full" id="deep-space-survey-panel">
+      <div class="panel-header">
+        <div class="panel-title" style="display:flex; align-items:center; gap:10px;">
+          <span>🛰️</span> Deep Space Survey // Prospección y Triangulación Relativa
+          <span class="badge-cat cat-tactical" style="font-size:10px; font-weight:bold; letter-spacing:1px;">ESPACIO PROFUNDO • AARON HALO</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button class="btn btn-secondary btn-sm" id="btn-dss-export-json" title="Exportar prospecciones en formato JSON">
+            <span>💾</span> Copia JSON
+          </button>
+          <button class="btn btn-secondary btn-sm" id="btn-dss-clear-all" style="color:var(--accent-red);" title="Limpiar todos los registros">
+            <span>🗑️</span> Vaciar
+          </button>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <!-- BARRA DE ANCLA TÁCTICA (NAVE NODRIZA / PUNTO CERO) -->
+        <div class="dss-anchor-banner" id="dss-anchor-banner">
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="pulse-dot" id="dss-anchor-pulse" style="background:#00ffaa; box-shadow:0 0 8px #00ffaa;"></span>
+              <span style="font-weight:bold; font-size:13px; color:var(--text-main); font-family:var(--font-mono);" id="dss-anchor-title">ANCLA TÁCTICA: CARRACK NODRIZA CCBE-01</span>
+              <span class="badge-cat cat-tactical" id="dss-anchor-status-badge" style="font-size:10px;">ANCLA ACTIVA (0, 0, 0)</span>
+            </div>
+            <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);" id="dss-anchor-coords-desc">
+              Punto de Referencia Zero: Nave nodriza estacionaria para cálculo de vectores de aproximación y distancias 3D.
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button class="btn btn-sm btn-secondary" id="btn-dss-use-current-coords" title="Usar las coordenadas /showlocation cargadas arriba">
+              <span>⚡</span> Usar Telemetría Superior
+            </button>
+            <button class="btn btn-sm" id="btn-dss-open-anchor-modal">
+              <span>⚓</span> Fijar / Editar Ancla
+            </button>
+          </div>
+        </div>
+
+        <!-- FORMULARIO DE REGISTRO DE YACIMIENTO / POI -->
+        <div class="dss-form-box" style="margin-top:16px;">
+          <div style="font-size:12px; font-weight:bold; color:var(--accent-cyan); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <span>➕ Registrar Nuevo Hallazgo Táctico / Yacimiento</span>
+            <div style="display:flex; gap:6px;">
+              <button type="button" class="dss-mode-btn active" id="dss-mode-coords-btn">Modo /showlocation</button>
+              <button type="button" class="dss-mode-btn" id="dss-mode-polar-btn">Modo Telémetro (HUD / Radar)</button>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-bottom:10px;">
+            <input type="text" id="dss-poi-name" placeholder="Nombre descriptivo (ej: Filón Quantainium 48% x3 rocas)">
+            <select id="dss-poi-category">
+              <option value="quant">💎 Quantainium (Alta Inestabilidad)</option>
+              <option value="mining">⛏️ Minería General (Bexalite / Gold / Taranite)</option>
+              <option value="salvage">📦 Pecio / Salvage (RMC / Componentes)</option>
+              <option value="rescue">🚨 Emergencia Médica / Baliza SAR</option>
+              <option value="waypoint">🛡️ Baliza de Reagrupamiento / Táctica</option>
+            </select>
+            <input type="text" id="dss-poi-scout" placeholder="Nave Exploradora / Piloto" value="Scout MedRecon">
+          </div>
+
+          <!-- INPUT DE POSICIONAMIENTO SEGÚN MODO -->
+          <div id="dss-coords-input-block">
+            <div class="input-group" style="margin-bottom:8px;">
+              <input type="text" id="dss-poi-coords" placeholder="Pegar /showlocation del yacimiento (Coordinates: x:... y:... z:...)">
+              <button class="btn btn-secondary btn-sm" id="btn-dss-paste-coords" type="button" title="Pegar del portapapeles">📋 Pegar</button>
+            </div>
+          </div>
+
+          <div id="dss-polar-input-block" style="display:none; margin-bottom:8px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+              <div>
+                <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:3px; font-family:var(--font-mono);">Distancia al Ancla (km)</label>
+                <input type="number" id="dss-polar-dist" placeholder="ej: 14.5" step="0.1" min="0">
+              </div>
+              <div>
+                <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:3px; font-family:var(--font-mono);">Rumbo / Azimut (0° - 359°)</label>
+                <input type="number" id="dss-polar-heading" placeholder="ej: 085" min="0" max="359">
+              </div>
+              <div>
+                <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:3px; font-family:var(--font-mono);">Elevación / Pitch (±°)</label>
+                <input type="number" id="dss-polar-elevation" placeholder="ej: +12" min="-90" max="90" value="0">
+              </div>
+            </div>
+          </div>
+
+          <!-- METADATOS TÁCTICOS -->
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) auto; gap:10px; align-items:center;">
+            <input type="text" id="dss-poi-purity" placeholder="Pureza % (ej: 48.5%)">
+            <input type="text" id="dss-poi-mass" placeholder="Masa / SCU (ej: 32 SCU / 6.200 kg)">
+            <input type="text" id="dss-poi-notes" placeholder="Notas (ej: Escolta hostil a 5km / Terreno accidentado)">
+            <button class="btn" id="btn-dss-save-poi" type="button" style="white-space:nowrap;">
+              <span>💾</span> Registrar Hallazgo
+            </button>
+          </div>
+        </div>
+
+        <!-- TABS DE VISUALIZACIÓN: HOLOMAPA 3D vs MATRIZ TÁCTICA -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; border-bottom:1px solid var(--border-hud); padding-bottom:10px; flex-wrap:wrap; gap:10px;">
+          <div style="display:flex; gap:10px;">
+            <button type="button" class="dss-tab-btn active" id="dss-tab-3d-btn">
+              <span>🌐</span> Holomapa 3D Espacio Profundo
+            </button>
+            <button type="button" class="dss-tab-btn" id="dss-tab-matrix-btn">
+              <span>📋</span> Matriz de Yacimientos & Guía de Vuelo (<span id="dss-count-badge">0</span>)
+            </button>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">Escala 3D:</span>
+            <button type="button" class="pill-btn dss-range-btn" data-range="5">5 km</button>
+            <button type="button" class="pill-btn dss-range-btn active" data-range="20">20 km</button>
+            <button type="button" class="pill-btn dss-range-btn" data-range="50">50 km</button>
+            <button type="button" class="pill-btn dss-range-btn" data-range="100">100 km</button>
+          </div>
+        </div>
+
+        <!-- CONTENIDO VISTA 1: HOLOMAPA 3D ESPACIO PROFUNDO -->
+        <div id="dss-view-3d" style="margin-top:16px;">
+          <div id="dss-3d-viewport" style="position:relative; width:100%; height:520px; background:#02050b; border:1px solid var(--border-hud); border-radius:6px; overflow:hidden; box-shadow: inset 0 0 40px rgba(0,0,0,0.8);">
+            
+            <!-- Three.js Canvas Container -->
+            <div id="dss-three-canvas-container" style="width:100%; height:100%;"></div>
+
+            <!-- HUD OVERLAY SUPERIOR IZQUIERDA -->
+            <div style="position:absolute; top:12px; left:14px; font-family:var(--font-mono); font-size:11px; color:var(--accent-cyan); pointer-events:none; background:rgba(6,10,18,0.85); padding:6px 12px; border-radius:4px; border:1px solid rgba(0,210,255,0.3); backdrop-filter:blur(4px);">
+              HOLOMAPA 3D // ESCALA: <span id="dss-hud-range" style="font-weight:bold; color:var(--text-main);">20 KM</span> | ANCLA: <span id="dss-hud-anchor-name" style="font-weight:bold; color:var(--accent-green);">CARRACK NODRIZA</span>
+            </div>
+
+            <!-- HUD BOTONES DE CÁMARA (SUPERIOR DERECHA) -->
+            <div style="position:absolute; top:12px; right:14px; display:flex; gap:6px; flex-wrap:wrap; z-index:5;">
+              <button type="button" class="dss-cam-btn active" id="btn-cam-iso" title="Perspectiva Isométrica Táctica 3D">📐 Isométrica 3D</button>
+              <button type="button" class="dss-cam-btn" id="btn-cam-top" title="Vista Cenital Superior (Plano XY)">⬆️ Cenital (Top)</button>
+              <button type="button" class="dss-cam-btn" id="btn-cam-side" title="Vista Lateral de Nivel">➡️ Lateral</button>
+              <button type="button" class="dss-cam-btn" id="btn-cam-reset" title="Restablecer posición de cámara">🎯 Reset</button>
+            </div>
+
+            <!-- HUD INSTRUCCIONES DE NAVEGACIÓN 3D (INFERIOR DERECHA) -->
+            <div style="position:absolute; bottom:12px; right:14px; font-family:var(--font-mono); font-size:10px; color:var(--text-muted); pointer-events:none; background:rgba(6,10,18,0.85); padding:4px 10px; border-radius:4px; border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:8px;">
+              <span>🖱️ Clic Izq: Rotar 3D</span> &bull; 
+              <span>Rueda: Zoom</span> &bull; 
+              <span>Clic Dcho: Desplazar</span>
+            </div>
+
+            <!-- HUD STATUS 3D VIVO (INFERIOR IZQUIERDA) -->
+            <div style="position:absolute; bottom:12px; left:14px; font-family:var(--font-mono); font-size:10px; color:var(--accent-green); pointer-events:none; background:rgba(6,10,18,0.85); padding:4px 10px; border-radius:4px; border:1px solid rgba(0,255,170,0.25); display:flex; align-items:center; gap:6px;">
+              <span class="pulse-dot"></span> ENTORNO HOLOGRÁFICO 3D ACTIVO
+            </div>
+
+            <!-- TOOLTIP FLOTANTE DEL HOLOMAPA 3D -->
+            <div id="dss-3d-tooltip" style="display:none; position:absolute; pointer-events:none; background:rgba(10,16,28,0.96); border:1px solid var(--accent-cyan); border-radius:4px; padding:10px 14px; font-family:var(--font-mono); font-size:11px; z-index:10; box-shadow:0 8px 24px rgba(0,0,0,0.9); min-width:240px;"></div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:11px; color:var(--text-muted); font-family:var(--font-mono); flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; gap:14px; flex-wrap:wrap;">
+              <span><span style="color:#00ffff;">◆</span> 💎 Quantainium</span>
+              <span><span style="color:#f5a623;">◆</span> ⛏️ Minería</span>
+              <span><span style="color:#c084fc;">◆</span> 📦 Pecio/Salvage</span>
+              <span><span style="color:#ff4757;">◆</span> 🚨 Rescate SAR</span>
+              <span><span style="color:#00ffaa;">◆</span> 🛡️ Baliza Táctica</span>
+            </div>
+            <div>💡 Haz clic en cualquier yacimiento 3D para enfocar la cámara y ver su vector de vuelo.</div>
+          </div>
+        </div>
+
+        <!-- CONTENIDO VISTA 2: LISTA DE YACIMIENTOS & VECTORES DE CABINA -->
+        <div id="dss-view-matrix" style="display:none; margin-top:16px;">
+          <!-- CALCULADORA DE VELOCIDAD DE INTERCEPTACIÓN -->
+          <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(9,14,24,0.7); border:1px solid var(--border-hud); border-radius:4px; padding:10px 14px; margin-bottom:12px; font-family:var(--font-mono); font-size:12px; flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="color:var(--accent-amber);">🚀 Velocidad de Nave de Extracción:</span>
+              <select id="dss-speed-selector" style="width:auto; padding:4px 8px; font-size:12px;">
+                <option value="400">400 m/s (Minero Pesado - MOLE / Reclaimer)</option>
+                <option value="800" selected>800 m/s (SCM Estándar - Prospector / Vulture / Cutlass)</option>
+                <option value="1200">1.200 m/s (Modo NAV / Crucero de Interceptación)</option>
+              </select>
+            </div>
+            <div style="color:var(--text-muted); font-size:11px;">
+              Los tiempos de vuelo hacia cada yacimiento se recalculan al instante.
+            </div>
+          </div>
+
+          <!-- LISTADO DE TARJETAS -->
+          <div id="dss-poi-card-list">
+            <!-- Render dinámico -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL PARA FIJAR ANCLA TÁCTICA -->
+    <div id="dss-anchor-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:9999; backdrop-filter:blur(6px); justify-content:center; align-items:center; padding:16px;">
+      <div style="background:var(--bg-panel); border:1px solid var(--accent-cyan); border-radius:6px; max-width:540px; width:100%; box-shadow:0 12px 40px rgba(0,0,0,0.8); overflow:hidden;">
+        <div style="background:rgba(18,29,47,0.95); padding:14px 18px; border-bottom:1px solid var(--border-hud); display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-weight:bold; font-size:13px; color:var(--accent-cyan); font-family:var(--font-mono); display:flex; align-items:center; gap:8px;">
+            <span>⚓</span> Configurar Punto Ancla Táctico (Nave Nodriza)
+          </div>
+          <button type="button" id="btn-close-anchor-modal" style="background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer;">✕</button>
+        </div>
+        <div style="padding:18px;">
+          <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px; line-height:1.5;">
+            El Punto Ancla representa la posición fija de la nave nodriza o baliza de referencia en el espacio profundo. Todos los vectores de prospección se calcularán a partir de esta posición.
+          </p>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted); display:block; margin-bottom:4px;">Nombre / Identificador de la Nodriza:</label>
+            <input type="text" id="dss-anchor-modal-name" placeholder="ej: CARRACK NODRIZA CCBE-01" value="CARRACK NODRIZA CCBE-01">
+          </div>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted); display:block; margin-bottom:4px;">Coordenadas /showlocation de la Nodriza:</label>
+            <input type="text" id="dss-anchor-modal-coords" placeholder="Coordinates: x:... y:... z:...">
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button type="button" class="btn btn-secondary" id="btn-cancel-anchor-modal">Cancelar</button>
+            <button type="button" class="btn" id="btn-save-anchor-modal">Guardar y Activar Ancla</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
   
     <!-- CINTURÓN DE AARON HALO // ENLACE Y GUÍA SCMINER.ROCKS (DESPLEGABLE AL FINAL) -->
@@ -2868,6 +3257,1229 @@
     // Redimensionar canvas limpiamente tras layout DOM
     setTimeout(resizeCanvas, 100);
     setTimeout(resizeCanvas, 400);
+    // =========================================================
+    // DEEP SPACE SURVEY & PROSPECCIÓN RELATIVA (LÓGICA TÁCTICA 3D)
+    // =========================================================
+    const DSS_KEY_ANCHOR = 'ccbe_dss_anchor_v2';
+    const DSS_KEY_POIS = 'ccbe_dss_pois_v2';
+
+    let dssAnchor = {
+      name: "CARRACK NODRIZA CCBE-01",
+      coords: "Coordinates: x:-18930700000.000000 y:-2610050000.000000 z:220000.000000",
+      x: -18930700000,
+      y: -2610050000,
+      z: 220000,
+      set: true
+    };
+
+    let dssPois = [
+      {
+        id: 'dss-demo-1',
+        name: 'Filón Quantainium 48.2% (3 rocas)',
+        category: 'quant',
+        scout: 'Scout Prospector-01',
+        coords: 'Coordinates: x:-18930691500.000000 y:-2610041200.000000 z:222600.000000',
+        x: -18930691500,
+        y: -2610041200,
+        z: 222600,
+        purity: '48.2%',
+        mass: '32 SCU',
+        notes: 'Inestabilidad alta. Iniciar extracción rápida.',
+        status: 'available',
+        createdAt: Date.now() - 1000 * 60 * 15
+      },
+      {
+        id: 'dss-demo-2',
+        name: 'Pecio C2 Hercules // Carga RMC',
+        category: 'salvage',
+        scout: 'Scout Vulture-02',
+        coords: 'Coordinates: x:-18930714200.000000 y:-2610061500.000000 z:218500.000000',
+        x: -18930714200,
+        y: -2610061500,
+        z: 218500,
+        purity: '100% RMC',
+        mass: '64 SCU Hull',
+        notes: 'Pecio a la deriva sin señal activa. Seguro.',
+        status: 'available',
+        createdAt: Date.now() - 1000 * 60 * 45
+      },
+      {
+        id: 'dss-demo-3',
+        name: 'Cúmulo Bexalite + Gold',
+        category: 'mining',
+        scout: 'Scout MOLE Alpha',
+        coords: 'Coordinates: x:-18930705200.000000 y:-2610045800.000000 z:220800.000000',
+        x: -18930705200,
+        y: -2610045800,
+        z: 220800,
+        purity: '34.8%',
+        mass: '45.2 Toneladas',
+        notes: 'Fractura asistida recomendada.',
+        status: 'extracting',
+        createdAt: Date.now() - 1000 * 60 * 70
+      },
+      {
+        id: 'dss-demo-4',
+        name: 'Baliza SAR // Piloto Cutlass Inconsciente',
+        category: 'rescue',
+        scout: 'MedRecon SAR-1',
+        coords: 'Coordinates: x:-18930696500.000000 y:-2610053200.000000 z:221200.000000',
+        x: -18930696500,
+        y: -2610053200,
+        z: 221200,
+        purity: 'Signos Vitales Críticos',
+        mass: '1 Tripulante',
+        notes: 'Oxígeno a 18%. Llevar MedPen Hemozal.',
+        status: 'available',
+        createdAt: Date.now() - 1000 * 60 * 5
+      }
+    ];
+
+    let dssCurrentRangeKm = 20;
+    let dssShipSpeed = 800; // m/s
+    let dssActiveTab = 'radar'; // 'radar' (3D) | 'matrix'
+    let dssInputMode = 'coords'; // 'coords' | 'polar'
+
+    // Load persisted state
+    try {
+      const savedAnchor = localStorage.getItem(DSS_KEY_ANCHOR);
+      if (savedAnchor) dssAnchor = JSON.parse(savedAnchor);
+      const savedPois = localStorage.getItem(DSS_KEY_POIS);
+      if (savedPois) dssPois = JSON.parse(savedPois);
+    } catch(e) {
+      console.warn('DSS: error loading state', e);
+    }
+
+    function saveDssState() {
+      try {
+        localStorage.setItem(DSS_KEY_ANCHOR, JSON.stringify(dssAnchor));
+        localStorage.setItem(DSS_KEY_POIS, JSON.stringify(dssPois));
+      } catch(e) {
+        console.warn('DSS: error saving state', e);
+      }
+    }
+
+    // 3D Vector & Polar calculations
+    function computeDssVector(pX, pY, pZ, aX, aY, aZ) {
+      const dx = pX - aX;
+      const dy = pY - aY;
+      const dz = pZ - aZ;
+      const dist3d = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      const distH = Math.sqrt(dx * dx + dy * dy);
+      
+      // Bearing from North: 0° = +Y, 90° = +X, 180° = -Y, 270° = -X
+      let bearingRad = Math.atan2(dx, dy);
+      let bearingDeg = (bearingRad * (180 / Math.PI) + 360) % 360;
+      
+      // Pitch / Elevation angle
+      let elevRad = distH > 0 ? Math.atan2(dz, distH) : (dz >= 0 ? Math.PI/2 : -Math.PI/2);
+      let elevDeg = elevRad * (180 / Math.PI);
+      
+      return {
+        dx, dy, dz,
+        dist3d,
+        distKm: dist3d / 1000,
+        distH,
+        bearingDeg: Math.round(bearingDeg),
+        elevationDeg: parseFloat(elevDeg.toFixed(1))
+      };
+    }
+
+    function formatFlightTime(distMeters, speedMps) {
+      if (!speedMps || speedMps <= 0) speedMps = 800;
+      const seconds = distMeters / speedMps;
+      if (seconds < 60) return Math.round(seconds) + 's';
+      const mins = Math.floor(seconds / 60);
+      const remSec = Math.round(seconds % 60);
+      return mins + 'm ' + remSec + 's';
+    }
+
+    function updateDssAnchorUI() {
+      const titleEl = document.getElementById('dss-anchor-title');
+      const badgeEl = document.getElementById('dss-anchor-status-badge');
+      const descEl = document.getElementById('dss-anchor-coords-desc');
+      const hudAnchorEl = document.getElementById('dss-hud-anchor-name');
+
+      if (dssAnchor && dssAnchor.set) {
+        titleEl.textContent = 'ANCLA TÁCTICA: ' + dssAnchor.name;
+        badgeEl.textContent = 'ACTIVA (0, 0, 0)';
+        badgeEl.className = 'badge-cat cat-tactical';
+        descEl.textContent = 'Origen Táctico: X: ' + dssAnchor.x.toFixed(0) + ' | Y: ' + dssAnchor.y.toFixed(0) + ' | Z: ' + dssAnchor.z.toFixed(0) + ' (m)';
+        if (hudAnchorEl) hudAnchorEl.textContent = dssAnchor.name;
+      } else {
+        titleEl.textContent = 'ANCLA TÁCTICA NO ESTABLECIDA';
+        badgeEl.textContent = 'STANDBY';
+        badgeEl.className = 'badge-cat cat-mining';
+        descEl.textContent = 'Define una nave nodriza estacionaria (Carrack, Polaris, Cutlass Red, Baliza) como origen (0,0,0).';
+        if (hudAnchorEl) hudAnchorEl.textContent = 'SIN ANCLA';
+      }
+    }
+
+    // Render Matrix of POIs
+    function renderDssMatrix() {
+      const container = document.getElementById('dss-poi-card-list');
+      const badgeCount = document.getElementById('dss-count-badge');
+      if (badgeCount) badgeCount.textContent = dssPois.length;
+
+      if (!dssPois.length) {
+        container.innerHTML = '<div style="color:var(--text-muted); font-size:12px; text-align:center; padding:24px; font-family:var(--font-mono);">No hay yacimientos ni prospecciones registradas en este sector.</div>';
+        return;
+      }
+
+      // Calculate vectors relative to current anchor
+      const aX = dssAnchor && dssAnchor.set ? dssAnchor.x : 0;
+      const aY = dssAnchor && dssAnchor.set ? dssAnchor.y : 0;
+      const aZ = dssAnchor && dssAnchor.set ? dssAnchor.z : 0;
+
+      const enriched = dssPois.map(poi => {
+        const v = computeDssVector(poi.x, poi.y, poi.z, aX, aY, aZ);
+        return Object.assign({}, poi, { vector: v });
+      });
+
+      // Sort by distance (nearest first)
+      enriched.sort((a, b) => a.vector.dist3d - b.vector.dist3d);
+
+      let html = '';
+      enriched.forEach(poi => {
+        let catClass = 'cat-dss-quant';
+        let catBadgeClass = 'cat-mining';
+        let catLabel = '💎 Quantainium';
+        if (poi.category === 'mining') { catClass = 'cat-dss-mining'; catBadgeClass = 'cat-mining'; catLabel = '⛏️ Minería'; }
+        else if (poi.category === 'salvage') { catClass = 'cat-dss-salvage'; catBadgeClass = 'cat-wreck'; catLabel = '📦 Salvage/Pecio'; }
+        else if (poi.category === 'rescue') { catClass = 'cat-dss-rescue'; catBadgeClass = 'cat-rescue'; catLabel = '🚨 Rescate SAR'; }
+        else if (poi.category === 'waypoint') { catClass = 'cat-dss-waypoint'; catBadgeClass = 'cat-tactical'; catLabel = '🛡️ Baliza Táctica'; }
+
+        let statusClass = 'dss-status-available';
+        let statusLabel = '🟢 DISPONIBLE';
+        if (poi.status === 'extracting') { statusClass = 'dss-status-extracting'; statusLabel = '🟡 EN EXTRACCIÓN'; }
+        else if (poi.status === 'exhausted') { statusClass = 'dss-status-exhausted'; statusLabel = '⚪ AGOTADO'; }
+
+        const flightTime = formatFlightTime(poi.vector.dist3d, dssShipSpeed);
+        const elevSign = poi.vector.elevationDeg >= 0 ? '+' : '';
+
+        html += `
+          <div class="dss-card ${catClass}" id="dss-card-${poi.id}">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:4px;">
+                <span style="font-weight:bold; font-size:13px; color:var(--text-main); font-family:var(--font-mono);">${poi.name}</span>
+                <span class="badge-cat ${catBadgeClass}" style="font-size:10px;">${catLabel}</span>
+                <span class="dss-status-badge ${statusClass}">${statusLabel}</span>
+                <span style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">Scout: ${poi.scout}</span>
+              </div>
+
+              <!-- Cockpit Tactical Vector Readout -->
+              <div class="dss-vector-box">
+                <span style="font-weight:bold; color:var(--accent-amber);">🎯 Rumbo: ${poi.vector.bearingDeg.toString().padStart(3, '0')}°</span>
+                <span style="color:var(--text-muted);">|</span>
+                <span style="font-weight:bold; color:var(--accent-cyan);">📐 Elevación: ${elevSign}${poi.vector.elevationDeg}°</span>
+                <span style="color:var(--text-muted);">|</span>
+                <span style="font-weight:bold; color:#00ffaa;">📏 Distancia: ${poi.vector.distKm.toFixed(2)} km</span>
+                <span style="color:var(--text-muted);">|</span>
+                <span style="font-weight:bold; color:var(--text-main);">⏱️ Vuelo (${dssShipSpeed}m/s): ${flightTime}</span>
+              </div>
+
+              <!-- Metadata details -->
+              <div style="margin-top:6px; font-size:11px; color:var(--text-muted); font-family:var(--font-mono); display:flex; gap:12px; flex-wrap:wrap;">
+                ${poi.purity ? '<span><strong>Pureza/Riqueza:</strong> ' + poi.purity + '</span>' : ''}
+                ${poi.mass ? '<span><strong>Masa/SCU:</strong> ' + poi.mass + '</span>' : ''}
+                ${poi.notes ? '<span><strong>Notas:</strong> ' + poi.notes + '</span>' : ''}
+              </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;">
+              <button class="btn btn-sm btn-secondary" onclick="copyDssCockpitVector('${poi.id}')" title="Copiar instrucción de cabina concisa para dictar por voz">
+                <span>📋</span> Copiar Vector
+              </button>
+              <button class="btn btn-sm btn-secondary" onclick="copyDssDiscordReport('${poi.id}')" title="Copiar informe táctico completo para Discord">
+                <span>💬</span> Discord
+              </button>
+              <button class="btn btn-sm btn-secondary" onclick="toggleDssStatus('${poi.id}')" title="Cambiar estado: Disponible / En Extracción / Agotado">
+                <span>🔄</span> Estado
+              </button>
+              <button class="btn btn-sm btn-secondary" style="color:var(--accent-red);" onclick="deleteDssPoi('${poi.id}')" title="Eliminar registro">
+                ✕
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // =========================================================
+    // MOTOR 3D THREE.JS: HOLOMAPA TÁCTICO ESPACIAL
+    // =========================================================
+    let dssScene, dssCamera, dssRenderer, dssControls;
+    let dssPoisGroup, dssGridGroup, dssAnchorGroup;
+    let dssRadarPulseRing;
+    let dssRaycaster, dssMouse;
+    let dssHoveredMesh = null;
+    let dssAnimFrameId = null;
+
+    // Helper: Create high-contrast text billboard sprite
+    function makeDssTextSprite(message, colorStr, bgStr) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 380;
+      canvas.height = 70;
+      const ctx = canvas.getContext('2d');
+
+      // Rounded background
+      ctx.fillStyle = bgStr || 'rgba(6, 12, 22, 0.85)';
+      ctx.strokeStyle = colorStr || '#00d2ff';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect ? ctx.roundRect(4, 4, 372, 62, 8) : ctx.rect(4, 4, 372, 62);
+      ctx.fill();
+      ctx.stroke();
+
+      // Text
+      ctx.fillStyle = colorStr || '#00d2ff';
+      ctx.font = 'bold 22px monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(message, 190, 35);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.minFilter = THREE.LinearFilter;
+      const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
+      const sprite = new THREE.Sprite(spriteMat);
+      sprite.scale.set(4.0, 0.75, 1.0);
+      return sprite;
+    }
+
+    function initDss3DScene() {
+      const container = document.getElementById('dss-three-canvas-container');
+      if (!container || !window.THREE) {
+        console.warn('DSS 3D: Three.js not loaded or container not found');
+        return;
+      }
+
+      // Clear any previous canvas
+      container.innerHTML = '';
+      const width = container.clientWidth || 800;
+      const height = container.clientHeight || 520;
+
+      // 1. Scene
+      dssScene = new THREE.Scene();
+      dssScene.fog = new THREE.FogExp2(0x02050b, 0.004);
+
+      // 2. Camera
+      dssCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 2000);
+      setDssCameraIso();
+
+      // 3. WebGL Renderer
+      dssRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      dssRenderer.setSize(width, height);
+      dssRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      dssRenderer.toneMapping = THREE.ACESFilmicToneMapping;
+      container.appendChild(dssRenderer.domElement);
+
+      // 4. Orbit Controls
+      if (THREE.OrbitControls) {
+        dssControls = new THREE.OrbitControls(dssCamera, dssRenderer.domElement);
+        dssControls.enableDamping = true;
+        dssControls.dampingFactor = 0.06;
+        dssControls.screenSpacePanning = true;
+        dssControls.maxDistance = 500;
+        dssControls.minDistance = 2;
+      }
+
+      // 5. Lights
+      const ambLight = new THREE.AmbientLight(0xffffff, 0.8);
+      dssScene.add(ambLight);
+
+      const dirLight = new THREE.DirectionalLight(0x00d2ff, 1.2);
+      dirLight.position.set(30, 50, 40);
+      dssScene.add(dirLight);
+
+      // 6. Deep Space Background Starfield (800 particles)
+      const starGeo = new THREE.BufferGeometry();
+      const starCount = 800;
+      const starPositions = new Float32Array(starCount * 3);
+      for (let i = 0; i < starCount * 3; i += 3) {
+        const u = Math.random();
+        const v = Math.random();
+        const theta = u * 2.0 * Math.PI;
+        const phi = Math.acos(2.0 * v - 1.0);
+        const r = 250 + Math.random() * 250;
+        starPositions[i] = r * Math.sin(phi) * Math.cos(theta);
+        starPositions[i + 1] = r * Math.sin(phi) * Math.sin(theta);
+        starPositions[i + 2] = r * Math.cos(phi);
+      }
+      starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+      const starMat = new THREE.PointsMaterial({ color: 0x6495ed, size: 1.6, transparent: true, opacity: 0.65 });
+      dssScene.add(new THREE.Points(starGeo, starMat));
+
+      // 7. Groups
+      dssGridGroup = new THREE.Group();
+      dssAnchorGroup = new THREE.Group();
+      dssPoisGroup = new THREE.Group();
+      dssScene.add(dssGridGroup);
+      dssScene.add(dssAnchorGroup);
+      dssScene.add(dssPoisGroup);
+
+      // 8. Build Scene Elements
+      buildDss3DGrid();
+      buildDss3DAnchor();
+      buildDss3DPois();
+
+      // 9. Raycasting Setup
+      dssRaycaster = new THREE.Raycaster();
+      dssMouse = new THREE.Vector2();
+
+      setupDss3DInteractions(container);
+      startDss3DLoop();
+    }
+
+    // Camera Presets
+    function setDssCameraIso() {
+      if (!dssCamera) return;
+      const r = dssCurrentRangeKm;
+      dssCamera.position.set(r * 0.95, r * 0.85, r * 1.2);
+      if (dssControls) {
+        dssControls.target.set(0, 0, 0);
+        dssControls.update();
+      } else {
+        dssCamera.lookAt(0, 0, 0);
+      }
+    }
+
+    function setDssCameraTop() {
+      if (!dssCamera) return;
+      const r = dssCurrentRangeKm;
+      dssCamera.position.set(0, r * 2.1, 0.001);
+      if (dssControls) {
+        dssControls.target.set(0, 0, 0);
+        dssControls.update();
+      } else {
+        dssCamera.lookAt(0, 0, 0);
+      }
+    }
+
+    function setDssCameraSide() {
+      if (!dssCamera) return;
+      const r = dssCurrentRangeKm;
+      dssCamera.position.set(r * 2.0, r * 0.15, 0);
+      if (dssControls) {
+        dssControls.target.set(0, 0, 0);
+        dssControls.update();
+      } else {
+        dssCamera.lookAt(0, 0, 0);
+      }
+    }
+
+    // Build Tactical 3D Reference Grid (Ground plane Y = 0)
+    function buildDss3DGrid() {
+      if (!dssGridGroup) return;
+      // Clear existing
+      while (dssGridGroup.children.length > 0) {
+        dssGridGroup.remove(dssGridGroup.children[0]);
+      }
+
+      const range = dssCurrentRangeKm; // 1 unit = 1 km
+
+      // Concentric Rings at 25%, 50%, 75%, 100%
+      const fractions = [0.25, 0.5, 0.75, 1.0];
+      fractions.forEach(frac => {
+        const radius = range * frac;
+        const curve = new THREE.EllipseCurve(0, 0, radius, radius, 0, Math.PI * 2, false, 0);
+        const points = curve.getPoints(96);
+        const geo = new THREE.BufferGeometry().setFromPoints(points);
+        // Rotate to XZ plane
+        geo.rotateX(Math.PI / 2);
+
+        const isOuter = frac === 1.0;
+        const mat = new THREE.LineBasicMaterial({
+          color: 0x00d2ff,
+          transparent: true,
+          opacity: isOuter ? 0.6 : 0.22,
+          linewidth: isOuter ? 2 : 1
+        });
+        const line = new THREE.LineLoop(geo, mat);
+        dssGridGroup.add(line);
+
+        // Distance Tag Sprite on +X axis
+        const distKmStr = (range * frac).toFixed(frac === 0.25 ? 1 : 0) + ' km';
+        const distSprite = makeDssTextSprite(distKmStr, '#00d2ff', 'rgba(4, 10, 20, 0.75)');
+        distSprite.scale.set(2.4, 0.5, 1.0);
+        distSprite.position.set(radius + 0.3, 0.1, 0);
+        dssGridGroup.add(distSprite);
+      });
+
+      // Crosshairs / Cardinal Axes Lines
+      const axisGeo = new THREE.BufferGeometry();
+      const axisPts = [
+        new THREE.Vector3(-range, 0, 0), new THREE.Vector3(range, 0, 0),
+        new THREE.Vector3(0, 0, -range), new THREE.Vector3(0, 0, range)
+      ];
+      axisGeo.setFromPoints(axisPts);
+      const axisMat = new THREE.LineBasicMaterial({ color: 0x00d2ff, transparent: true, opacity: 0.35 });
+      const axesLines = new THREE.LineSegments(axisGeo, axisMat);
+      dssGridGroup.add(axesLines);
+
+      // Radial Guides every 30 deg
+      const radGeo = new THREE.BufferGeometry();
+      const radPts = [];
+      for (let deg = 30; deg < 360; deg += 30) {
+        if (deg % 90 === 0) continue; // skip main crosshairs
+        const rad = deg * (Math.PI / 180);
+        radPts.push(new THREE.Vector3(0, 0, 0));
+        radPts.push(new THREE.Vector3(range * Math.cos(rad), 0, range * Math.sin(rad)));
+      }
+      radGeo.setFromPoints(radPts);
+      const radMat = new THREE.LineBasicMaterial({ color: 0x00d2ff, transparent: true, opacity: 0.12 });
+      dssGridGroup.add(new THREE.LineSegments(radGeo, radMat));
+
+      // Cardinal Labels Sprites
+      const cardN = makeDssTextSprite('000° [NORTE]', '#00d2ff', 'rgba(0, 210, 255, 0.18)');
+      cardN.position.set(0, 0.1, -range - 1.8);
+      dssGridGroup.add(cardN);
+
+      const cardS = makeDssTextSprite('180° [SUR]', '#00d2ff', 'rgba(0, 210, 255, 0.18)');
+      cardS.position.set(0, 0.1, range + 1.8);
+      dssGridGroup.add(cardS);
+
+      const cardE = makeDssTextSprite('090° [ESTE]', '#00d2ff', 'rgba(0, 210, 255, 0.18)');
+      cardE.position.set(range + 2.4, 0.1, 0);
+      dssGridGroup.add(cardE);
+
+      const cardW = makeDssTextSprite('270° [OESTE]', '#00d2ff', 'rgba(0, 210, 255, 0.18)');
+      cardW.position.set(-range - 2.4, 0.1, 0);
+      dssGridGroup.add(cardW);
+    }
+
+    // Build Central 3D Anchor (Nave Nodriza at 0,0,0)
+    function buildDss3DAnchor() {
+      if (!dssAnchorGroup) return;
+      while (dssAnchorGroup.children.length > 0) {
+        dssAnchorGroup.remove(dssAnchorGroup.children[0]);
+      }
+
+      // 1. Futuristic Arrowhead Ship Mesh
+      const shipGeo = new THREE.ConeGeometry(0.8, 2.0, 4);
+      shipGeo.rotateX(Math.PI / 2); // Point forward (-Z)
+      const shipMat = new THREE.MeshStandardMaterial({
+        color: 0x00ffaa,
+        emissive: 0x00ffaa,
+        emissiveIntensity: 0.8,
+        wireframe: true
+      });
+      const shipMesh = new THREE.Mesh(shipGeo, shipMat);
+      shipMesh.position.set(0, 0.5, 0);
+      dssAnchorGroup.add(shipMesh);
+
+      // Glowing Center Light
+      const pLight = new THREE.PointLight(0x00ffaa, 2.0, 15);
+      pLight.position.set(0, 1, 0);
+      dssAnchorGroup.add(pLight);
+
+      // Center sphere
+      const sphGeo = new THREE.SphereGeometry(0.3, 16, 16);
+      const sphMat = new THREE.MeshBasicMaterial({ color: 0x00ffaa });
+      dssAnchorGroup.add(new THREE.Mesh(sphGeo, sphMat));
+
+      // Radar Pulse Wave Ring
+      const pulseGeo = new THREE.RingGeometry(0.1, 0.25, 48);
+      pulseGeo.rotateX(Math.PI / 2);
+      const pulseMat = new THREE.MeshBasicMaterial({
+        color: 0x00ffaa,
+        transparent: true,
+        opacity: 0.8,
+        side: THREE.DoubleSide
+      });
+      dssRadarPulseRing = new THREE.Mesh(pulseGeo, pulseMat);
+      dssRadarPulseRing.position.set(0, 0.05, 0);
+      dssAnchorGroup.add(dssRadarPulseRing);
+
+      // Anchor 3D Sprite Label
+      const anchorName = dssAnchor && dssAnchor.set ? dssAnchor.name : 'ORIGEN (0,0,0)';
+      const anchorSprite = makeDssTextSprite('⚓ ' + anchorName, '#00ffaa', 'rgba(0, 40, 25, 0.85)');
+      anchorSprite.scale.set(4.5, 0.85, 1.0);
+      anchorSprite.position.set(0, 2.2, 0);
+      dssAnchorGroup.add(anchorSprite);
+    }
+
+    // Build 3D Yacimientos / POIs
+    function buildDss3DPois() {
+      if (!dssPoisGroup) return;
+      while (dssPoisGroup.children.length > 0) {
+        dssPoisGroup.remove(dssPoisGroup.children[0]);
+      }
+
+      const aX = dssAnchor && dssAnchor.set ? dssAnchor.x : 0;
+      const aY = dssAnchor && dssAnchor.set ? dssAnchor.y : 0;
+      const aZ = dssAnchor && dssAnchor.set ? dssAnchor.z : 0;
+
+      dssPois.forEach(poi => {
+        const v = computeDssVector(poi.x, poi.y, poi.z, aX, aY, aZ);
+        poi._computedVector = v;
+
+        // Position in km units:
+        // Three.js +X = East (dx/1000)
+        // Three.js +Y = Elevation (dz/1000)
+        // Three.js -Z = North (dy/1000 -> posZ = -dy/1000)
+        const posX = v.dx / 1000;
+        const posY = v.dz / 1000;
+        const posZ = -v.dy / 1000;
+
+        // Group for this POI
+        const poiNode = new THREE.Group();
+
+        // 1. Altitude Stem (Vertical line from floor Y=0 to posY)
+        const stemGeo = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(posX, 0, posZ),
+          new THREE.Vector3(posX, posY, posZ)
+        ]);
+        const stemMat = new THREE.LineDashedMaterial({
+          color: 0x7e95b0,
+          dashSize: 0.5,
+          gapSize: 0.3,
+          transparent: true,
+          opacity: 0.5
+        });
+        const stemLine = new THREE.Line(stemGeo, stemMat);
+        stemLine.computeLineDistances();
+        poiNode.add(stemLine);
+
+        // 2. Floor Target Footprint Ring at (posX, 0, posZ)
+        const footGeo = new THREE.RingGeometry(0.3, 0.45, 24);
+        footGeo.rotateX(Math.PI / 2);
+        const footMat = new THREE.MeshBasicMaterial({
+          color: getDssCategoryColorHex(poi.category),
+          transparent: true,
+          opacity: 0.6,
+          side: THREE.DoubleSide
+        });
+        const footMesh = new THREE.Mesh(footGeo, footMat);
+        footMesh.position.set(posX, 0.02, posZ);
+        poiNode.add(footMesh);
+
+        // 3. 3D Holographic Marker Mesh
+        let markerMesh;
+        const colHex = getDssCategoryColorHex(poi.category);
+
+        if (poi.category === 'quant') {
+          // 💎 Quantainium: Rotating Crystal Octahedron
+          const geo = new THREE.OctahedronGeometry(0.8, 0);
+          const mat = new THREE.MeshStandardMaterial({
+            color: colHex,
+            emissive: colHex,
+            emissiveIntensity: 0.85,
+            wireframe: false,
+            roughness: 0.2,
+            metalness: 0.8
+          });
+          markerMesh = new THREE.Mesh(geo, mat);
+        } else if (poi.category === 'mining') {
+          // ⛏️ Minería: Polyhedral Asteroid Dodecahedron
+          const geo = new THREE.DodecahedronGeometry(0.75, 0);
+          const mat = new THREE.MeshStandardMaterial({
+            color: colHex,
+            emissive: colHex,
+            emissiveIntensity: 0.65,
+            roughness: 0.4,
+            metalness: 0.6
+          });
+          markerMesh = new THREE.Mesh(geo, mat);
+        } else if (poi.category === 'salvage') {
+          // 📦 Salvage / Pecio: Cargo Container Box
+          const geo = new THREE.BoxGeometry(0.9, 0.9, 0.9);
+          const mat = new THREE.MeshStandardMaterial({
+            color: colHex,
+            emissive: colHex,
+            emissiveIntensity: 0.7,
+            wireframe: true
+          });
+          markerMesh = new THREE.Mesh(geo, mat);
+        } else if (poi.category === 'rescue') {
+          // 🚨 SAR: Medical Emergency Pulsing Icosahedron
+          const geo = new THREE.IcosahedronGeometry(0.7, 0);
+          const mat = new THREE.MeshStandardMaterial({
+            color: colHex,
+            emissive: colHex,
+            emissiveIntensity: 0.95
+          });
+          markerMesh = new THREE.Mesh(geo, mat);
+        } else {
+          // 🛡️ Waypoint: Satellite Cone / Diamond
+          const geo = new THREE.ConeGeometry(0.65, 1.4, 4);
+          const mat = new THREE.MeshStandardMaterial({
+            color: colHex,
+            emissive: colHex,
+            emissiveIntensity: 0.75,
+            wireframe: true
+          });
+          markerMesh = new THREE.Mesh(geo, mat);
+        }
+
+        markerMesh.position.set(posX, posY, posZ);
+        markerMesh.userData = { poi, vector: v };
+        poiNode.add(markerMesh);
+
+        // 4. Billboard Sprite Label
+        const labelText = poi.name.substring(0, 16) + ' (' + v.distKm.toFixed(1) + 'k)';
+        const labelSprite = makeDssTextSprite(labelText, getDssCategoryColorCss(poi.category));
+        labelSprite.position.set(posX, posY + 1.25, posZ);
+        poiNode.add(labelSprite);
+
+        dssPoisGroup.add(poiNode);
+      });
+    }
+
+    function getDssCategoryColorHex(cat) {
+      if (cat === 'quant') return 0x00ffff;
+      if (cat === 'mining') return 0xf5a623;
+      if (cat === 'salvage') return 0xc084fc;
+      if (cat === 'rescue') return 0xff4757;
+      return 0x00ffaa;
+    }
+
+    function getDssCategoryColorCss(cat) {
+      if (cat === 'quant') return '#00ffff';
+      if (cat === 'mining') return '#f5a623';
+      if (cat === 'salvage') return '#c084fc';
+      if (cat === 'rescue') return '#ff4757';
+      return '#00ffaa';
+    }
+
+    // 3D Animation Render Loop
+    let dssPulseRadius = 0.1;
+    function startDss3DLoop() {
+      if (dssAnimFrameId) cancelAnimationFrame(dssAnimFrameId);
+
+      function loop() {
+        if (dssActiveTab === 'radar' && dssRenderer && dssScene && dssCamera) {
+          // 1. Update OrbitControls
+          if (dssControls) dssControls.update();
+
+          // 2. Animate POI meshes (gently rotate crystals)
+          if (dssPoisGroup) {
+            dssPoisGroup.children.forEach(group => {
+              group.children.forEach(child => {
+                if (child.isMesh && child.userData && child.userData.poi) {
+                  child.rotation.y += 0.018;
+                  child.rotation.x += 0.008;
+                }
+              });
+            });
+          }
+
+          // 3. Animate Radar Pulse Wave
+          if (dssRadarPulseRing) {
+            dssPulseRadius += dssCurrentRangeKm * 0.004;
+            if (dssPulseRadius > dssCurrentRangeKm) {
+              dssPulseRadius = 0.1;
+            }
+            dssRadarPulseRing.scale.set(dssPulseRadius, dssPulseRadius, 1);
+            const fade = Math.max(0, 1.0 - (dssPulseRadius / dssCurrentRangeKm));
+            dssRadarPulseRing.material.opacity = fade * 0.65;
+          }
+
+          dssRenderer.render(dssScene, dssCamera);
+        }
+        dssAnimFrameId = requestAnimationFrame(loop);
+      }
+      loop();
+    }
+
+    // 3D Mouse Interactivity (Raycasting & Tooltip)
+    function setupDss3DInteractions(container) {
+      const tooltip = document.getElementById('dss-3d-tooltip');
+
+      container.addEventListener('mousemove', (e) => {
+        if (!dssRenderer || !dssCamera || !dssPoisGroup) return;
+        const rect = container.getBoundingClientRect();
+        dssMouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        dssMouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+        dssRaycaster.setFromCamera(dssMouse, dssCamera);
+
+        // Gather all interactive POI meshes
+        const interactiveMeshes = [];
+        dssPoisGroup.children.forEach(g => {
+          g.children.forEach(c => {
+            if (c.isMesh && c.userData && c.userData.poi) {
+              interactiveMeshes.push(c);
+            }
+          });
+        });
+
+        const intersects = dssRaycaster.intersectObjects(interactiveMeshes);
+
+        if (intersects.length > 0) {
+          const hitMesh = intersects[0].object;
+          const poi = hitMesh.userData.poi;
+          const v = hitMesh.userData.vector;
+
+          if (dssHoveredMesh && dssHoveredMesh !== hitMesh) {
+            dssHoveredMesh.scale.set(1, 1, 1);
+          }
+          dssHoveredMesh = hitMesh;
+          hitMesh.scale.set(1.35, 1.35, 1.35);
+          container.style.cursor = 'pointer';
+
+          const elevSign = v.elevationDeg >= 0 ? '+' : '';
+          const flightTime = formatFlightTime(v.dist3d, dssShipSpeed);
+
+          tooltip.style.display = 'block';
+          tooltip.style.left = Math.min(rect.width - 260, Math.max(10, e.clientX - rect.left + 16)) + 'px';
+          tooltip.style.top = Math.min(rect.height - 140, Math.max(10, e.clientY - rect.top + 16)) + 'px';
+
+          tooltip.innerHTML = `
+            <div style="font-weight:bold; color:var(--text-main); margin-bottom:4px; font-size:12px;">${poi.name}</div>
+            <div style="color:var(--accent-cyan); margin-bottom:2px;">🎯 Rumbo: ${v.bearingDeg.toString().padStart(3, '0')}° | Elev: ${elevSign}${v.elevationDeg}°</div>
+            <div style="color:#00ffaa; margin-bottom:2px;">📏 Distancia 3D: ${v.distKm.toFixed(2)} km (${Math.round(v.dist3d)}m)</div>
+            <div style="color:var(--accent-amber); margin-bottom:4px;">⏱️ Tiempo (${dssShipSpeed}m/s): ${flightTime}</div>
+            <div style="color:var(--text-muted); font-size:10px;">${poi.notes || 'Sin observaciones'}</div>
+          `;
+        } else {
+          if (dssHoveredMesh) {
+            dssHoveredMesh.scale.set(1, 1, 1);
+            dssHoveredMesh = null;
+          }
+          container.style.cursor = 'default';
+          tooltip.style.display = 'none';
+        }
+      });
+
+      container.addEventListener('mouseleave', () => {
+        if (dssHoveredMesh) {
+          dssHoveredMesh.scale.set(1, 1, 1);
+          dssHoveredMesh = null;
+        }
+        tooltip.style.display = 'none';
+      });
+
+      container.addEventListener('click', () => {
+        if (dssHoveredMesh && dssHoveredMesh.userData && dssHoveredMesh.userData.poi) {
+          const poi = dssHoveredMesh.userData.poi;
+          // Smooth focus or switch to matrix card
+          switchDssTab('matrix');
+          setTimeout(() => {
+            const card = document.getElementById('dss-card-' + poi.id);
+            if (card) {
+              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              card.style.borderColor = 'var(--accent-cyan)';
+              card.style.boxShadow = '0 0 25px rgba(0, 210, 255, 0.45)';
+              setTimeout(() => {
+                card.style.borderColor = '';
+                card.style.boxShadow = '';
+              }, 2200);
+            }
+          }, 100);
+        }
+      });
+
+      // Window resize handling
+      window.addEventListener('resize', () => {
+        if (!dssRenderer || !dssCamera || !container) return;
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        if (w > 0 && h > 0) {
+          dssCamera.aspect = w / h;
+          dssCamera.updateProjectionMatrix();
+          dssRenderer.setSize(w, h);
+        }
+      });
+    }
+
+    // Global Action Functions for DSS POIs
+    window.copyDssCockpitVector = function(id) {
+      const poi = dssPois.find(p => p.id === id);
+      if (!poi) return;
+      const aX = dssAnchor && dssAnchor.set ? dssAnchor.x : 0;
+      const aY = dssAnchor && dssAnchor.set ? dssAnchor.y : 0;
+      const aZ = dssAnchor && dssAnchor.set ? dssAnchor.z : 0;
+      const v = computeDssVector(poi.x, poi.y, poi.z, aX, aY, aZ);
+      const elevSign = v.elevationDeg >= 0 ? '+' : '';
+      const flightTime = formatFlightTime(v.dist3d, dssShipSpeed);
+
+      const text = '[CCBE NAV] ' + dssAnchor.name + ' -> ' + poi.name + ': RUMBO ' + v.bearingDeg.toString().padStart(3, '0') + '° | ELEV ' + elevSign + v.elevationDeg + '° | DIST ' + v.distKm.toFixed(1) + 'km | VUELO (' + dssShipSpeed + 'm/s): ' + flightTime;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('¡Vector de cabina copiado al portapapeles!\n\n' + text);
+      });
+    };
+
+    window.copyDssDiscordReport = function(id) {
+      const poi = dssPois.find(p => p.id === id);
+      if (!poi) return;
+      const aX = dssAnchor && dssAnchor.set ? dssAnchor.x : 0;
+      const aY = dssAnchor && dssAnchor.set ? dssAnchor.y : 0;
+      const aZ = dssAnchor && dssAnchor.set ? dssAnchor.z : 0;
+      const v = computeDssVector(poi.x, poi.y, poi.z, aX, aY, aZ);
+      const elevSign = v.elevationDeg >= 0 ? '+' : '';
+      const flightTime = formatFlightTime(v.dist3d, dssShipSpeed);
+      const ticks = '```';
+
+      let report = ticks + 'yaml\n' +
+'CCBE // REPORTE DE PROSPECCIÓN EN ESPACIO PROFUNDO\n' +
+'Identificador: ' + poi.name + '\n' +
+'Categoría: ' + poi.category.toUpperCase() + '\n' +
+'Nave Exploradora: ' + poi.scout + '\n' +
+'Punto Ancla / Nodriza: ' + dssAnchor.name + '\n\n' +
+'VECTOR TÁCTICO DE INTERCEPTACIÓN:\n' +
+'- Rumbo de Cabina: ' + v.bearingDeg.toString().padStart(3, '0') + '°\n' +
+'- Elevación de Morro (Pitch): ' + elevSign + v.elevationDeg + '°\n' +
+'- Distancia Directa 3D: ' + v.distKm.toFixed(2) + ' km (' + Math.round(v.dist3d) + ' m)\n' +
+'- Tiempo de Vuelo Estimado: ' + flightTime + ' (a ' + dssShipSpeed + ' m/s)\n\n' +
+'DATOS DEL YACIMIENTO:\n' +
+'- Pureza / Riqueza: ' + (poi.purity || 'N/A') + '\n' +
+'- Masa / SCU: ' + (poi.mass || 'N/A') + '\n' +
+'- Observaciones: ' + (poi.notes || 'Ninguna') + '\n' +
+'- Estado: ' + poi.status.toUpperCase() + '\n' +
+ticks;
+
+      navigator.clipboard.writeText(report).then(() => {
+        alert('¡Reporte táctico para Discord copiado al portapapeles!');
+      });
+    };
+
+    window.toggleDssStatus = function(id) {
+      const poi = dssPois.find(p => p.id === id);
+      if (!poi) return;
+      if (poi.status === 'available') poi.status = 'extracting';
+      else if (poi.status === 'extracting') poi.status = 'exhausted';
+      else poi.status = 'available';
+
+      saveDssState();
+      renderDssMatrix();
+      buildDss3DPois();
+    };
+
+    window.deleteDssPoi = function(id) {
+      if (confirm('¿Eliminar este registro de prospección?')) {
+        dssPois = dssPois.filter(p => p.id !== id);
+        saveDssState();
+        renderDssMatrix();
+        buildDss3DPois();
+      }
+    };
+
+    function switchDssTab(tab) {
+      dssActiveTab = tab;
+      const tab3dBtn = document.getElementById('dss-tab-3d-btn');
+      const tabMatrixBtn = document.getElementById('dss-tab-matrix-btn');
+      const view3d = document.getElementById('dss-view-3d');
+      const viewMatrix = document.getElementById('dss-view-matrix');
+
+      if (tab === 'radar') {
+        tab3dBtn.classList.add('active');
+        tabMatrixBtn.classList.remove('active');
+        view3d.style.display = 'block';
+        viewMatrix.style.display = 'none';
+
+        // Trigger renderer resize when showing
+        setTimeout(() => {
+          const container = document.getElementById('dss-three-canvas-container');
+          if (container && dssRenderer && dssCamera) {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            if (w > 0 && h > 0) {
+              dssCamera.aspect = w / h;
+              dssCamera.updateProjectionMatrix();
+              dssRenderer.setSize(w, h);
+            }
+          }
+        }, 50);
+      } else {
+        tab3dBtn.classList.remove('active');
+        tabMatrixBtn.classList.add('active');
+        view3d.style.display = 'none';
+        viewMatrix.style.display = 'block';
+        renderDssMatrix();
+      }
+    }
+
+    // Initialization and Event Bindings
+    function initDeepSpaceSurvey() {
+      updateDssAnchorUI();
+      renderDssMatrix();
+
+      // Init 3D Scene
+      initDss3DScene();
+
+      // Tab Buttons
+      document.getElementById('dss-tab-3d-btn').addEventListener('click', () => switchDssTab('radar'));
+      document.getElementById('dss-tab-matrix-btn').addEventListener('click', () => switchDssTab('matrix'));
+
+      // Range Selector Buttons (5, 20, 50, 100 km)
+      document.querySelectorAll('.dss-range-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.dss-range-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          dssCurrentRangeKm = parseFloat(btn.dataset.range) || 20;
+          const hudRange = document.getElementById('dss-hud-range');
+          if (hudRange) hudRange.textContent = dssCurrentRangeKm + ' KM';
+          buildDss3DGrid();
+          buildDss3DAnchor();
+          buildDss3DPois();
+          setDssCameraIso();
+        });
+      });
+
+      // Camera Preset Buttons
+      const btnCamIso = document.getElementById('btn-cam-iso');
+      const btnCamTop = document.getElementById('btn-cam-top');
+      const btnCamSide = document.getElementById('btn-cam-side');
+      const btnCamReset = document.getElementById('btn-cam-reset');
+
+      function setActiveCamBtn(activeBtn) {
+        [btnCamIso, btnCamTop, btnCamSide].forEach(b => { if (b) b.classList.remove('active'); });
+        if (activeBtn) activeBtn.classList.add('active');
+      }
+
+      if (btnCamIso) {
+        btnCamIso.addEventListener('click', () => {
+          setActiveCamBtn(btnCamIso);
+          setDssCameraIso();
+        });
+      }
+      if (btnCamTop) {
+        btnCamTop.addEventListener('click', () => {
+          setActiveCamBtn(btnCamTop);
+          setDssCameraTop();
+        });
+      }
+      if (btnCamSide) {
+        btnCamSide.addEventListener('click', () => {
+          setActiveCamBtn(btnCamSide);
+          setDssCameraSide();
+        });
+      }
+      if (btnCamReset) {
+        btnCamReset.addEventListener('click', () => {
+          setActiveCamBtn(btnCamIso);
+          setDssCameraIso();
+        });
+      }
+
+      // Speed Selector
+      const speedSelect = document.getElementById('dss-speed-selector');
+      if (speedSelect) {
+        speedSelect.addEventListener('change', (e) => {
+          dssShipSpeed = parseFloat(e.target.value) || 800;
+          renderDssMatrix();
+        });
+      }
+
+      // Input Mode Toggle (Coords vs Polar)
+      const modeCoordsBtn = document.getElementById('dss-mode-coords-btn');
+      const modePolarBtn = document.getElementById('dss-mode-polar-btn');
+      const coordsBlock = document.getElementById('dss-coords-input-block');
+      const polarBlock = document.getElementById('dss-polar-input-block');
+
+      modeCoordsBtn.addEventListener('click', () => {
+        dssInputMode = 'coords';
+        modeCoordsBtn.classList.add('active');
+        modePolarBtn.classList.remove('active');
+        coordsBlock.style.display = 'block';
+        polarBlock.style.display = 'none';
+      });
+
+      modePolarBtn.addEventListener('click', () => {
+        dssInputMode = 'polar';
+        modePolarBtn.classList.add('active');
+        modeCoordsBtn.classList.remove('active');
+        coordsBlock.style.display = 'none';
+        polarBlock.style.display = 'block';
+      });
+
+      // Paste Coords button
+      document.getElementById('btn-dss-paste-coords').addEventListener('click', async () => {
+        try {
+          const text = await navigator.clipboard.readText();
+          if (text) document.getElementById('dss-poi-coords').value = text;
+        } catch(e) {
+          console.warn('Clipboard read failed', e);
+        }
+      });
+
+      // Register POI button
+      document.getElementById('btn-dss-save-poi').addEventListener('click', () => {
+        const name = document.getElementById('dss-poi-name').value.trim();
+        const cat = document.getElementById('dss-poi-category').value;
+        const scout = document.getElementById('dss-poi-scout').value.trim() || 'Scout MedRecon';
+        const purity = document.getElementById('dss-poi-purity').value.trim();
+        const mass = document.getElementById('dss-poi-mass').value.trim();
+        const notes = document.getElementById('dss-poi-notes').value.trim();
+
+        if (!name) {
+          alert('Por favor, indica un nombre o etiqueta para el yacimiento.');
+          return;
+        }
+
+        let pX = 0, pY = 0, pZ = 0;
+        let coordsText = '';
+
+        const aX = dssAnchor && dssAnchor.set ? dssAnchor.x : 0;
+        const aY = dssAnchor && dssAnchor.set ? dssAnchor.y : 0;
+        const aZ = dssAnchor && dssAnchor.set ? dssAnchor.z : 0;
+
+        if (dssInputMode === 'coords') {
+          const rawCoords = document.getElementById('dss-poi-coords').value.trim();
+          const parsed = parseShowLocation(rawCoords);
+          if (!parsed) {
+            alert('Coordenadas /showlocation no válidas. Debe contener formato "Coordinates: x:... y:... z:...".');
+            return;
+          }
+          pX = parsed.x;
+          pY = parsed.y;
+          pZ = parsed.z;
+          coordsText = rawCoords;
+        } else {
+          // Polar mode: distance, heading, elevation
+          const distKm = parseFloat(document.getElementById('dss-polar-dist').value);
+          const headingDeg = parseFloat(document.getElementById('dss-polar-heading').value);
+          const elevDeg = parseFloat(document.getElementById('dss-polar-elevation').value) || 0;
+
+          if (isNaN(distKm) || isNaN(headingDeg)) {
+            alert('Por favor indica la distancia al ancla (km) y el rumbo (0-359°).');
+            return;
+          }
+
+          const distM = distKm * 1000;
+          const elevRad = elevDeg * (Math.PI / 180);
+          const headingRad = headingDeg * (Math.PI / 180);
+
+          const dz = distM * Math.sin(elevRad);
+          const distH = distM * Math.cos(elevRad);
+          const dx = distH * Math.sin(headingRad);
+          const dy = distH * Math.cos(headingRad);
+
+          pX = aX + dx;
+          pY = aY + dy;
+          pZ = aZ + dz;
+          coordsText = 'Coordinates: x:' + pX.toFixed(2) + ' y:' + pY.toFixed(2) + ' z:' + pZ.toFixed(2);
+        }
+
+        const newPoi = {
+          id: 'dss-' + Date.now(),
+          name,
+          category: cat,
+          scout,
+          coords: coordsText,
+          x: pX,
+          y: pY,
+          z: pZ,
+          purity,
+          mass,
+          notes,
+          status: 'available',
+          createdAt: Date.now()
+        };
+
+        dssPois.unshift(newPoi);
+        saveDssState();
+        renderDssMatrix();
+        buildDss3DPois();
+
+        // Reset form inputs
+        document.getElementById('dss-poi-name').value = '';
+        document.getElementById('dss-poi-coords').value = '';
+        document.getElementById('dss-poi-purity').value = '';
+        document.getElementById('dss-poi-mass').value = '';
+        document.getElementById('dss-poi-notes').value = '';
+
+        alert('¡Yacimiento "' + name + '" registrado con éxito en Deep Space Survey!');
+      });
+
+      // Use Current Coords button
+      document.getElementById('btn-dss-use-current-coords').addEventListener('click', () => {
+        const topCoords = document.getElementById('input-coords').value.trim();
+        const parsed = parseShowLocation(topCoords);
+        if (!parsed) {
+          alert('No hay coordenadas /showlocation válidas cargadas en la entrada superior de navegación.');
+          return;
+        }
+
+        dssAnchor = {
+          name: 'NODRIZA (TELEMETRÍA SUPERIOR)',
+          coords: topCoords,
+          x: parsed.x,
+          y: parsed.y,
+          z: parsed.z,
+          set: true
+        };
+
+        saveDssState();
+        updateDssAnchorUI();
+        renderDssMatrix();
+        buildDss3DAnchor();
+        buildDss3DPois();
+        alert('¡Punto Ancla establecido con la telemetría actual de cabina!');
+      });
+
+      // Anchor Modal Controls
+      const anchorModal = document.getElementById('dss-anchor-modal');
+      document.getElementById('btn-dss-open-anchor-modal').addEventListener('click', () => {
+        document.getElementById('dss-anchor-modal-name').value = dssAnchor ? dssAnchor.name : 'CARRACK NODRIZA CCBE-01';
+        document.getElementById('dss-anchor-modal-coords').value = dssAnchor && dssAnchor.coords ? dssAnchor.coords : document.getElementById('input-coords').value.trim();
+        anchorModal.style.display = 'flex';
+      });
+
+      document.getElementById('btn-close-anchor-modal').addEventListener('click', () => anchorModal.style.display = 'none');
+      document.getElementById('btn-cancel-anchor-modal').addEventListener('click', () => anchorModal.style.display = 'none');
+
+      document.getElementById('btn-save-anchor-modal').addEventListener('click', () => {
+        const name = document.getElementById('dss-anchor-modal-name').value.trim() || 'NAVE NODRIZA';
+        const rawCoords = document.getElementById('dss-anchor-modal-coords').value.trim();
+        const parsed = parseShowLocation(rawCoords);
+
+        if (!parsed) {
+          alert('Por favor introduce un formato válido de /showlocation para el ancla.');
+          return;
+        }
+
+        dssAnchor = {
+          name,
+          coords: rawCoords,
+          x: parsed.x,
+          y: parsed.y,
+          z: parsed.z,
+          set: true
+        };
+
+        saveDssState();
+        updateDssAnchorUI();
+        renderDssMatrix();
+        buildDss3DAnchor();
+        buildDss3DPois();
+        anchorModal.style.display = 'none';
+        alert('¡Ancla táctica "' + name + '" activada correctamente!');
+      });
+
+      // Export JSON
+      document.getElementById('btn-dss-export-json').addEventListener('click', () => {
+        const exportData = {
+          anchor: dssAnchor,
+          pois: dssPois,
+          exportedAt: new Date().toISOString()
+        };
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'CCBE_DeepSpace_Survey_' + Date.now() + '.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      // Clear All
+      document.getElementById('btn-dss-clear-all').addEventListener('click', () => {
+        if (confirm('¿Vaciar todos los yacimientos y prospecciones del sector?')) {
+          dssPois = [];
+          saveDssState();
+          renderDssMatrix();
+          buildDss3DPois();
+        }
+      });
+    }
+
+    // Call DSS Initialization
+    initDeepSpaceSurvey();
+
   </script>
 </body>
 </html>
