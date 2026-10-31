@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planificador de Operaciones Tácticas • MedRecon</title>
+  <link rel="icon" type="image/jpeg" href="../assets/CCBE_MEDRECON.jpg">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#ef4444">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MedRecon">
+  <link rel="apple-touch-icon" href="../assets/CCBE_MEDRECON.jpg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+    :root {
+      --bg: #070a12;
+      --card-bg: rgba(13, 20, 36, 0.88);
+      --border: rgba(239, 68, 68, 0.25);
+      --primary: #ef4444;
+      --cyan: #38bdf8;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(circle at 10% 15%, rgba(239, 68, 68, 0.1) 0%, transparent 35%),
+        radial-gradient(circle at 90% 85%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .glow-red {
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);
+    }
+
+    input, select, textarea {
+      background: rgba(8, 13, 26, 0.9) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      color: #f8fafc !important;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary) !important;
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25);
+    }
+
+    .preview-box {
+      background: #080c18;
+      border-left: 4px solid var(--primary);
+    }
+
+    .autocomplete-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      margin-top: 4px;
+      max-height: 240px;
+      overflow-y: auto;
+      background: rgba(10, 16, 32, 0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 0.75rem;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 15px rgba(56, 189, 248, 0.15);
+      scrollbar-width: thin;
+      scrollbar-color: rgba(56, 189, 248, 0.4) transparent;
+    }
+
+    .autocomplete-item {
+      padding: 0.55rem 0.85rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      transition: all 0.15s ease;
+      color: #cbd5e1;
+    }
+
+    .autocomplete-item:last-child {
+      border-bottom: none;
+    }
+
+    .autocomplete-item:hover, .autocomplete-item.active {
+      background: rgba(56, 189, 248, 0.18);
+      color: #38bdf8;
+      padding-left: 1.1rem;
+    }
+
+    .autocomplete-item .match {
+      color: #f59e0b;
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    .autocomplete-item .badge-custom {
+      font-size: 0.65rem;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      padding: 1px 5px;
+      border-radius: 4px;
+      margin-left: 6px;
+    }
+  </style>
+</head>
+
+<body class="p-4 lg:p-6 flex flex-col justify-between">
+
+  <!-- TOP BREADCRUMB / NAV -->
+  <div class="max-w-7xl w-full mx-auto mb-3 flex flex-wrap items-center justify-between gap-2">
+    <a href="../index.html" class="inline-flex items-center gap-2 text-xs mono font-bold text-slate-400 hover:text-white transition">
+      <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+      Volver a MedRecon // Utilidades
+    </a>
+    
+    <div class="flex items-center gap-3">
+      <!-- PWA Install pill -->
+      <button id="btnPwaInstall" type="button" class="hidden text-[11px] mono text-cyan-300 flex items-center gap-1.5 bg-cyan-950/80 border border-cyan-500/40 px-3 py-1 rounded-full shadow hover:bg-cyan-900 transition">
+        📲 Instalar App (PWA)
+      </button>
+
+      <!-- MEMORY STATUS PILL -->
+      <div id="memoryPill" class="text-[11px] mono text-slate-400 flex items-center gap-2 bg-slate-900/80 border border-slate-700/80 px-3 py-1 rounded-full shadow">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Memoria Activa (<span id="customItemsCount" class="text-cyan-400 font-bold">0</span>)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP HEADER -->
+  <header class="max-w-7xl w-full mx-auto mb-5 flex flex-wrap items-center justify-between gap-4 glass-card p-4 rounded-2xl">
+    <div class="flex items-center gap-4">
+      <img src="../assets/CCBE_MEDRECON.jpg" alt="MedRecon Emblem" class="w-14 h-14 object-cover rounded-xl border border-red-500/40 glow-red shadow-xl transition-transform hover:scale-105">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold tracking-widest text-red-400 uppercase bg-red-950/60 px-2 py-0.5 rounded border border-red-500/30">M.E.R.R. • MedRecon</span>
+          <span class="text-xs text-slate-400 font-mono">OPORD DISPATCHER UNIVERSAL</span>
+        </div>
+        <h1 class="text-xl lg:text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
+          Planificador de Operaciones Tácticas
+        </h1>
+      </div>
+    </div>
+
+    <!-- PRESET LOADER, JSON & ACTIONS -->
+    <div class="flex flex-wrap items-center gap-2">
+      <button type="button" id="btnExportJson" class="px-3 py-1.5 rounded-xl bg-cyan-950/80 hover:bg-cyan-900 text-cyan-300 border border-cyan-500/40 text-xs font-bold mono flex items-center gap-1.5 transition active:scale-95 shadow">
+        💾 Descargar .json
+      </button>
+      <button type="button" id="btnImportJsonTrigger" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-400 border border-cyan-500/30 text-xs font-bold mono flex items-center gap-1.5 transition active:scale-95 shadow">
+        📥 Cargar .json
+      </button>
+      <input type="file" id="importJsonFileInput" accept=".json" class="hidden">
+
+      <button type="button" id="btnSaveMission" class="px-3 py-1.5 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/40 text-xs font-bold mono flex items-center gap-1.5 transition active:scale-95 shadow">
+        Guardar Misión
+      </button>
+      <button type="button" id="btnLoadMission" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold mono flex items-center gap-1.5 transition active:scale-95 shadow">
+        📂 Historial
+      </button>
+      <button type="button" id="btnDemoStarlancer" class="px-3 py-1.5 rounded-xl bg-red-950/70 hover:bg-red-900/70 text-red-300 border border-red-500/40 text-xs font-bold mono flex items-center gap-1.5 transition active:scale-95 shadow">
+        ⚡ Demo Starlancer
+      </button>
+      <button type="button" id="btnClear" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 border border-slate-700 text-xs font-bold mono transition">
+        Limpiar
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN INTERFACE: 2 COLUMNS (FORM + PREVIEW) -->
+  <main class="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
+
+    <!-- LEFT COLUMN: DYNAMIC MISSION INPUTS (7 cols) -->
+    <div class="lg:col-span-7 flex flex-col gap-5">
+
+      <!-- RADAR TRANSFER BANNER (SHOWN WHEN DATA IS RECEIVED FROM TRIANGULATION RADAR) -->
+      <div id="radarTransferBanner" class="p-3.5 bg-gradient-to-r from-red-950/90 via-slate-900 to-amber-950/90 border border-red-500/50 rounded-2xl space-y-2 hidden shadow-xl animate-pulse">
+        <div class="flex items-center justify-between text-xs font-bold text-red-400 mono">
+          <span class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+            🎯 COORDENADAS RECIBIDAS DESDE EL RADAR TÁCTICO
+          </span>
+          <span id="radarTransferTime" class="text-[10px] text-slate-400"></span>
+        </div>
+        <div id="radarTransferInfo" class="text-xs text-white mono font-semibold">
+          <!-- Populated via JS -->
+        </div>
+        <div class="flex flex-wrap items-center gap-2 pt-1 text-xs mono">
+          <button type="button" id="btnApplyRadarToLocation" class="px-3 py-1 rounded-lg bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/40 text-cyan-300 font-bold transition">
+            + Fijar como LZ / Ubicación
+          </button>
+          <button type="button" id="btnApplyRadarToDirectives" class="px-3 py-1 rounded-lg bg-amber-950 hover:bg-amber-900 border border-amber-500/40 text-amber-300 font-bold transition">
+            + Añadir a Directivas
+          </button>
+          <button type="button" id="btnDismissRadarTransfer" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 ml-auto transition">
+            Descartar ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- SECTION 1: A.O., VERSE GUIDE & AMENAZA -->
+      <div class="glass-card rounded-2xl p-4 md:p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <span class="text-xs font-bold mono uppercase tracking-wider text-red-400 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> 1. Información Operativa & Verse Guide
+          </span>
+          <div class="flex items-center gap-2">
+            <a href="https://verseguide.com" target="_blank" rel="noopener" class="text-[11px] mono text-cyan-400 hover:text-cyan-300 flex items-center gap-1 bg-cyan-950/70 border border-cyan-500/30 px-2.5 py-0.5 rounded-lg transition hover:scale-105 shadow">
+              <span>Abrir VerseGuide.com</span>
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div class="space-y-1">
+            <label class="text-slate-400 block font-semibold">Nombre de la Operación:</label>
+            <input type="text" id="opName" value="Operación «Furia en el Vértice»" class="w-full rounded-lg px-3 py-2 text-sm font-bold">
+          </div>
+          
+          <!-- UBICACIÓN VERSE GUIDE (AUTOCOMPLETE REAL-TIME CON MEMORIA) -->
+          <div class="space-y-1 relative">
+            <div class="flex items-center justify-between">
+              <label class="text-slate-400 block font-semibold">Ubicación / Verse Guide A.O.:</label>
+              <span class="text-[10px] text-cyan-400 mono">Filtra mientras escribes</span>
+            </div>
+            <div class="relative">
+              <input type="text" id="opLocation" autocomplete="off" value="Pyro // Bloom (Pyro III) // Narenas Rest (Asentamiento & Hangares)" placeholder="Escribe para buscar (ej. Narenas Rest, Levski, Gaslight, Seraphim...)" class="w-full rounded-lg px-3 py-2 text-sm font-semibold text-cyan-300">
+              <div id="menu-opLocation" class="autocomplete-menu hidden"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ENLACE DIRECTO VERSE GUIDE (URL DETECTOR & CLICKABLE LINK) -->
+        <div class="space-y-1 text-xs">
+          <div class="flex items-center justify-between">
+            <label class="text-slate-400 font-semibold flex items-center gap-1.5">
+              <span>Enlace Interactivo Verse Guide:</span>
+              <span class="text-[10px] text-cyan-400 mono bg-cyan-950/60 border border-cyan-500/30 px-1.5 py-0.2 rounded">Clickeable en Discord</span>
+            </label>
+            <span class="text-[10px] text-slate-500 mono">Pega enlaces como https://verseguide.com/location/...</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="url" id="opVerseGuideUrl" value="https://verseguide.com/location/PYRO/III#poi|hG2bQ5w4IWjWsljqHhRBk9OeIQzLdvrS4KBXhLie0l03mmuqkehR81tRAxFlCvXXZY0H2QNaZf" placeholder="Pega el enlace de Verse Guide aquí..." class="w-full rounded-lg px-3 py-1.5 text-xs text-cyan-300 font-mono">
+            <a id="btnTestVerseLink" href="https://verseguide.com/location/PYRO/III#poi|hG2bQ5w4IWjWsljqHhRBk9OeIQzLdvrS4KBXhLie0l03mmuqkehR81tRAxFlCvXXZY0H2QNaZf" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-400 border border-slate-700 font-bold mono text-xs whitespace-nowrap flex items-center gap-1">
+              <span>Probar</span> ↗
+            </a>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div class="space-y-1">
+            <label class="text-slate-400 block font-semibold">Fecha de Despliegue:</label>
+            <input type="date" id="opDate" class="w-full rounded-lg px-2.5 py-1.5 text-xs font-mono">
+          </div>
+          <div class="space-y-1">
+            <label class="text-slate-400 block font-semibold">Hora Inicio (Local):</label>
+            <input type="time" id="opTime" value="19:30" class="w-full rounded-lg px-2.5 py-1.5 text-xs font-mono">
+          </div>
+          <div class="space-y-1">
+            <label class="text-slate-400 block font-semibold">Código de Aborto (*Bailout*):</label>
+            <input type="text" id="opCode" value="«ÉXODO»" class="w-full rounded-lg px-2.5 py-1.5 text-xs font-bold text-red-400 uppercase font-mono">
+          </div>
+        </div>
+
+        <!-- AMENAZA (TEXTO LIBRE + AUTOCOMPLETE REAL-TIME) -->
+        <div class="space-y-1 text-xs relative">
+          <div class="flex items-center justify-between">
+            <label class="text-slate-400 font-semibold">Nivel de Amenaza & Defensas (Filtra o escribe libremente):</label>
+            <span class="text-[10px] text-amber-400 mono">Editable & auto-memorizado</span>
+          </div>
+          <div class="relative">
+            <input type="text" id="opThreat" autocomplete="off" value="Hostil Alta (Torretas AA Activas + 2 Patrullas NPCs de Asalto)" placeholder="Escribe o selecciona nivel de amenaza..." class="w-full rounded-lg px-3 py-2 text-xs font-medium text-amber-200">
+            <div id="menu-opThreat" class="autocomplete-menu hidden"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: FLOTA Y NAVES (MULTIVEHÍCULO + AUTOCOMPLETE REAL-TIME + MEMORIA) -->
+      <div class="glass-card rounded-2xl p-4 md:p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold mono uppercase tracking-wider text-cyan-400 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+              2. Flota & Naves Asignadas
+            </span>
+            <span id="shipCountBadge" class="text-[11px] mono bg-cyan-950/70 border border-cyan-500/30 text-cyan-400 px-2 py-0.5 rounded">
+              2 naves
+            </span>
+          </div>
+          <button type="button" id="btnAddShip" class="px-2.5 py-1 rounded-lg bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/40 text-cyan-300 text-xs font-bold mono flex items-center gap-1 transition">
+            + Añadir Nave
+          </button>
+        </div>
+
+        <!-- DYNAMIC SHIPS CONTAINER -->
+        <div id="shipsContainer" class="space-y-3">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- SECTION 3: ORGANIZACIÓN DE EQUIPOS (1 A N EQUIPOS, N EFECTIVOS, EMBARQUE & ROLES CON MEMORIA) -->
+      <div class="glass-card rounded-2xl p-4 md:p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between border-b border-slate-800 pb-2 gap-2">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold mono uppercase tracking-wider text-emerald-400 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              3. Despliegue de Equipos & Embarque
+            </span>
+            <span id="teamCountBadge" class="text-[11px] mono bg-emerald-950/70 border border-emerald-500/30 text-emerald-400 px-2 py-0.5 rounded">
+              2 equipos
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button type="button" id="presetBinomios" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 rounded text-[11px] mono">
+              3 Binomios
+            </button>
+            <button type="button" id="presetTrinomios" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 rounded text-[11px] mono">
+              2 Trinomios
+            </button>
+            <button type="button" id="presetEquipos4" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 rounded text-[11px] mono">
+              2x4 Asalto
+            </button>
+            <button type="button" id="btnAddTeam" class="px-2.5 py-1 rounded-lg bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 text-xs font-bold mono flex items-center gap-1 transition">
+              + Añadir Equipo
+            </button>
+          </div>
+        </div>
+
+        <!-- DYNAMIC TEAMS CONTAINER -->
+        <div id="teamsContainer" class="space-y-4">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- SECTION 4: DIRECTIVAS DE MISIÓN (TEXTO LIBRE + PRESETS) -->
+      <div class="glass-card rounded-2xl p-4 md:p-5 space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <span class="text-xs font-bold mono uppercase tracking-wider text-amber-400 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            4. Directivas de Misión & ROE (Texto Libre)
+          </span>
+          <span class="text-xs mono text-slate-500">REGLAS DE COMBATE</span>
+        </div>
+
+        <!-- Quick Directive Chips -->
+        <div class="flex flex-wrap gap-1.5 text-[11px] mono">
+          <span class="text-slate-400 self-center mr-1">Insertar:</span>
+          <button type="button" class="directive-chip px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300" data-text="• Protocolo «Cero Asomo»: Prohibido estabilizar a cuerpo descubierto. Tracción obligatoria con Tractor Beam tras cobertura dura.">
+            + Cero Asomo (Tractor Beam)
+          </button>
+          <button type="button" class="directive-chip px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300" data-text="• Regla de los 10 Segundos: Ningún elemento de infantería permanecerá estático bajo fuego. Avance por saltos escalonados (Bounding Overwatch).">
+            + Regla de los 10s
+          </button>
+          <button type="button" class="directive-chip px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300" data-text="• Regla de los 5 Metros (Boarding): Mantener 5m de separación en pasillos para evitar bajas múltiples por granada y asegurar 180° de cobertura.">
+            + Regla de los 5m
+          </button>
+          <button type="button" class="directive-chip px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300" data-text="• Weapon Hold Estricto: Prohibido abrir fuego antes de que el equipo de reconocimiento fije las posiciones enemigas.">
+            + Weapon Hold
+          </button>
+          <button type="button" class="directive-chip px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300" data-text="• Prioridad Sanitaria: 1º Eliminar la amenaza inmediata, 2º Estabilizar. Un médico caído genera dos bajas.">
+            + Prioridad Médica
+          </button>
+        </div>
+
+        <textarea id="opDirectives" rows="5" class="w-full rounded-xl p-3 text-xs mono text-slate-200 leading-relaxed resize-y focus:outline-none" placeholder="Redacta libremente las órdenes, fases tácticas o reglas de enfrentamiento..."></textarea>
+      </div>
+
+      <!-- SECTION 5: T.S.O. & CRONOGRAMA -->
+      <div class="glass-card rounded-2xl p-4 md:p-5 space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <span class="text-xs font-bold mono uppercase tracking-wider text-amber-400 flex items-center gap-2">
+            <span>⏱️ 5. Cronometraje & T.S.O.</span>
+          </span>
+          <span class="text-xs mono text-slate-500">PLAN DE VUELO</span>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+          <div>
+            <label class="text-slate-400 block text-[11px]">Salto QT (min):</label>
+            <input type="number" id="tso1" value="5" class="w-full rounded px-2 py-1 font-mono">
+          </div>
+          <div>
+            <label class="text-slate-400 block text-[11px]">Atmosférico (min):</label>
+            <input type="number" id="tso2" value="3" class="w-full rounded px-2 py-1 font-mono">
+          </div>
+          <div>
+            <label class="text-slate-400 block text-[11px]">Infiltración (min):</label>
+            <input type="number" id="tso3" value="4" class="w-full rounded px-2 py-1 font-mono">
+          </div>
+          <div>
+            <label class="text-slate-400 block text-[11px]">Margen Contingencia:</label>
+            <input type="number" id="tso4" value="2" class="w-full rounded px-2 py-1 font-mono">
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
+          <span class="text-slate-400">Tiempo Sobre Objetivo (T.S.O.): <span class="text-amber-400 font-bold mono" id="tsoDisplay">14 minutos</span></span>
+          <span class="text-slate-400">Ventana de Rampa en Tierra: <span class="text-red-400 font-bold mono">3 minutos máx.</span></span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: OPORD LIVE PREVIEW & DISCORD EXPORT (5 cols) -->
+    <div class="lg:col-span-5 flex flex-col gap-4">
+
+      <div class="glass-card rounded-2xl p-4 md:p-5 flex flex-col justify-between flex-grow sticky top-6">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
+            <span class="text-xs font-bold mono uppercase tracking-wider text-white flex items-center gap-2">
+              <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              Ficha OPORD // Vista Previa Discord
+            </span>
+            <span class="text-[11px] mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded">
+              AUTO-SYNC
+            </span>
+          </div>
+
+          <textarea id="opordOutput" readonly rows="22" class="preview-box w-full rounded-xl p-3 text-xs mono text-slate-300 font-medium leading-relaxed resize-none focus:outline-none"></textarea>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800 space-y-2">
+          <button type="button" id="btnCopyOpord" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-lg shadow-red-600/30 active:scale-[0.98]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copiar OPORD para Discord
+          </button>
+          <div class="text-[11px] text-center text-slate-500 mono">
+            Pegar en el canal <code>#operaciones-merr</code> o canal de voz táctico.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- SAVED OPERATIONS MODAL -->
+  <div id="modalSavedMissions" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="glass-card max-w-xl w-full rounded-2xl p-6 space-y-4 border border-cyan-500/40 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-base font-extrabold text-white flex items-center gap-2 mono">
+          <span>📂 Historial de Operaciones Guardadas</span>
+        </h3>
+        <button type="button" id="btnCloseModal" class="text-slate-400 hover:text-white mono text-xs px-2 py-1 rounded bg-slate-900 border border-slate-700">✕ Cerrar</button>
+      </div>
+
+      <div id="savedMissionsList" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+        <!-- Rendered via JS -->
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs mono">
+        <span class="text-slate-400">Total guardadas: <span id="savedCountLabel" class="text-cyan-400 font-bold">0</span></span>
+        <button type="button" id="btnClearAllSaved" class="text-red-400 hover:text-red-300 text-[11px] underline">Borrar historial guardado</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-red-600 to-amber-600 text-white px-5 py-2.5 rounded-full font-bold text-xs shadow-2xl flex items-center gap-2 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none z-50">
+    <span id="toastIcon">🚀</span>
+    <span id="toastMsg">¡Orden OPORD copiada al portapapeles con éxito!</span>
+  </div>
+
+  <!-- APPLICATION JAVASCRIPT ENGINE -->
+  <script>
+    // MASTER PRESET DATASETS
+    const MASTER_LOCATIONS = ["Nyx // Delamar // Levski (Zona de Aterrizaje Principal)", "Nyx // Delamar // Grand Barter (Plaza Comercial)", "Nyx // Delamar // Hangar Borehole (Acceso Pozos Mineros)", "Nyx // Delamar // Dumper's Depot & Teach's Ship Shop", "Nyx // Delamar // Levski // Borehole Hangar 01-04", "Nyx // Delamar // Mina Abandonada People's Alliance", "Nyx // Keeger Belt (Cinturón Asteroides Exterior)", "Nyx // Glaciem Ring (Anillo de Hielo y Minería)", "Nyx // Nyx I (Planeta Desértico Interior)", "Nyx // Nyx II (Gigante Gaseoso Brumas)", "Nyx // Nyx III (Planeta Helado Periférico)", "Nyx // Punto de Salto Nyx-Pyro (Gateway)", "Nyx // Punto de Salto Nyx-Castra (Gateway)", "Nyx // Punto de Salto Nyx-Bremen (Gateway)", "Nyx // Nyx Gateway Station", "Pyro // Bloom (Pyro III) // Narenas Rest (Asentamiento & Hangares)", "Pyro // Bloom (Pyro III) // Narenas Rest // Pistas de Aterrizaje", "Pyro // Bloom (Pyro III) // Arid Reach", "Pyro // Gaslight Station (Estación Orbital Pyro V - L2)", "Pyro // Gaslight Station // Bahías de Atraque de Carga", "Pyro // Ruin Station (Estación Pirata Central - Órbita Pyro VI)", "Pyro // Checkmate Station (Estación Orbital Libre)", "Pyro // Patch City (Estación Modular en Asteroides)", "Pyro // Starlight Service Station (Puesto de Servicio Orbital)", "Pyro // Rustville (Asentamiento Terrestre Headhunters)", "Pyro // Rough Landing (Puesto Terrestre)", "Pyro // Last Landings (Asentamiento Terrestre)", "Pyro // Kinder Plots (Asentamiento Headhunters)", "Pyro // Gray Gardens Depot (Depósito XenoThreat)", "Pyro // Scarper's Turn (Base Avanzada XenoThreat)", "Pyro // Watcher's Depot (Puesto XenoThreat)", "Pyro // Stonetree (Asentamiento)", "Pyro // Stag's Rut (Asentamiento Citizens for Prosperity)", "Pyro // Bullock's Reach (Puesto C.f.P.)", "Pyro // Blackrock Exchange (Centro de Comercio Ilegal)", "Pyro // Canard View (Asentamiento Terrestre)", "Pyro // Monox (Pyro II - Yang's Place)", "Pyro // Monox (Pyro II) // Checkpoint Yang", "Pyro // Terminus (Pyro VI - The Golden Riviera)", "Pyro // Terminus (Pyro VI) // The Golden Riviera (Centro Turístico Abandonado)", "Pyro // Pyro I (Akiro - Superficie Volcánica Extrema)", "Pyro // Pyro IV (Luna Fragmentada)", "Pyro // Pyro Va // Ignis (Luna de Gaslight)", "Pyro // Pyro Vb // Vatra (Luna de Gaslight)", "Pyro // Pyro Vc // Adir (Luna de Gaslight)", "Pyro // Pyro Vd // Fairo (Luna de Gaslight)", "Pyro // Pyro Ve // Fira (Luna de Gaslight)", "Pyro // Pyro Vf // Komorebi (Luna de Gaslight)", "Pyro // Punto de Salto Pyro-Stanton (Gateway)", "Pyro // Punto de Salto Pyro-Nyx (Gateway)", "Pyro // Punto de Salto Pyro-Oso (Gateway)", "Crusader // Seraphim Station (Estación Orbital Principal)", "Crusader // Orison (August Dunlow Spaceport & Plataformas Cloudview)", "Crusader // Grim HEX (Yela / Estación Clandestina & Hospital Green Imperial)", "Crusader // Security Post Kareah (SPK - Orbital)", "Crusader // Covalex Hub Gundo (Derelicto Orbital en Yela)", "Crusader // CRU-L1 Ambitious Dream Station", "Crusader // CRU-L4 Shallow Frontier Station", "Crusader // CRU-L5 Beautiful Glen Station", "Daymar // Brio's Breaker Yard (Chatarrería & Desguace)", "Daymar // Minlo Spire (Outpost)", "Daymar // Dunlow Ridge (Outpost)", "Daymar // Shubin Processing SPB-1", "Daymar // Tamdon Plains", "Daymar // Eager Flats Aid Shelter", "Daymar // Búnker Kudre Ore (Clandestino)", "Daymar // Búnker Kudre Ore Closed", "Daymar // Derelict C2 Hercules Crash Site", "Daymar // Wolf Point Aid Shelter", "Daymar // ArcCorp Mining Area 141", "Cellin // Terra Mills HydroFarm", "Cellin // Ashburn Enclave", "Cellin // Fliegel Outpost", "Cellin // Security Depot Hur-TD-21 (Búnker de Seguridad)", "Cellin // Tram & Myers Mining", "Cellin // Private Property Aid Shelter", "Yela // Deakins Research", "Yela // Aston Ridge Aid Shelter", "Yela // Nakamura Valley", "Yela // ArcCorp Mining Area 157", "Yela // Benson Mining Outpost", "Yela // Kosso Basin Aid Shelter", "Yela // Cinturón de Asteroides de Yela (Belt)", "Hurston // Lorville (Teasa Spaceport & Torre Central HD)", "Hurston // Everus Harbor (Estación Orbital Principal)", "Hurston // Security Post Hurston (SPH - Búnker Máxima Seguridad)", "Hurston // Covalex Distribution Center S4DC05", "Hurston // Greycat Industrial Distribution Center GD-01", "Hurston // Reclamation & Disposal Orinth (Desguace)", "Hurston // Cutter's Rig (Derelict Settlement)", "Hurston // Zephyr (Asentamiento Abandonado)", "Hurston // Finnegan's Cross (Asentamiento)", "Hurston // Weeping Cove (Asentamiento Costero)", "Hurston // HDMS-Edmond", "Hurston // HDMS-Persephone", "Hurston // HDMS-Stanhope", "Hurston // HDMS-Theodosia", "Hurston // HDMS-Hadley", "Hurston // HDMS-Oparei", "Hurston // HDMS-Pinewood", "Hurston // HDMS-Woodruff", "Hurston // HUR-L1 Green Glade Station", "Hurston // HUR-L2 Faithful Dream Station", "Hurston // HUR-L3 Thriving Cargo Station", "Hurston // HUR-L4 Melodious Asteroid Station", "Hurston // HUR-L5 Highfall Station", "Arial // HDMS-Bezdek (Búnker & Carga)", "Arial // HDMS-Lathan", "Aberdeen // HDMS-Anderson", "Aberdeen // HDMS-Norgaard", "Aberdeen // Klescher Rehabilitation Facility (Prisión KRF)", "Magda // HDMS-Perlman", "Magda // HDMS-Hahn", "Ita // HDMS-Ryder", "Ita // HDMS-Woodruff", "ArcCorp // Area 18 (Riker Memorial Spaceport & Plaza Central)", "ArcCorp // Baijini Point (Estación Orbital Principal)", "ArcCorp // Centro de Distribución Covalex AC-01", "ArcCorp // ARC-L1 Wide Forest Station", "ArcCorp // ARC-L2 Lonely Mountain Station", "ArcCorp // ARC-L3 Modern Express Station", "ArcCorp // ARC-L4 Faint Glen Station", "ArcCorp // ARC-L5 Asteroid Arch Station", "Lyria // Shubin Processing SAL-2", "Lyria // Shubin Processing SAL-5", "Lyria // The Orphanage (Puesto Oculto / Contrabando)", "Lyria // Paradise Cove (Contrabando)", "Lyria // Humboldt Mines", "Lyria // Loveridge Mineral Reserve", "Lyria // Launch Pad Wheler", "Wala // Samson & Son's Salavage Center", "Wala // ArcCorp Mining Area 045", "Wala // ArcCorp Mining Area 048", "Wala // ArcCorp Mining Area 056", "Wala // Lost and Found Aid Shelter", "microTech // New Babbage (NBIS Spaceport, The Commons, Aspire Grand)", "microTech // Port Tressler (Estación Orbital Principal)", "microTech // Ghost Hollow (Derelicto Reclaimer Asentamiento)", "microTech // Sakura Sun Distribution Center SS-01", "microTech // Rayari Deltana Research", "microTech // Rayari Cantwell Research", "microTech // Rayari Anvik Research", "microTech // Shubin Mining Facility SAL-2", "microTech // Shubin Mining Facility SAL-5", "microTech // The Pit (Derelict Settlement)", "microTech // Astor's Clearing (Asentamiento)", "microTech // Clear View (Asentamiento)", "microTech // Frostbite (Asentamiento)", "microTech // MIC-L1 Shallow Frontier Station", "microTech // MIC-L2 Long Forest Station", "microTech // MIC-L3 Ambitious Glen Station", "microTech // MIC-L4 Modern Oasis Station", "microTech // MIC-L5 Wide Cloud Station", "Calliope // Rayari Kaltag Research", "Calliope // Shubin Processing SMCa-6", "Calliope // Shubin Processing SMCa-8", "Clio // Rayari McGrath Research", "Clio // Snake Pit (Circuito Terrestre de Carreras)", "Euterpe // Bud's Growing (Hidroponía)", "Euterpe // Devlin Scrap & Salvage", "Stanton // Punto de Salto Stanton-Pyro (Gateway Station)", "Stanton // Punto de Salto Stanton-Magnus (Gateway Station)", "Stanton // Punto de Salto Stanton-Terra (Gateway Station)", "Espacio Profundo // Aaron Halo Asteroid Belt (Band 1 a Band 10)", "Espacio Profundo // Naufragio de Destructor Javelin (EVA / Zero-G)", "Espacio Profundo // Naufragio de Fragata Idris (EVA / Zero-G)", "Instalación Subterránea Onyx Facility (Búnker Clasificado)"];
+    const MASTER_SHIPS = ["MISC Starlancer TAC (Transporte Táctico / Cañones Gemelos)", "MISC Starlancer MAX (Transporte de Carga Pesada)", "MISC Freelancer (Multi-rol Medio / 4x S3)", "MISC Freelancer DUR (Exploración de Largo Alcance)", "MISC Freelancer MAX (Carga Ensanchada / 120 SCU)", "MISC Freelancer MIS (Cañonera Misilera Militar)", "MISC Prospector (Minería Especializada Individual)", "MISC Expanse (Refinería Móvil Monoplaza)", "MISC Odyssey (Exploración Avanzada / Hangar & Minería)", "MISC Hull A (Carguero Ligero Telescópico)", "MISC Hull B (Carguero Medio Telescópico)", "MISC Hull C (Carguero Pesado Orbital 4608 SCU)", "MISC Hull D (Megacarguero Comercial Capital)", "MISC Hull E (Supercarguero Comercial Gigante)", "MISC Reliant Kore (Transporte Ligero Ala Pivotante)", "MISC Reliant Tana (Caza Ligero de Escolta)", "MISC Reliant Sen (Investigación Científica)", "MISC Reliant Mako (Retransmisión de Noticias / Cámara)", "MISC Razor (Intercepción / Carreras de Competición)", "MISC Razor EX (Infiltración Sigilosa / Baja Firma)", "MISC Razor LX (Carreras de Alta Velocidad Pura)", "Mirai Fury (Snub Fighter Parasitario de Maniobra)", "Mirai Fury MX (Snub Bombardero Misilero)", "Mirai Fury LX (Snub de Carreras Supersónicas)", "Mirai Pulse (Hoverbike Grav-Lev Monoplaza)", "Mirai Pulse LX (Hoverbike Grav-Lev de Competición)", "Mirai Guardian (Caza Pesado de Asalto)", "Drake Cutlass Red (Médica / 2x Camas T2-T3)", "Drake Cutlass Black (Multi-rol / Cañonera Ligera)", "Drake Cutlass Blue (Intercepción Policial / Células)", "Drake Cutlass Steel (Transporte de Tropas / 18 Asientos)", "Drake Cutter (Exploración & Carga Ligera)", "Drake Cutter Medical (Ambulancia Ligera / 1x Cama T3)", "Drake Cutter Rambler (Exploración Autónoma de Alcance)", "Drake Cutter Scout (Escáner & Reconocimiento)", "Drake Corsair (Exploración / Cañonera de Asalto Pesado)", "Drake Herald (Guerra Electrónica & Data Runner)", "Drake Vulture (Reciclaje Industrial & Salvamento)", "Drake Caterpillar (Carguero Modular Pesado 576 SCU)", "Drake Caterpillar Pirate Edition (Asalto & Carga)", "Drake Buccaneer (Caza Ligero de Intercepción Rápida)", "Drake Dragonfly Black (Moto Espacial y Terrestre Biplaza)", "Drake Dragonfly Yellowjacket (Moto Espacial)", "Drake Mule (Vehículo Terrestre Montacargas / 1x SCU + Cajas)", "Drake Ironclad (Acorazado de Carga Pesada Blindado)", "Drake Ironclad Assault (Acorazado Dropship / Pistas de Reparación)", "Drake Kraken (Portanaves Ligero / Base Móvil)", "Drake Kraken Privateer (Bazar Comercial Capital)", "RSI Apollo Medivac (Clínica Militar Móvil / Camas T1-T2-T3)", "RSI Apollo Triage (Clínica Civil de Rescate / Camas T1-T2-T3)", "RSI Ursa Medivac (Terrestre Blindado / 1x Cama T3 + Spawn)", "RSI Ursa Rover (Terrestre Blindado de Exploración 6x6)", "RSI Ursa Fortuna (Terrestre Blindado Verde Esmeralda)", "RSI Lynx Rover (Transporte VIP Terrestre Blindado)", "RSI Zeus Mk II MR (Cazarrecompensas / Interdicción QED)", "RSI Zeus Mk II ES (Exploración / Radar Aumentado)", "RSI Zeus Mk II CL (Transporte de Carga 128 SCU)", "RSI Constellation Andromeda (Cañonera Pesada / 4x S5 + Misiles)", "RSI Constellation Taurus (Transporte Blindado / Tractor Beam)", "RSI Constellation Aquila (Exploración / Puente Rediseñado)", "RSI Constellation Phoenix (Transporte VIP de Lujo / Salón)", "RSI Scorpius (Caza Pesado Biplaza / Torreta Trasera en Carril)", "RSI Scorpius Antares (Guerra Electrónica / Interrupción EMP)", "RSI Polaris (Corbeta Militar Capital / Bahía T2 + Hangar S2)", "RSI Perseus (Cañonera Militar Sub-Capital / 4x S7)", "RSI Galaxy (Nave Modular / Hospital T1 / Cargo / Refinería)", "RSI Arrastra (Minería Industrial Multitripulación)", "RSI Orion (Minería Espacial Masiva Capital)", "RSI Mantis (Interdicción Cuántica QED / Snare)", "RSI Aurora MR (Combate Ligero e Interfase)", "RSI Aurora LN (Legionnaire / Asalto Reforzado)", "RSI Aurora LX (Exploración Ligera con Cama)", "RSI Aurora CL (Carguero Ligero)", "RSI Aurora ES (Nave de Inicio Básica)", "Anvil C8R Pisces Rescue (Rescate Rápido / 1x Cama T3)", "Anvil C8X Pisces Expedition (Exploración Ligera / 4 Armas)", "Anvil C8 Pisces (Snub de Desembarco Estándar)", "Anvil Terrapin (Reconocimiento Blindado / Radar Superior)", "Anvil Valkyrie (Dropship Pesado / Bahía Vehículo + 20 Tropas)", "Anvil Carrack (Exploración Profunda / Cama T1 + Bahía Médica)", "Anvil Carrack Expedition (Exploración con Blindaje Reforzado)", "Anvil Legionnaire (Abordaje Táctico / Hackeo de Esclusas)", "Anvil Arrow (Caza Ligero de Máxima Agilidad)", "Anvil Gladiator (Bombardero Torpedero / Caza Biplaza)", "Anvil Hurricane (Caza Pesado Biplaza / Torreta Cuádruple S3)", "Anvil Hawk (Caza Ligero Cazarrecompensas / Celda Trasera)", "Anvil F8C Lightning (Caza Pesado Superior de la Flota)", "Anvil F7C Hornet Mk II (Caza Medio de Combate Moderno)", "Anvil F7C-M Super Hornet Mk II (Caza Espacial Biplaza)", "Anvil F7C-R Hornet Tracker (AWACS / Radar de Largo Alcance)", "Anvil F7C-S Hornet Ghost (Infiltración Sigilosa / Baja Firma)", "Anvil F7C Hornet (Caza Medio Clásico)", "Anvil Crucible (Taller de Reparación Naval Móvil)", "Anvil Liberator (Transporte Portanaves y Vehículos Terrestres)", "Anvil Ballista (Vehículo Terrestre Lanzamisiles Antiaéreo S7)", "Anvil Centurion (Vehículo Terrestre Cañonero Cuádruple Láser AA)", "Anvil Spartan (Transporte Terrestre Blindado de Pelotón)", "Crusader C2 Hercules (Transporte Pesado de Vehículos y Carga)", "Crusader M2 Hercules (Transporte Militar Blindado con Torreta)", "Crusader A2 Hercules (Bombardero Masivo MOAB de Supresión)", "Crusader Mercury Star Runner (MSR / Data Runner y Carga)", "Crusader Ares Ion (Caza Pesado Anti-Capital Láser S7)", "Crusader Ares Inferno (Caza Pesado Anti-Capital Gatling S7)", "Crusader Spirit A1 (Bombardero Táctico Ligero)", "Crusader Spirit C1 (Transporte Utilitario / Tractor Beam)", "Crusader Spirit E1 (Transporte Ejecutivo VIP)", "Crusader Intrepid (Transporte Táctico Ligero)", "Crusader Genesis Starliner (Transporte Civil de Pasajeros)", "Aegis Vanguard Hoplite (Dropship Blindado de Infiltración)", "Aegis Vanguard Warden (Caza Pesado de Largo Alcance y Salto)", "Aegis Vanguard Sentinel (Guerra Electrónica / Generador EMP)", "Aegis Vanguard Harbinger (Bombardero Torpedero Pesado S5)", "Aegis Redeemer (Cañonera de Supresión / 2 Torretas Pesadas)", "Aegis Retaliator (Bombardero Pesado Torpedero 6x S9)", "Aegis Hammerhead (Corbeta Antiaérea / 6 Torretas Cuádruples)", "Aegis Reclaimer (Salvamento Pesado Industrial & Trituración)", "Aegis Sabre (Caza Sigiloso de Superioridad Aérea)", "Aegis Sabre Firebird (Interceptor Sigiloso Lanzamisiles)", "Aegis Sabre Raven (Guerra Electrónica EMP y Sigilo)", "Aegis Sabre Peregrine (Interceptor de Carreras Militar)", "Aegis Gladius (Caza Ligero Estándar de la Flota UEE)", "Aegis Eclipse (Bombardero Stealth con Torpedos S9)", "Aegis Avenger Titan (Transporte Ligero y Combate)", "Aegis Avenger Stalker (Intercepción / Celdas Prisioneros)", "Aegis Avenger Warlock (Generador EMP Pulsado)", "Aegis Nautilus (Colocador y Detector de Minas Tácticas)", "Aegis Vulcan (Soporte, Reabastecimiento y Reparación)", "Aegis Idris-P (Fragata Ligera Militar / Bahía Médica T1)", "Aegis Idris-M (Fragata de Ataque con Cañón Railgun S10)", "Aegis Javelin (Destructor Capital Militar)", "Origin 890 Jump (Superyate Capital / Clínica Médica Tier 1)", "Origin 600i Explorer (Exploración / Cama Médica Tier 2)", "Origin 600i Touring (Transporte VIP de Alta Gama)", "Origin 400i (Exploración Blindada y Aventura)", "Origin 300i (Turismo Ligero y Desplazamiento)", "Origin 315p (Exploración Ligera / Tractor Beam)", "Origin 325a (Intercepción Ligera y Combate)", "Origin 350r (Carreras de Gran Velocidad)", "Origin 100i (Turismo Ligero y Eficiencia)", "Origin 125a (Combate Ligero y Misiles)", "Origin 135c (Transporte de Carga Ligera)", "Origin 85X (Lanzadera Biplaza Ejecutiva)", "Origin M50 (Interceptor de Carreras Ágil)", "Origin X1 (Hoverbike Grav-Lev Monoplaza)", "Origin X1 Velocity (Hoverbike Ligera de Carreras)", "Origin X1 Force (Hoverbike Blindada de Reconocimiento)", "ARGO MOLE (Minería Multitripulación / 3 Cabezales Láser)", "ARGO RAFT (Transporte de Contenedores de Carga 96 SCU)", "ARGO SRV (Remolcador Espacial / Rayo Tractor Pesado)", "ARGO MPVU Personnel (Transporte de Pasajeros Orbital)", "ARGO MPVU Cargo (Carga Ligera en Hangares)", "ARGO MPUV 1T (Tractor Beam Ligero)", "ARGO CSV-SM (Vehículo Terrestre Utilitario de Carga)", "ARGO ATLS (Exoesqueleto Power Suit de Carga Industrial)", "Consolidated Outland Nomad (Transporte Ligero / Cama Grav-Lev)", "Consolidated Outland Pioneer (Base Móvil de Construcción)", "Consolidated Outland Mustang Alpha (Carga Ligera)", "Consolidated Outland Mustang Beta (Exploración con Vivienda)", "Consolidated Outland Mustang Gamma (Carreras Rápidas)", "Consolidated Outland Mustang Delta (Ataque y Cohetes)", "Consolidated Outland HoverQuad (Quad Terrestre Grav-Lev)", "Tumbril Nova Tank (Carro de Combate Pesado / Cañón S5)", "Tumbril Cyclone (Buggy Terrestre Rápido de Patrulla)", "Tumbril Cyclone TR (Buggy con Torreta Balística)", "Tumbril Cyclone AA (Buggy con Misiles Antiaéreos y EMP)", "Tumbril Cyclone RN (Buggy de Reconocimiento y Radar)", "Tumbril Cyclone RC (Buggy de Carreras Terrestres)", "Tumbril Cyclone MT (Buggy con Misiles y Cañón)", "Tumbril Storm (Tanque Ligero Terrestre de Oruga)", "Tumbril Storm AA (Tanque Ligero Terrestre Antiaéreo)", "Tumbril Ranger CV (Moto Terrestre de Carga)", "Tumbril Ranger TR (Moto Terrestre Militar de Patrulla)", "Esperia Talon (Caza Sigiloso Tevarin / Escudo Phalanx)", "Esperia Talon Shrike (Lanzamisiles Sigiloso Tevarin)", "Esperia Prowler (Dropship Sigiloso Grav-Lev Tevarin)", "Esperia Glaive (Caza Pesado Réplica Vanduul / 2x S5)", "Esperia Scythe (Caza de Asalto Vanduul con Cuchilla)", "Esperia Blade (Caza Ligero Ágil Réplica Vanduul)", "Banu Defender (Caza de Escolta de Largo Alcance Alien)", "Banu Merchantman (BMM / Gran Bazar Capital Alien)", "Gatac Syulen (Transporte Ligero Alien Grav-Lev Xi'an)", "Gatac Railen (Carguero Pesado Xi'an Gravitacional)", "Aopoa Khartu-al (Caza Ligero Scout Xi'an Omnidireccional)", "Aopoa San'tok.yāi (Caza Medio Xi'an de Alta Maniobrabilidad)", "Aopoa Nox (Hoverbike Grav-Lev Monoplaza Alien)"];
+    const MASTER_ROLES = ["Líder de Asalto / Mando Operativo", "Breacher / Asalto (Punta de Lanza)", "Médico de Vanguardia (ParaMed Gun)", "Médico de Campo / Cirujano (Trauma)", "Especialista Tractor Beam (Cero Asomo)", "Operador LMG Supresión (FS9 / Demeco)", "Tirador de Élite / Sniper Recon (16x)", "Observador Óptico (Telémetro / Rangefinder)", "Piloto de Evacuación / Dropship", "Copiloto / Ingeniero de Vuelo", "Conductor Terrestre Blindado (Ursa / Spartan)", "Especialista en Demoliciones / C4", "Operador de Dron / Reconocimiento", "Escolta de Retaguardia / Fusilero", "Operador de Guerra Electrónica / Hackeo"];
+    const MASTER_THREATS = ["Hostil Alta (Torretas AA Activas + 2 Patrullas NPCs de Asalto)", "Baja // Extracción Segura (Sin presencia hostil detectada)", "Media // Búnker con NPCs armados (Sin defensas antiaéreas)", "Crítica // Zona Caliente PvP (Piratas en Pyro / Sin Ley)", "Extrema // Naves hostiles patrullando en órbita + AA en tierra", "Zero-G // Derelicto en el espacio con trampas balísticas", "Asalto a Base de Distribución // Seguridad Privada Hostil", "Emboscada Pirata en Chatarrería // Fuego Cruzado de Francotiradores"];
+
+    // STORAGE KEYS
+    const KEY_CUSTOM_LOCATIONS = 'medrecon_custom_locations';
+    const KEY_CUSTOM_SHIPS = 'medrecon_custom_ships';
+    const KEY_CUSTOM_ROLES = 'medrecon_custom_roles';
+    const KEY_CUSTOM_THREATS = 'medrecon_custom_threats';
+    const KEY_SAVED_MISSIONS = 'medrecon_saved_missions';
+    const KEY_RADAR_TRANSFER = 'medrecon_radar_transfer';
+
+    // MEMORY MANAGEMENT HELPERS
+    function getStoredList(key) {
+      try {
+        return JSON.parse(localStorage.getItem(key) || '[]');
+      } catch(e) {
+        return [];
+      }
+    }
+
+    function saveToMemory(key, val) {
+      if (!val || typeof val !== 'string') return;
+      const clean = val.trim();
+      if (!clean) return;
+
+      const current = getStoredList(key);
+      if (!current.includes(clean)) {
+        current.unshift(clean);
+        localStorage.setItem(key, JSON.stringify(current));
+        updateMemoryBadge();
+        showToast(`💾 «${clean.slice(0, 32)}» memorizado en tu catálogo`, '💾');
+      }
+    }
+
+    function getCombinedList(masterList, key) {
+      const custom = getStoredList(key);
+      return Array.from(new Set([...custom, ...masterList]));
+    }
+
+    function updateMemoryBadge() {
+      const totalCustom = getStoredList(KEY_CUSTOM_LOCATIONS).length +
+                          getStoredList(KEY_CUSTOM_SHIPS).length +
+                          getStoredList(KEY_CUSTOM_ROLES).length +
+                          getStoredList(KEY_CUSTOM_THREATS).length;
+      const countEl = document.getElementById('customItemsCount');
+      if (countEl) countEl.textContent = totalCustom;
+    }
+
+    // INSTANT REAL-TIME AUTOCOMPLETE ENGINE (TRIGGERED WHILE TYPING)
+    function setupAutocomplete(inputEl, menuEl, getListFn, storageKey, onSelected) {
+      let activeIndex = -1;
+
+      function renderSuggestions(query) {
+        const allItems = getListFn();
+        const customList = getStoredList(storageKey);
+        const q = (query || '').toLowerCase().trim();
+
+        let filtered = [];
+        if (!q) {
+          filtered = allItems.slice(0, 10);
+        } else {
+          filtered = allItems.filter(item => item.toLowerCase().includes(q)).slice(0, 16);
+        }
+
+        menuEl.innerHTML = '';
+        activeIndex = -1;
+
+        if (filtered.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'p-2.5 text-xs text-slate-400 italic flex items-center justify-between';
+          empty.innerHTML = `<span>Presiona <b class="text-cyan-300">Enter</b> para usar este valor personalizado</span> <span class="badge-custom">Nuevo</span>`;
+          menuEl.appendChild(empty);
+          menuEl.classList.remove('hidden');
+          return;
+        }
+
+        filtered.forEach((item, idx) => {
+          const div = document.createElement('div');
+          div.className = 'autocomplete-item';
+          div.dataset.index = idx;
+
+          let labelHtml = item;
+          if (q) {
+            const regex = new RegExp(`(${q.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+            labelHtml = item.replace(regex, '<span class="match">$1</span>');
+          }
+
+          const isCustom = customList.includes(item);
+          div.innerHTML = `${labelHtml}${isCustom ? '<span class="badge-custom">💾 Memoria</span>' : ''}`;
+
+          div.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            selectItem(item);
+          });
+
+          menuEl.appendChild(div);
+        });
+
+        menuEl.classList.remove('hidden');
+      }
+
+      function selectItem(val) {
+        inputEl.value = val;
+        saveToMemory(storageKey, val);
+        menuEl.classList.add('hidden');
+        if (onSelected) onSelected(val);
+      }
+
+      inputEl.addEventListener('input', (e) => {
+        renderSuggestions(e.target.value);
+        if (onSelected) onSelected(e.target.value, false);
+      });
+
+      inputEl.addEventListener('focus', () => {
+        renderSuggestions(inputEl.value);
+      });
+
+      inputEl.addEventListener('blur', () => {
+        setTimeout(() => {
+          menuEl.classList.add('hidden');
+          if (inputEl.value.trim()) {
+            saveToMemory(storageKey, inputEl.value.trim());
+          }
+        }, 200);
+      });
+
+      inputEl.addEventListener('keydown', (e) => {
+        const items = menuEl.querySelectorAll('.autocomplete-item');
+        if (menuEl.classList.contains('hidden') || items.length === 0) {
+          if (e.key === 'Enter') {
+            if (inputEl.value.trim()) {
+              saveToMemory(storageKey, inputEl.value.trim());
+            }
+            menuEl.classList.add('hidden');
+          }
+          return;
+        }
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          activeIndex = (activeIndex + 1) % items.length;
+          highlightActive(items);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          activeIndex = (activeIndex - 1 + items.length) % items.length;
+          highlightActive(items);
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (activeIndex >= 0 && items[activeIndex]) {
+            items[activeIndex].dispatchEvent(new MouseEvent('mousedown'));
+          } else {
+            menuEl.classList.add('hidden');
+            if (inputEl.value.trim()) {
+              saveToMemory(storageKey, inputEl.value.trim());
+            }
+          }
+        } else if (e.key === 'Escape') {
+          menuEl.classList.add('hidden');
+        }
+      });
+
+      function highlightActive(items) {
+        items.forEach((item, idx) => {
+          if (idx === activeIndex) {
+            item.classList.add('active');
+            item.scrollIntoView({ block: 'nearest' });
+          } else {
+            item.classList.remove('active');
+          }
+        });
+      }
+    }
+
+    // APPLICATION STATE
+    const state = {
+      ships: [
+        {
+          id: 'ship-1',
+          name: 'MISC Starlancer TAC (Transporte Táctico / Cañones Gemelos)',
+          role: 'Nave Nodriza / Infiltración y Asalto Pesado',
+          callsign: 'Lancer-Líder'
+        },
+        {
+          id: 'ship-2',
+          name: 'Drake Cutlass Red (Médica / 2x Camas T2-T3)',
+          role: 'Evacuación Rápida & Triage CASEVAC',
+          callsign: 'Ángel Rojo'
+        }
+      ],
+      teams: [
+        {
+          id: 'team-1',
+          name: 'Equipo Alfa // Punta de Lanza (Asalto)',
+          shipId: 'ship-1',
+          operators: [
+            { name: '@TheRazorc', role: 'Líder de Asalto / Mando Operativo' },
+            { name: '@Shozt', role: 'Breacher / Asalto (Punta de Lanza)' },
+            { name: '@Operador3', role: 'Médico de Vanguardia (ParaMed Gun)' },
+            { name: '@Operador4', role: 'Especialista en Demoliciones / C4' }
+          ],
+          equipment: 'Fusiles de asalto, Multi-Tool médica, granadas de humo, 4x Hemozaline, C4'
+        },
+        {
+          id: 'team-2',
+          name: 'Equipo Bravo // Soporte Pesado & Cero Asomo',
+          shipId: 'ship-2',
+          operators: [
+            { name: '@Druidaloco', role: 'Operador LMG Supresión (FS9 / Demeco)' },
+            { name: '@Ismaelviac', role: 'Especialista Tractor Beam (Cero Asomo)' },
+            { name: '@PilotoMERR', role: 'Piloto de Evacuación / Dropship' },
+            { name: '@ReconScout', role: 'Observador Óptico (Telémetro / Rangefinder)' }
+          ],
+          equipment: 'FS9 / Demeco LMG (75 balas), Multi-Tool con Tractor Beam (tracción bajas), telémetro'
+        }
+      ]
+    };
+
+    // DOM ELEMENTS
+    const opName = document.getElementById('opName');
+    const opLocation = document.getElementById('opLocation');
+    const menuOpLocation = document.getElementById('menu-opLocation');
+    const opVerseGuideUrl = document.getElementById('opVerseGuideUrl');
+    const btnTestVerseLink = document.getElementById('btnTestVerseLink');
+    const opDate = document.getElementById('opDate');
+    const opTime = document.getElementById('opTime');
+    const opCode = document.getElementById('opCode');
+    const opThreat = document.getElementById('opThreat');
+    const menuOpThreat = document.getElementById('menu-opThreat');
+    const opDirectives = document.getElementById('opDirectives');
+
+    const shipsContainer = document.getElementById('shipsContainer');
+    const teamsContainer = document.getElementById('teamsContainer');
+    const shipCountBadge = document.getElementById('shipCountBadge');
+    const teamCountBadge = document.getElementById('teamCountBadge');
+
+    const tso1 = document.getElementById('tso1');
+    const tso2 = document.getElementById('tso2');
+    const tso3 = document.getElementById('tso3');
+    const tso4 = document.getElementById('tso4');
+    const tsoDisplay = document.getElementById('tsoDisplay');
+    const opordOutput = document.getElementById('opordOutput');
+
+    // INITIAL DATE (NEXT MONDAY)
+    const now = new Date();
+    const nextMonday = new Date();
+    nextMonday.setDate(now.getDate() + ((1 + 7 - now.getDay()) % 7 || 7));
+    opDate.value = nextMonday.toISOString().split('T')[0];
+
+    opDirectives.value = 
+`• Despliegue en Pyro III // Narenas Rest: Abordaje escalonado en Starlancer TAC y Cutlass Red.
+• Protocolo «Cero Asomo»: Prohibido estabilizar a cuerpo descubierto. Tracción obligatoria con Tractor Beam tras cobertura dura.
+• Regla de los 10 Segundos: Ningún elemento permanecerá estático al descubierto. Desplazamiento por saltos coordinados (Bounding Overwatch).
+• Fase 1: Infiltración y fijación perimetral por Equipo Alfa.
+• Fase 2: Entrada del Equipo Bravo con Tractor Beam para tracción y evacuación a camas de Cutlass Red.`;
+
+    // VERSE GUIDE URL DETECTION ON LOCATION INPUT
+    opLocation.addEventListener('input', (e) => {
+      const val = e.target.value.trim();
+      if (val.startsWith('http://') || val.startsWith('https://')) {
+        opVerseGuideUrl.value = val;
+        btnTestVerseLink.href = val;
+        generateOPORD();
+      }
+    });
+
+    opVerseGuideUrl.addEventListener('input', (e) => {
+      const val = e.target.value.trim();
+      btnTestVerseLink.href = val || 'https://verseguide.com';
+      generateOPORD();
+    });
+
+    // ATTACH REAL-TIME AUTOCOMPLETE TO PRIMARY INPUTS
+    setupAutocomplete(
+      opLocation,
+      menuOpLocation,
+      () => getCombinedList(MASTER_LOCATIONS, KEY_CUSTOM_LOCATIONS),
+      KEY_CUSTOM_LOCATIONS,
+      () => generateOPORD()
+    );
+
+    setupAutocomplete(
+      opThreat,
+      menuOpThreat,
+      () => getCombinedList(MASTER_THREATS, KEY_CUSTOM_THREATS),
+      KEY_CUSTOM_THREATS,
+      () => generateOPORD()
+    );
+
+    // RENDER SHIPS DYNAMICALLY
+    function renderShips() {
+      shipsContainer.innerHTML = '';
+      shipCountBadge.textContent = `${state.ships.length} ${state.ships.length === 1 ? 'nave' : 'naves'}`;
+
+      state.ships.forEach((ship, idx) => {
+        const card = document.createElement('div');
+        card.className = 'bg-slate-900/80 border border-slate-700/80 rounded-xl p-3.5 space-y-2.5 relative group';
+        card.innerHTML = `
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-cyan-400 flex items-center gap-1.5 uppercase mono">
+              <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Nave ${idx + 1}
+            </span>
+            ${state.ships.length > 1 ? `
+              <button type="button" class="btn-remove-ship text-red-400 hover:text-red-300 text-[11px] mono px-2 py-0.5 rounded bg-red-950/40 border border-red-500/20" data-idx="${idx}">
+                ✕ Eliminar
+              </button>
+            ` : ''}
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-2 text-xs">
+            <div class="md:col-span-7 space-y-1 relative">
+              <label class="text-slate-400 block text-[11px]">Modelo de Nave (Filtra en tiempo real al escribir):</label>
+              <div class="relative">
+                <input type="text" autocomplete="off" value="${ship.name}" class="ship-name-input w-full rounded px-2.5 py-1.5 text-xs font-semibold" data-idx="${idx}" placeholder="Escribe para filtrar (ej. Starlancer, Cutlass, Apollo, Ursa, Polaris...)">
+                <div class="autocomplete-menu hidden ship-menu-${idx}"></div>
+              </div>
+            </div>
+            <div class="md:col-span-5 space-y-1">
+              <label class="text-slate-400 block text-[11px]">Rol Operativo:</label>
+              <input type="text" value="${ship.role}" class="ship-role-input w-full rounded px-2.5 py-1.5 text-xs" data-idx="${idx}" placeholder="ej. Asalto, Triage, Transporte...">
+            </div>
+          </div>
+        `;
+        shipsContainer.appendChild(card);
+
+        const shipInput = card.querySelector('.ship-name-input');
+        const shipMenu = card.querySelector(`.ship-menu-${idx}`);
+        setupAutocomplete(
+          shipInput,
+          shipMenu,
+          () => getCombinedList(MASTER_SHIPS, KEY_CUSTOM_SHIPS),
+          KEY_CUSTOM_SHIPS,
+          (val) => {
+            state.ships[idx].name = val;
+            renderTeams();
+            generateOPORD();
+          }
+        );
+      });
+
+      document.querySelectorAll('.ship-role-input').forEach(input => {
+        input.addEventListener('input', (e) => {
+          const idx = parseInt(e.target.dataset.idx);
+          state.ships[idx].role = e.target.value;
+          generateOPORD();
+        });
+      });
+
+      document.querySelectorAll('.btn-remove-ship').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt(e.target.dataset.idx);
+          state.ships.splice(idx, 1);
+          renderShips();
+          renderTeams();
+          generateOPORD();
+        });
+      });
+    }
+
+    // RENDER TEAMS DYNAMICALLY
+    function renderTeams() {
+      teamsContainer.innerHTML = '';
+      teamCountBadge.textContent = `${state.teams.length} ${state.teams.length === 1 ? 'equipo' : 'equipos'}`;
+
+      state.teams.forEach((team, tIdx) => {
+        const teamCard = document.createElement('div');
+        teamCard.className = 'bg-slate-900/90 border border-slate-700 rounded-xl p-4 space-y-3';
+
+        const shipOptions = state.ships.map(s => {
+          const shortName = s.name.split('(')[0].trim();
+          return `<option value="${s.id}" ${team.shipId === s.id ? 'selected' : ''}>Embarcado en: ${shortName}</option>`;
+        }).join('');
+
+        teamCard.innerHTML = `
+          <!-- TEAM HEADER -->
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-2 flex-grow max-w-sm">
+              <span class="w-2.5 h-2.5 rounded-full ${tIdx % 2 === 0 ? 'bg-red-400' : 'bg-cyan-400'}"></span>
+              <input type="text" value="${team.name}" class="team-name-input text-xs font-bold text-white uppercase mono w-full rounded px-2 py-1" data-tidx="${tIdx}">
+            </div>
+
+            <div class="flex items-center gap-2">
+              <select class="team-ship-select text-[11px] mono font-semibold rounded px-2 py-1 text-cyan-300" data-tidx="${tIdx}">
+                ${shipOptions}
+              </select>
+              ${state.teams.length > 1 ? `
+                <button type="button" class="btn-remove-team text-red-400 hover:text-red-300 text-[11px] mono px-2 py-0.5 rounded bg-red-950/40 border border-red-500/20" data-tidx="${tIdx}">
+                  ✕ Eliminar Equipo
+                </button>
+              ` : ''}
+            </div>
+          </div>
+
+          <!-- OPERATORS CONTROLS -->
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-semibold">Efectivos Asignados (${team.operators.length}):</span>
+            <div class="flex items-center gap-1.5">
+              <button type="button" class="btn-add-op text-[11px] font-bold mono px-2 py-0.5 rounded bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/30" data-tidx="${tIdx}">
+                + Añadir Efectivo
+              </button>
+              ${team.operators.length > 1 ? `
+                <button type="button" class="btn-remove-op text-[11px] font-bold mono px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600" data-tidx="${tIdx}">
+                  - Quitar
+                </button>
+              ` : ''}
+            </div>
+          </div>
+
+          <!-- OPERATORS LIST WITH AUTOCOMPLETE ROLE INPUT -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+            ${team.operators.map((op, oIdx) => `
+              <div class="flex items-center gap-1.5 bg-slate-950/60 p-1.5 rounded-lg border border-slate-800">
+                <input type="text" value="${op.name}" placeholder="@Handle" class="op-name-input w-2/5 rounded px-2 py-1 text-xs mono text-emerald-300 font-semibold" data-tidx="${tIdx}" data-oidx="${oIdx}">
+                <div class="w-3/5 relative">
+                  <input type="text" autocomplete="off" value="${op.role}" placeholder="Rol táctico..." class="op-role-input w-full rounded px-2 py-1 text-[11px] text-slate-200" data-tidx="${tIdx}" data-oidx="${oIdx}">
+                  <div class="autocomplete-menu hidden op-role-menu-${tIdx}-${oIdx}"></div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- EQUIPMENT DOTACIÓN -->
+          <div class="space-y-1.5 pt-1 border-t border-slate-800/80">
+            <label class="text-slate-400 block text-[11px] font-semibold">Dotación de Equipo (Escribe o combina):</label>
+            <input type="text" value="${team.equipment}" class="team-equip-input w-full rounded px-2.5 py-1.5 text-xs text-slate-300" data-tidx="${tIdx}" placeholder="Armamento, gadgets médicos...">
+          </div>
+        `;
+
+        teamsContainer.appendChild(teamCard);
+
+        team.operators.forEach((op, oIdx) => {
+          const roleInput = teamCard.querySelector(`.op-role-input[data-tidx="${tIdx}"][data-oidx="${oIdx}"]`);
+          const roleMenu = teamCard.querySelector(`.op-role-menu-${tIdx}-${oIdx}`);
+          setupAutocomplete(
+            roleInput,
+            roleMenu,
+            () => getCombinedList(MASTER_ROLES, KEY_CUSTOM_ROLES),
+            KEY_CUSTOM_ROLES,
+            (val) => {
+              state.teams[tIdx].operators[oIdx].role = val;
+              generateOPORD();
+            }
+          );
+        });
+      });
+
+      document.querySelectorAll('.team-name-input').forEach(input => {
+        input.addEventListener('input', (e) => {
+          const tIdx = parseInt(e.target.dataset.tidx);
+          state.teams[tIdx].name = e.target.value;
+          generateOPORD();
+        });
+      });
+
+      document.querySelectorAll('.team-ship-select').forEach(select => {
+        select.addEventListener('change', (e) => {
+          const tIdx = parseInt(e.target.dataset.tidx);
+          state.teams[tIdx].shipId = e.target.value;
+          generateOPORD();
+        });
+      });
+
+      document.querySelectorAll('.team-equip-input').forEach(input => {
+        input.addEventListener('input', (e) => {
+          const tIdx = parseInt(e.target.dataset.tidx);
+          state.teams[tIdx].equipment = e.target.value;
+          generateOPORD();
+        });
+      });
+
+      document.querySelectorAll('.btn-add-op').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const tIdx = parseInt(e.target.dataset.tidx);
+          state.teams[tIdx].operators.push({ name: '', role: 'Breacher / Asalto (Punta de Lanza)' });
+          renderTeams();
+          generateOPORD();
+        });
+      });
+
+      document.querySelectorAll('.btn-remove-op').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const tIdx = parseInt(e.target.dataset.tidx);
+          if (state.teams[tIdx].operators.length > 1) {
+            state.teams[tIdx].operators.pop();
+            renderTeams();
+            generateOPORD();
+          }
+        });
+      });
+
+      document.querySelectorAll('.op-name-input').forEach(input => {
+        input.addEventListener('input', (e) => {
+          const tIdx = parseInt(e.target.dataset.tidx);
+          const oIdx = parseInt(e.target.dataset.oidx);
+          state.teams[tIdx].operators[oIdx].name = e.target.value;
+          generateOPORD();
+        });
+      });
+
+      document.querySelectorAll('.btn-remove-team').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const tIdx = parseInt(e.target.dataset.tidx);
+          state.teams.splice(tIdx, 1);
+          renderTeams();
+          generateOPORD();
+        });
+      });
+    }
+
+    // BUTTON ACTIONS
+    document.getElementById('btnAddShip').addEventListener('click', () => {
+      state.ships.push({
+        id: `ship-${Date.now()}`,
+        name: 'RSI Ursa Medivac (Terrestre Blindado / 1x Cama T3 + Spawn)',
+        role: 'Apoyo Terrestre & Cama Médica',
+        callsign: 'Ursa-1'
+      });
+      renderShips();
+      renderTeams();
+      generateOPORD();
+    });
+
+    document.getElementById('btnAddTeam').addEventListener('click', () => {
+      state.teams.push({
+        id: `team-${Date.now()}`,
+        name: `Equipo ${String.fromCharCode(65 + state.teams.length)} // Apoyo`,
+        shipId: state.ships[0] ? state.ships[0].id : '',
+        operators: [
+          { name: '', role: 'Líder de Asalto / Mando Operativo' },
+          { name: '', role: 'Médico de Vanguardia (ParaMed Gun)' }
+        ],
+        equipment: 'Fusiles de asalto, Multi-Tool médica, humo, MedPens'
+      });
+      renderTeams();
+      generateOPORD();
+    });
+
+    // PRESET TEAMS
+    document.getElementById('presetBinomios').addEventListener('click', () => {
+      state.teams = [
+        {
+          id: 'team-1',
+          name: 'Binomio Alfa // Punta de Lanza (Brecha)',
+          shipId: state.ships[0]?.id || '',
+          operators: [{ name: '@TheRazorc', role: 'Breacher / Asalto (Punta de Lanza)' }, { name: '@Shozt', role: 'Médico de Vanguardia (ParaMed Gun)' }],
+          equipment: 'Fusil de asalto, Multi-Tool médica, humo, 4x Hemozaline'
+        },
+        {
+          id: 'team-2',
+          name: 'Binomio Bravo // Soporte Pesado & Cero Asomo',
+          shipId: state.ships[0]?.id || '',
+          operators: [{ name: '@Druidaloco', role: 'Operador LMG Supresión (FS9 / Demeco)' }, { name: '@Ismaelviac', role: 'Especialista Tractor Beam (Cero Asomo)' }],
+          equipment: 'FS9 / Demeco LMG (75 balas), Multi-Tool con Tractor Beam (tracción bajas)'
+        },
+        {
+          id: 'team-3',
+          name: 'Binomio Charlie // Extracción, Piloto & Recon',
+          shipId: state.ships[1]?.id || state.ships[0]?.id || '',
+          operators: [{ name: '@PilotoMERR', role: 'Piloto de Evacuación / Dropship' }, { name: '@ReconScout', role: 'Observador Óptico (Telémetro / Rangefinder)' }],
+          equipment: 'Nave médica en ralentí, prismáticos ópticos y baliza'
+        }
+      ];
+      renderTeams();
+      generateOPORD();
+    });
+
+    document.getElementById('presetTrinomios').addEventListener('click', () => {
+      state.teams = [
+        {
+          id: 'team-1',
+          name: 'Trinomio 1 // Asalto, Brecha y Triage',
+          shipId: state.ships[0]?.id || '',
+          operators: [
+            { name: '@Operador1', role: 'Líder de Asalto / Mando Operativo' },
+            { name: '@Operador2', role: 'Médico de Vanguardia (ParaMed Gun)' },
+            { name: '@Operador3', role: 'Especialista Tractor Beam (Cero Asomo)' }
+          ],
+          equipment: 'Fusiles, Tractor Beam, humo y kit quirúrgico'
+        },
+        {
+          id: 'team-2',
+          name: 'Trinomio 2 // Cobertura Pesada & Extracción',
+          shipId: state.ships[1]?.id || state.ships[0]?.id || '',
+          operators: [
+            { name: '@Operador4', role: 'Operador LMG Supresión (FS9 / Demeco)' },
+            { name: '@Operador5', role: 'Tirador de Élite / Sniper Recon (16x)' },
+            { name: '@Operador6', role: 'Piloto de Evacuación / Dropship' }
+          ],
+          equipment: 'FS9 LMG, rifle de precisión con telémetro, nave médica'
+        }
+      ];
+      renderTeams();
+      generateOPORD();
+    });
+
+    document.getElementById('presetEquipos4').addEventListener('click', () => {
+      state.teams = [
+        {
+          id: 'team-1',
+          name: 'Equipo Alfa // Asalto & Infiltración (4 Ops)',
+          shipId: state.ships[0]?.id || '',
+          operators: [
+            { name: '@TheRazorc', role: 'Líder de Asalto / Mando Operativo' },
+            { name: '@Shozt', role: 'Breacher / Asalto (Punta de Lanza)' },
+            { name: '@Operador3', role: 'Médico de Vanguardia (ParaMed Gun)' },
+            { name: '@Operador4', role: 'Especialista en Demoliciones / C4' }
+          ],
+          equipment: 'Fusiles de asalto, C4, Multi-Tool médica, humo, 4x Hemozaline'
+        },
+        {
+          id: 'team-2',
+          name: 'Equipo Bravo // Contención, Extracción & Apoyo (4 Ops)',
+          shipId: state.ships[1]?.id || state.ships[0]?.id || '',
+          operators: [
+            { name: '@Druidaloco', role: 'Operador LMG Supresión (FS9 / Demeco)' },
+            { name: '@Ismaelviac', role: 'Especialista Tractor Beam (Cero Asomo)' },
+            { name: '@PilotoMERR', role: 'Piloto de Evacuación / Dropship' },
+            { name: '@ReconScout', role: 'Observador Óptico (Telémetro / Rangefinder)' }
+          ],
+          equipment: 'FS9 / Demeco LMG, Multi-Tool con Tractor Beam, telémetro'
+        }
+      ];
+      renderTeams();
+      generateOPORD();
+    });
+
+    // DIRECTIVE CHIPS
+    document.querySelectorAll('.directive-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const textToInsert = chip.dataset.text;
+        if (!opDirectives.value.includes(textToInsert)) {
+          opDirectives.value = opDirectives.value.trim() + '\n' + textToInsert;
+          generateOPORD();
+        }
+      });
+    });
+
+    // T.S.O. CALCULATION
+    function calculateTSO() {
+      const sum = (parseFloat(tso1.value) || 0) +
+                  (parseFloat(tso2.value) || 0) +
+                  (parseFloat(tso3.value) || 0) +
+                  (parseFloat(tso4.value) || 0);
+      tsoDisplay.textContent = `${sum} minutos`;
+      return sum;
+    }
+
+    // OPORD GENERATOR WITH VERSE GUIDE LINK
+    function generateOPORD() {
+      const totalTso = calculateTSO();
+
+      let timestampStr = '';
+      if (opDate.value && opTime.value) {
+        const dateTime = new Date(`${opDate.value}T${opTime.value}`);
+        const ts = Math.floor(dateTime.getTime() / 1000);
+        timestampStr = `<t:${ts}:F>`;
+      } else {
+        timestampStr = 'Hora a confirmar en Malla';
+      }
+
+      let fleetStr = '';
+      state.ships.forEach((ship, idx) => {
+        const sName = ship.name.trim();
+        const sRole = ship.role.trim();
+        fleetStr += `• **[NAVE ${idx + 1}]** ${sName} \n  └ *Rol:* ${sRole}\n`;
+      });
+
+      let teamsStr = '';
+      state.teams.forEach((t) => {
+        const assignedShip = state.ships.find(s => s.id === t.shipId);
+        const shipLabel = assignedShip ? assignedShip.name.split('(')[0].trim() : 'Sin asignar';
+        
+        teamsStr += `• 🛡️ **${t.name}** [Embarque: *${shipLabel}*]\n`;
+        t.operators.forEach(op => {
+          const opName = op.name.trim() || '@PorAsignar';
+          teamsStr += `   - ${opName} *(${op.role.trim() || 'Operador'})*\n`;
+        });
+        if (t.equipment.trim()) {
+          teamsStr += `   └ *Dotación:* ${t.equipment.trim()}\n`;
+        }
+        teamsStr += '\n';
+      });
+
+      const verseLinkFormatted = opVerseGuideUrl.value.trim() 
+        ? `\n🔗 **MAPA INTERACTIVO VERSE GUIDE:** <${opVerseGuideUrl.value.trim()}>` 
+        : '';
+
+      const opord = 
+`# 🚨 [MEDRECON] ORDEN DE OPERACIÓN TÁCTICA (OPORD)
+**OPERACIÓN:** ${opName.value.trim()}
+**ZONA / VERSE GUIDE:** ${opLocation.value.trim()}${verseLinkFormatted}
+**NIVEL DE AMENAZA:** ${opThreat.value.trim()}
+
+📅 **HORA DE DESPEGUE:** ${timestampStr}
+⏱️ **T.S.O. TOTAL ESTIMADO:** ${totalTso} minutos desde salto
+📍 **LZ / PUNTO CERO:** Coordenadas fijadas fuera de radar
+🚪 **VENTANA DE RAMPA:** 3 minutos máx. con motores en ralentí
+
+🚀 **FLOTA & NAVES ASIGNADAS (${state.ships.length}):**
+${fleetStr.trim()}
+
+👥 **DESPLIEGUE DE EQUIPOS & EMBARQUE:**
+${teamsStr.trim()}
+
+📜 **DIRECTIVAS DOCTRINALES DE LA MISIÓN:**
+${opDirectives.value.trim()}
+
+🛑 **PALABRA DE ABORTO / EMERGENCIA:** **${opCode.value.trim()}** *(Repliegue total inmediato a rampa)*
+
+✅ ⚕️ *Confirmad recepción de orden y presencia en frecuencia táctica de MedRecon.*`;
+
+      opordOutput.value = opord;
+    }
+
+    // DEMO STARLANCER
+    document.getElementById('btnDemoStarlancer').addEventListener('click', () => {
+      opName.value = 'Operación «Asalto Starlancer en Narenas Rest»';
+      opLocation.value = 'Pyro // Bloom (Pyro III) // Narenas Rest (Asentamiento & Hangares)';
+      opVerseGuideUrl.value = 'https://verseguide.com/location/PYRO/III#poi|hG2bQ5w4IWjWsljqHhRBk9OeIQzLdvrS4KBXhLie0l03mmuqkehR81tRAxFlCvXXZY0H2QNaZf';
+      btnTestVerseLink.href = opVerseGuideUrl.value;
+      opThreat.value = 'Hostil Alta (Torretas AA Activas + 2 Patrullas NPCs de Asalto)';
+      opCode.value = '«ÉXODO 9»';
+      
+      state.ships = [
+        {
+          id: 'ship-1',
+          name: 'MISC Starlancer TAC (Transporte Táctico / Cañones Gemelos)',
+          role: 'Nave Nodriza / Dropship de Asalto & Fuego Pesado',
+          callsign: 'Lancer-Líder'
+        },
+        {
+          id: 'ship-2',
+          name: 'Drake Cutlass Red (Médica / 2x Camas T2-T3)',
+          role: 'Evacuación Rápida & Bahía de Triage CASEVAC',
+          callsign: 'Ángel Rojo'
+        },
+        {
+          id: 'ship-3',
+          name: 'RSI Ursa Medivac (Terrestre Blindado / 1x Cama T3 + Spawn)',
+          role: 'Aproximación Terrestre Infiltrada bajo AA',
+          callsign: 'Oruga Médica'
+        }
+      ];
+
+      state.teams = [
+        {
+          id: 'team-1',
+          name: 'Equipo Alfa // Asalto Pesado (4 Efectivos)',
+          shipId: 'ship-1',
+          operators: [
+            { name: '@TheRazorc', role: 'Líder de Asalto / Mando Operativo' },
+            { name: '@Shozt', role: 'Breacher / Asalto (Punta de Lanza)' },
+            { name: '@Operador1', role: 'Especialista en Demoliciones / C4' },
+            { name: '@Operador2', role: 'Médico de Vanguardia (ParaMed Gun)' }
+          ],
+          equipment: 'Fusiles de asalto, C4, humo denso, 4x Hemozaline, blindaje pesado'
+        },
+        {
+          id: 'team-2',
+          name: 'Equipo Bravo // Tracción «Cero Asomo» & Triage (3 Efectivos)',
+          shipId: 'ship-2',
+          operators: [
+            { name: '@Druidaloco', role: 'Operador LMG Supresión (FS9 / Demeco)' },
+            { name: '@Ismaelviac', role: 'Especialista Tractor Beam (Cero Asomo)' },
+            { name: '@MédicoBravo', role: 'Médico de Campo / Cirujano (Trauma)' }
+          ],
+          equipment: 'FS9 LMG (75 balas), Multi-Tool con Tractor Beam, lechos T2-T3'
+        },
+        {
+          id: 'team-3',
+          name: 'Equipo Charlie // Terrestre & Recon (2 Efectivos)',
+          shipId: 'ship-3',
+          operators: [
+            { name: '@ConductorUrsa', role: 'Conductor Terrestre Blindado (Ursa / Spartan)' },
+            { name: '@ReconScout', role: 'Observador Óptico (Telémetro / Rangefinder)' }
+          ],
+          equipment: 'Ursa Medivac, prismáticos con telémetro, rifle francotirador 16x'
+        }
+      ];
+
+      opDirectives.value = 
+`• Despliegue en Pyro III // Narenas Rest: Starlancer TAC proporciona cobertura aérea perimetral y desembarca al Equipo Alfa a 1.200m.
+• El Equipo Charlie infiltra el Ursa Medivac sorteando las defensas gracias al informe de Recon.
+• Protocolo «Cero Asomo»: Tracción de heridos con Tractor Beam hacia el interior del Ursa / Cutlass Red sin exponerse a fuego abierto.
+• Regla de los 10 Segundos activa durante todo el avance terrestre.`;
+
+      renderShips();
+      renderTeams();
+      generateOPORD();
+      showToast('⚡ Demo Starlancer cargada con éxito', '⚡');
+    });
+
+    // CLEAR FORM
+    document.getElementById('btnClear').addEventListener('click', () => {
+      opName.value = '';
+      opLocation.value = '';
+      opVerseGuideUrl.value = '';
+      opThreat.value = '';
+      opDirectives.value = '';
+      state.ships = [{
+        id: 'ship-1',
+        name: 'Drake Cutlass Red (Médica / 2x Camas T2-T3)',
+        role: 'Transporte y Triage',
+        callsign: 'Médica 1'
+      }];
+      state.teams = [{
+        id: 'team-1',
+        name: 'Equipo Alfa',
+        shipId: 'ship-1',
+        operators: [{ name: '', role: 'Breacher / Asalto (Punta de Lanza)' }],
+        equipment: 'Dotación estándar'
+      }];
+      renderShips();
+      renderTeams();
+      generateOPORD();
+    });
+
+    // TOAST NOTIFICATION HELPER
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+    const toastIcon = document.getElementById('toastIcon');
+
+    function showToast(msg, icon = '🚀') {
+      toastMsg.textContent = msg;
+      toastIcon.textContent = icon;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 2600);
+    }
+
+    // CLIPBOARD COPY
+    document.getElementById('btnCopyOpord').addEventListener('click', () => {
+      navigator.clipboard.writeText(opordOutput.value).then(() => {
+        showToast('¡Orden OPORD copiada al portapapeles con éxito!');
+      });
+    });
+
+    // EXPORT PLANIFICATION AS .JSON FILE
+    function getMissionPayload() {
+      return {
+        medreconVersion: '2.0',
+        exportedAt: new Date().toISOString(),
+        opName: opName.value.trim() || 'Operación sin título',
+        opLocation: opLocation.value.trim(),
+        opVerseGuideUrl: opVerseGuideUrl.value.trim(),
+        opDate: opDate.value,
+        opTime: opTime.value,
+        opCode: opCode.value.trim(),
+        opThreat: opThreat.value.trim(),
+        opDirectives: opDirectives.value.trim(),
+        tso: [tso1.value, tso2.value, tso3.value, tso4.value],
+        ships: JSON.parse(JSON.stringify(state.ships)),
+        teams: JSON.parse(JSON.stringify(state.teams))
+      };
+    }
+
+    document.getElementById('btnExportJson').addEventListener('click', () => {
+      const data = getMissionPayload();
+      const jsonStr = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const safeName = (data.opName || 'Mision_MedRecon').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 32);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `OPORD_${safeName}_${data.opDate || 'Despliegue'}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast(`💾 Descargando OPORD_${safeName}.json`, '💾');
+    });
+
+    // IMPORT PLANIFICATION FROM .JSON FILE
+    const btnImportJsonTrigger = document.getElementById('btnImportJsonTrigger');
+    const importJsonFileInput = document.getElementById('importJsonFileInput');
+
+    btnImportJsonTrigger.addEventListener('click', () => {
+      importJsonFileInput.click();
+    });
+
+    importJsonFileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const m = JSON.parse(event.target.result);
+          if (!m.opName && !m.ships && !m.teams) {
+            throw new Error('Formato JSON no compatible con MedRecon');
+          }
+
+          opName.value = m.opName || '';
+          opLocation.value = m.opLocation || '';
+          opVerseGuideUrl.value = m.opVerseGuideUrl || '';
+          btnTestVerseLink.href = m.opVerseGuideUrl || 'https://verseguide.com';
+          opDate.value = m.opDate || '';
+          opTime.value = m.opTime || '';
+          opCode.value = m.opCode || '';
+          opThreat.value = m.opThreat || '';
+          opDirectives.value = m.opDirectives || '';
+          if (m.tso && Array.isArray(m.tso)) {
+            tso1.value = m.tso[0] || '5';
+            tso2.value = m.tso[1] || '3';
+            tso3.value = m.tso[2] || '4';
+            tso4.value = m.tso[3] || '2';
+          }
+          if (m.ships && Array.isArray(m.ships)) state.ships = m.ships;
+          if (m.teams && Array.isArray(m.teams)) state.teams = m.teams;
+
+          renderShips();
+          renderTeams();
+          generateOPORD();
+          showToast(`📥 Planificación cargada con éxito desde ${file.name}`, '📥');
+        } catch(err) {
+          alert('Error al leer el archivo JSON: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+      importJsonFileInput.value = ''; // Reset input
+    });
+
+    // SAVE & RESTORE COMPLETE MISSIONS (LOCALSTORAGE HISTORIAL)
+    const btnSaveMission = document.getElementById('btnSaveMission');
+    const btnLoadMission = document.getElementById('btnLoadMission');
+    const modalSavedMissions = document.getElementById('modalSavedMissions');
+    const btnCloseModal = document.getElementById('btnCloseModal');
+    const savedMissionsList = document.getElementById('savedMissionsList');
+    const savedCountLabel = document.getElementById('savedCountLabel');
+    const btnClearAllSaved = document.getElementById('btnClearAllSaved');
+
+    btnSaveMission.addEventListener('click', () => {
+      const missionData = getMissionPayload();
+      missionData.id = `mission-${Date.now()}`;
+      missionData.savedAt = new Date().toLocaleString('es-ES');
+
+      const saved = getStoredList(KEY_SAVED_MISSIONS);
+      saved.unshift(missionData);
+      localStorage.setItem(KEY_SAVED_MISSIONS, JSON.stringify(saved));
+      showToast(`💾 Misión «${missionData.opName}» guardada en historial`, '💾');
+    });
+
+    btnLoadMission.addEventListener('click', () => {
+      renderSavedMissionsList();
+      modalSavedMissions.classList.remove('hidden');
+    });
+
+    btnCloseModal.addEventListener('click', () => {
+      modalSavedMissions.classList.add('hidden');
+    });
+
+    function renderSavedMissionsList() {
+      const saved = getStoredList(KEY_SAVED_MISSIONS);
+      savedCountLabel.textContent = saved.length;
+      savedMissionsList.innerHTML = '';
+
+      if (saved.length === 0) {
+        savedMissionsList.innerHTML = `<div class="p-6 text-center text-xs text-slate-500 mono">No hay operaciones guardadas aún en este navegador.</div>`;
+        return;
+      }
+
+      saved.forEach((m, idx) => {
+        const card = document.createElement('div');
+        card.className = 'bg-slate-900/90 border border-slate-700/80 rounded-xl p-3 flex items-center justify-between gap-3 text-xs';
+        card.innerHTML = `
+          <div>
+            <div class="font-bold text-white">${m.opName}</div>
+            <div class="text-[11px] text-cyan-400 mono">${m.opLocation || 'Sin ubicación'} • <span class="text-slate-400">${m.savedAt}</span></div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" class="btn-restore-mission px-2.5 py-1 rounded bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/40 text-cyan-300 font-bold mono" data-idx="${idx}">
+              Cargar
+            </button>
+            <button type="button" class="btn-delete-mission px-2 py-1 rounded bg-red-950/60 hover:bg-red-900/60 border border-red-500/30 text-red-400 font-bold mono" data-idx="${idx}">
+              ✕
+            </button>
+          </div>
+        `;
+        savedMissionsList.appendChild(card);
+      });
+
+      document.querySelectorAll('.btn-restore-mission').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt(e.target.dataset.idx);
+          const saved = getStoredList(KEY_SAVED_MISSIONS);
+          const m = saved[idx];
+          if (!m) return;
+
+          opName.value = m.opName;
+          opLocation.value = m.opLocation;
+          opVerseGuideUrl.value = m.opVerseGuideUrl || '';
+          btnTestVerseLink.href = m.opVerseGuideUrl || 'https://verseguide.com';
+          opDate.value = m.opDate;
+          opTime.value = m.opTime;
+          opCode.value = m.opCode;
+          opThreat.value = m.opThreat;
+          opDirectives.value = m.opDirectives;
+          if (m.tso) {
+            tso1.value = m.tso[0];
+            tso2.value = m.tso[1];
+            tso3.value = m.tso[2];
+            tso4.value = m.tso[3];
+          }
+          state.ships = m.ships;
+          state.teams = m.teams;
+
+          renderShips();
+          renderTeams();
+          generateOPORD();
+          modalSavedMissions.classList.add('hidden');
+          showToast(`📂 Misión «${m.opName}» restaurada`, '📂');
+        });
+      });
+
+      document.querySelectorAll('.btn-delete-mission').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt(e.target.dataset.idx);
+          const saved = getStoredList(KEY_SAVED_MISSIONS);
+          saved.splice(idx, 1);
+          localStorage.setItem(KEY_SAVED_MISSIONS, JSON.stringify(saved));
+          renderSavedMissionsList();
+        });
+      });
+    }
+
+    btnClearAllSaved.addEventListener('click', () => {
+      if (confirm('¿Seguro que deseas vaciar el historial de operaciones guardadas?')) {
+        localStorage.removeItem(KEY_SAVED_MISSIONS);
+        renderSavedMissionsList();
+      }
+    });
+
+    // RADAR COORDINATES TRANSFER DETECTION & HANDLER
+    function checkRadarTransfer() {
+      const banner = document.getElementById('radarTransferBanner');
+      const infoEl = document.getElementById('radarTransferInfo');
+      const timeEl = document.getElementById('radarTransferTime');
+      const btnApplyLoc = document.getElementById('btnApplyRadarToLocation');
+      const btnApplyDir = document.getElementById('btnApplyRadarToDirectives');
+      const btnDismiss = document.getElementById('btnDismissRadarTransfer');
+
+      const raw = localStorage.getItem(KEY_RADAR_TRANSFER);
+      if (!raw) return;
+
+      try {
+        const payload = JSON.parse(raw);
+        banner.classList.remove('hidden');
+        timeEl.textContent = new Date(payload.timestamp).toLocaleTimeString('es-ES');
+        infoEl.textContent = `Blanco Fijado // Vector: ${payload.vector} | Coordenadas: [X: ${payload.targetX}m, Y: ${payload.targetY}m] (${payload.dist1 || ''})`;
+
+        btnApplyLoc.onclick = () => {
+          opLocation.value = `LZ Táctica Radar [Vector: ${payload.vector} | X:${payload.targetX}m, Y:${payload.targetY}m]`;
+          generateOPORD();
+          showToast('🎯 Coordenadas del Radar aplicadas a la LZ/Ubicación', '🎯');
+        };
+
+        btnApplyDir.onclick = () => {
+          const text = `• Coordenadas tácticas fijadas por Radar: Vector ${payload.vector} [Coord Rel: X:${payload.targetX}m, Y:${payload.targetY}m]. Infiltración perimetral a 500m del blanco.`;
+          if (!opDirectives.value.includes(text)) {
+            opDirectives.value = opDirectives.value.trim() + '\n' + text;
+            generateOPORD();
+            showToast('🎯 Coordenadas del Radar añadidas a Directivas', '🎯');
+          }
+        };
+
+        btnDismiss.onclick = () => {
+          banner.classList.add('hidden');
+          localStorage.removeItem(KEY_RADAR_TRANSFER);
+        };
+      } catch(e) {
+        console.error('Error parsing radar payload', e);
+      }
+    }
+
+    // PWA SERVICE WORKER REGISTRATION & INSTALL PROMPT
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('../sw.js')
+          .then(reg => console.log('Planificador SW registrado', reg.scope))
+          .catch(err => console.log('SW registration error:', err));
+      });
+    }
+
+    let deferredPrompt;
+    const btnPwaInstall = document.getElementById('btnPwaInstall');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (btnPwaInstall) {
+        btnPwaInstall.classList.remove('hidden');
+        btnPwaInstall.classList.add('inline-flex');
+      }
+    });
+
+    if (btnPwaInstall) {
+      btnPwaInstall.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          btnPwaInstall.classList.add('hidden');
+        }
+        deferredPrompt = null;
+      });
+    }
+
+    // LISTENERS FOR LIVE OPORD UPDATE
+    [opName, opDate, opTime, opCode, opDirectives, tso1, tso2, tso3, tso4].forEach(el => {
+      el.addEventListener('input', generateOPORD);
+    });
+
+    // INITIALIZATION
+    updateMemoryBadge();
+    renderShips();
+    renderTeams();
+    generateOPORD();
+    checkRadarTransfer();
+  </script>
+</body>
+
+</html>

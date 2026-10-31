@@ -1,0 +1,20 @@
+{
+  "name": "MedRecon // Utilidades Tácticas",
+  "short_name": "MedRecon",
+  "description": "Suite táctica militar para operaciones de reconocimiento, medicina de combate y triangulación en Star Citizen.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#060913",
+  "theme_color": "#ef4444",
+  "icons": [
+    {
+      "src": "assets/CCBE_MEDRECON.jpg",
+      "sizes": "192x192 512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "games", "productivity"]
+}
