@@ -1013,6 +1013,8 @@
     .cat-wreck { background: rgba(0, 210, 255, 0.2); color: #00d2ff; border: 1px solid #00d2ff; }
     .cat-rescue { background: rgba(255, 71, 87, 0.2); color: #ff4757; border: 1px solid #ff4757; }
     .cat-tactical { background: rgba(0, 255, 170, 0.2); color: #00ffaa; border: 1px solid #00ffaa; }
+    .cat-hostile { background: rgba(255, 42, 75, 0.2); color: #ff2a4b; border: 1px solid #ff2a4b; }
+    .cat-bogey { background: rgba(255, 170, 0, 0.2); color: #ffaa00; border: 1px solid #ffaa00; }
 
     footer {
       margin-top: auto;
@@ -1187,6 +1189,48 @@
     .dss-card.cat-dss-salvage { border-left: 3px solid #c084fc; }
     .dss-card.cat-dss-rescue { border-left: 3px solid var(--accent-red); }
     .dss-card.cat-dss-waypoint { border-left: 3px solid var(--accent-green); }
+    .dss-card.cat-dss-hostile { border-left: 3px solid #ff2a4b; background: rgba(35, 10, 16, 0.6); }
+    .dss-card.cat-dss-hostile:hover { border-color: #ff2a4b; box-shadow: 0 4px 20px rgba(255, 42, 75, 0.3); }
+    .dss-card.cat-dss-bogey { border-left: 3px solid #ffaa00; background: rgba(35, 24, 10, 0.55); }
+    .dss-card.cat-dss-bogey:hover { border-color: #ffaa00; box-shadow: 0 4px 16px rgba(255, 170, 0, 0.25); }
+
+    .dss-status-hostile { background: rgba(255, 42, 75, 0.2); color: #ff2a4b; border: 1px solid rgba(255, 42, 75, 0.5); }
+    .dss-status-engaging { background: rgba(255, 119, 0, 0.2); color: #ff7700; border: 1px solid rgba(255, 119, 0, 0.5); }
+    .dss-status-neutralized { background: rgba(126, 149, 176, 0.15); color: #7e95b0; border: 1px solid rgba(126, 149, 176, 0.4); text-decoration: line-through; }
+
+    .dss-cam-btn.marking-active {
+      background: rgba(255, 42, 75, 0.35) !important;
+      color: #ff2a4b !important;
+      border-color: #ff2a4b !important;
+      box-shadow: 0 0 16px rgba(255, 42, 75, 0.7) !important;
+      animation: pulse-dss-mark 1.2s infinite alternate;
+    }
+    @keyframes pulse-dss-mark {
+      0% { box-shadow: 0 0 6px rgba(255, 42, 75, 0.4); }
+      100% { box-shadow: 0 0 18px rgba(255, 42, 75, 0.95); }
+    }
+
+    .dss-filter-btn {
+      background: rgba(10, 18, 30, 0.85);
+      border: 1px solid var(--border-hud);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      padding: 4px 10px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .dss-filter-btn:hover {
+      border-color: var(--accent-cyan);
+      color: var(--text-main);
+    }
+    .dss-filter-btn.active {
+      background: rgba(0, 210, 255, 0.15);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+    }
 
     .dss-vector-box {
       display: inline-flex;
@@ -1778,6 +1822,7 @@
             <option value="wreck">📦 Pecio/Carga (Expira en 8h)</option>
             <option value="rescue">🚨 Rescate (Expira en 24h)</option>
             <option value="tactical">🛡️ Base Táctica (Permanente)</option>
+            <option value="hostile">🎯 Contacto Hostil / Base Enemiga</option>
           </select>
           <input type="text" id="save-pilot" placeholder="Piloto CCBE" value="Piloto CCBE">
           <button class="btn" id="btn-save-poi">
@@ -1849,6 +1894,11 @@
           <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-bottom:10px;">
             <input type="text" id="dss-poi-name" placeholder="Nombre descriptivo (ej: Filón Quantainium 48% x3 rocas)" value="Filón Quantainium 52.4% // 4 Clústeres">
             <select id="dss-poi-category">
+              <option value="hostile">🎯 Contacto Hostil / Caza Interceptor</option>
+              <option value="enemy_capital">⚔️ Nave Capital Hostil (Corbeta / Fragata)</option>
+              <option value="pirate">🏴‍☠️ Incursor / Pirata / Forajido</option>
+              <option value="enemy_structure">📡 Torreta / Instalación Hostil</option>
+              <option value="bogey">⚠️ Bogey Desconocido / Sospechoso</option>
               <option value="quant">💎 Quantainium (Alta Inestabilidad)</option>
               <option value="mining">⛏️ Minería General (Bexalite / Gold / Taranite)</option>
               <option value="salvage">📦 Pecio / Salvage (RMC / Componentes)</option>
@@ -1929,8 +1979,15 @@
               <button type="button" onclick="dssClearSelection()" style="background:rgba(255,71,87,0.2); border:1px solid var(--accent-red); color:var(--accent-red); cursor:pointer; font-size:10px; border-radius:2px; padding:2px 6px; font-family:var(--font-mono);" title="Deseleccionar blanco">✕ LIBERAR</button>
             </div>
 
-            <!-- HUD BOTONES DE CÁMARA (SUPERIOR DERECHA) -->
+            <!-- HUD TARGET MARKING BANNER (SUPERIOR CENTRO CUANDO ESTÁ ACTIVO) -->
+            <div id="dss-hud-marking-bar" style="display:none; position:absolute; top:12px; left:50%; transform:translateX(-50%); background:rgba(35,10,16,0.96); border:1px solid #ff2a4b; border-radius:4px; padding:6px 14px; font-family:var(--font-mono); font-size:11px; color:#fff; box-shadow:0 0 20px rgba(255,42,75,0.7); z-index:12; white-space:nowrap; align-items:center; gap:12px;">
+              <span style="font-weight:bold; color:#ff4757;">🔴 MODO MARCAR OBJETIVOS ACTIVO — Haz clic en el Grid 3D para fijar enemigos</span>
+              <button type="button" id="btn-dss-exit-marking-mode" style="background:rgba(255,42,75,0.25); border:1px solid #ff2a4b; color:#ff6b7e; cursor:pointer; font-size:10px; border-radius:2px; padding:2px 8px; font-family:var(--font-mono);" title="Salir del modo de marcado">✕ SALIR</button>
+            </div>
+
+            <!-- HUD BOTONES DE CÁMARA Y MARCADOR (SUPERIOR DERECHA) -->
             <div style="position:absolute; top:12px; right:14px; display:flex; gap:6px; flex-wrap:wrap; z-index:5;">
+              <button type="button" class="dss-cam-btn" id="btn-dss-mark-target-mode" title="Activar modo para marcar objetivos enemigos con un clic en el Grid 3D" style="border-color:rgba(255,42,75,0.4); color:#ff6b7e;"><span>🎯</span> Marcar en Grid</button>
               <button type="button" class="dss-cam-btn active" id="btn-cam-iso" title="Perspectiva Isométrica Táctica 3D">📐 Isométrica 3D</button>
               <button type="button" class="dss-cam-btn" id="btn-cam-top" title="Vista Cenital Superior (Plano Horizontal)">⬆️ Cenital (Top)</button>
               <button type="button" class="dss-cam-btn" id="btn-cam-side" title="Vista Lateral de Nivel">➡️ Lateral</button>
@@ -1956,6 +2013,8 @@
           <!-- LEYENDA DEL HOLOMAPA 3D -->
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:11px; color:var(--text-muted); font-family:var(--font-mono); flex-wrap:wrap; gap:10px;">
             <div style="display:flex; gap:14px; flex-wrap:wrap;">
+              <span><span style="color:#ff2a4b;">◆</span> 🎯 Hostil / Enemigo</span>
+              <span><span style="color:#ffaa00;">◆</span> ⚠️ Bogey</span>
               <span><span style="color:#00ffff;">◆</span> 💎 Quantainium</span>
               <span><span style="color:#f5a623;">◆</span> ⛏️ Minería</span>
               <span><span style="color:#c084fc;">◆</span> 📦 Pecio/Salvage</span>
@@ -1969,8 +2028,33 @@
         <!-- MATRIZ DE YACIMIENTOS & GUÍA DE VUELO (SIEMPRE VISIBLE DIRECTAMENTE DEBAJO DEL HOLOMAPA) -->
         <div id="dss-view-matrix" style="margin-top:24px; border-top:1px solid var(--border-hud); padding-top:16px;">
           <div style="font-size:13px; font-weight:bold; color:var(--accent-cyan); margin-bottom:12px; text-transform:uppercase; letter-spacing:1px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-            <span>📋 Matriz de Yacimientos & Guía de Vuelo en Cabina (<span id="dss-count-badge">0</span>)</span>
+            <span>📋 Matriz Táctica de Contactos & Objetivos (<span id="dss-count-badge">0</span>)</span>
             <span style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">Haz clic en cualquier tarjeta para fijar y enfocar la cámara 3D en el Holomapa</span>
+          </div>
+
+          <!-- BARRA DE RESUMEN DE AMENAZAS EN GRID TÁCTICO -->
+          <div id="dss-threat-summary-bar" style="display:none; background:rgba(30,8,14,0.85); border:1px solid rgba(255,42,75,0.45); border-radius:4px; padding:10px 14px; margin-bottom:12px; font-family:var(--font-mono); font-size:12px; color:#fff; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="pulse-dot" style="background:#ff2a4b; box-shadow:0 0 10px #ff2a4b;"></span>
+              <span style="font-weight:bold; color:#ff6b7e;">ALERTA DE GRID TÁCTICO:</span>
+              <span id="dss-threat-summary-text" style="color:var(--text-main);">0 Amenazas Detectadas</span>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button type="button" class="btn btn-sm btn-secondary" id="btn-dss-copy-all-targets" style="color:#ff6b7e; border-color:rgba(255,42,75,0.4);" title="Copiar informe con las coordenadas de todos los objetivos hostiles">
+                📋 Copiar Lista de Objetivos
+              </button>
+              <button type="button" class="btn btn-sm btn-secondary" id="btn-dss-clear-neutralized" style="color:var(--text-muted);" title="Eliminar del grid los objetivos marcados como neutralizados">
+                ☠️ Purgar Neutralizados
+              </button>
+            </div>
+          </div>
+
+          <!-- FILTROS DE MATRIZ TÁCTICA -->
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
+            <button type="button" class="dss-filter-btn active" id="btn-filter-all" data-filter="all">Todos (<span id="dss-filter-all-count">0</span>)</button>
+            <button type="button" class="dss-filter-btn" id="btn-filter-enemies" data-filter="enemies" style="border-color:rgba(255,42,75,0.4); color:#ff6b7e;">🎯 Objetivos / Enemigos (<span id="dss-filter-enemies-count">0</span>)</button>
+            <button type="button" class="dss-filter-btn" id="btn-filter-resources" data-filter="resources">💎 Recursos & Pecios (<span id="dss-filter-res-count">0</span>)</button>
+            <button type="button" class="dss-filter-btn" id="btn-filter-tactical" data-filter="tactical">🛡️ Balizas (<span id="dss-filter-tac-count">0</span>)</button>
           </div>
 
           <!-- CALCULADORA DE VELOCIDAD DE INTERCEPTACIÓN -->
@@ -3186,6 +3270,7 @@
         if (poi.category === 'wreck') { catClass = 'cat-wreck'; catLabel = 'Pecio/Carga'; }
         else if (poi.category === 'rescue') { catClass = 'cat-rescue'; catLabel = 'Rescate'; }
         else if (poi.category === 'tactical') { catClass = 'cat-tactical'; catLabel = 'Base Táctica'; }
+        else if (poi.category === 'hostile') { catClass = 'cat-hostile'; catLabel = '🎯 Hostil / Enemigo'; }
 
         const timeLeft = poi.expiresAt ? Math.max(0, Math.round((poi.expiresAt - Date.now()) / 3600000)) : null;
         const expireText = timeLeft !== null ? `Expira en: ${timeLeft}h` : 'Permanente';
@@ -3261,17 +3346,19 @@
     }
 
     // Deslizador de Transparencia de Sombra Noche (0% - 100%)
-    window.onShadowOpacityChange = function(val) {
+    function onShadowOpacityChange(val) {
       shadowOpacity = val / 100;
-      document.getElementById('shadow-opacity-pct').textContent = val + '%';
-      
-      // Actualizar botones rápidos activos
-      document.getElementById('btn-quick-0').classList.toggle('active', parseInt(val) === 0);
-      document.getElementById('btn-quick-55').classList.toggle('active', parseInt(val) === 55);
-      document.getElementById('btn-quick-85').classList.toggle('active', parseInt(val) === 85);
-      
+      const pctEl = document.getElementById('shadow-opacity-pct');
+      if (pctEl) pctEl.textContent = val + '%';
+      const b0 = document.getElementById('btn-quick-0');
+      const b55 = document.getElementById('btn-quick-55');
+      const b85 = document.getElementById('btn-quick-85');
+      if (b0) b0.classList.toggle('active', parseInt(val) === 0);
+      if (b55) b55.classList.toggle('active', parseInt(val) === 55);
+      if (b85) b85.classList.toggle('active', parseInt(val) === 85);
       renderMap();
-    };
+    }
+    window.onShadowOpacityChange = onShadowOpacityChange;
 
     window.setShadowQuick = function(val) {
       document.getElementById('slider-shadow-opacity').value = val;
@@ -3570,6 +3657,7 @@
         else if (poi.category === 'wreck') col = '#00ffff';
         else if (poi.category === 'rescue') col = '#ff4757';
         else if (poi.category === 'tactical') col = '#00ffaa';
+        else if (poi.category === 'hostile') col = '#ff2a4b';
 
         ctx.save();
         ctx.fillStyle = col;
@@ -3792,14 +3880,18 @@
 
     // Pegar Portapapeles
     document.getElementById('btn-paste').addEventListener('click', async () => {
+      let text = '';
       try {
-        const text = await navigator.clipboard.readText();
-        if (text) {
-          document.getElementById('input-coords').value = text;
-          computeCurrent();
-        }
+        text = await navigator.clipboard.readText();
       } catch (err) {
-        alert('No se pudo acceder automáticamente al portapapeles. Pega manualmente con Ctrl + V.');
+        console.warn('Clipboard readText restricted:', err);
+      }
+      if (!text) {
+        text = prompt('Introduce o pega (Ctrl + V) las coordenadas /showlocation de Star Citizen:') || '';
+      }
+      if (text.trim()) {
+        document.getElementById('input-coords').value = text.trim();
+        computeCurrent();
       }
     });
 
@@ -3890,6 +3982,36 @@
 
     let dssPois = [
       {
+        id: 'dss-demo-hostile-1',
+        name: '🎯 Cutlass Black Pirata // Escolta Hostil [Alpha-01]',
+        category: 'hostile',
+        scout: 'Radar Táctico CCBE',
+        coords: 'Coordinates: x:-18930708000.000000 y:-26100520000.000000 z:221800.000000',
+        x: -18930708000,
+        y: -26100520000,
+        z: 221800,
+        purity: 'Amenaza Nivel 3 // Escudos S2',
+        mass: 'Armamento Balístico S3 x4',
+        notes: 'Patrulla hostil en sector. Vector de combate activo.',
+        status: 'hostile',
+        createdAt: Date.now() - 1000 * 60 * 10
+      },
+      {
+        id: 'dss-demo-hostile-2',
+        name: '⚔️ Hammerhead Cañonera // Insignia Forajida [Bravo-Lead]',
+        category: 'enemy_capital',
+        scout: 'Radar Táctico CCBE',
+        coords: 'Coordinates: x:-18930718500.000000 y:-26100430000.000000 z:223500.000000',
+        x: -18930718500,
+        y: -26100430000,
+        z: 223500,
+        purity: 'Amenaza Crítica // 6x Torretas S4',
+        mass: 'Nave Capital Gunship',
+        notes: 'Cañonera pesada escoltada. Requiere bombardeo o escuadrón torpedo.',
+        status: 'hostile',
+        createdAt: Date.now() - 1000 * 60 * 25
+      },
+      {
         id: 'dss-demo-1',
         name: 'Filón Quantainium 48.2% (3 rocas)',
         category: 'quant',
@@ -3970,6 +4092,9 @@
     let dssShipSpeed = 800; // m/s
     let dssActiveTab = 'radar'; // 'radar' (3D) | 'matrix'
     let dssInputMode = 'coords'; // 'coords' | 'polar'
+    let dssMarkingMode = false; // Modo para marcar múltiples objetivos en el Grid 3D
+    let dssActiveFilter = 'all'; // 'all' | 'enemies' | 'resources' | 'tactical'
+    let dssMarkingReticle = null; // Retícula 3D para marcado en suelo
 
     // Load persisted state
     try {
@@ -4029,6 +4154,20 @@
         distH,
         bearingDeg: Math.round(bearingDeg),
         elevationDeg: parseFloat(elevDeg.toFixed(1))
+      };
+    }
+
+    function computeDssPointFromPolar(aX, aY, aZ, distM, bDeg, eDeg) {
+      const bRad = bDeg * (Math.PI / 180);
+      const eRad = eDeg * (Math.PI / 180);
+      const distH = distM * Math.cos(eRad);
+      const dz = distM * Math.sin(eRad);
+      const dx = distH * Math.sin(bRad);
+      const dy = distH * Math.cos(bRad);
+      return {
+        x: aX + dx,
+        y: aY + dy,
+        z: aZ + dz
       };
     }
 
@@ -4111,20 +4250,70 @@
       // Sort by distance (nearest first)
       enriched.sort((a, b) => a.vector.dist3d - b.vector.dist3d);
 
+      // Update counters
+      const totalAll = dssPois.length;
+      const totalEnemies = dssPois.filter(p => p.category === 'hostile' || p.category === 'enemy_capital' || p.category === 'pirate' || p.category === 'enemy_structure' || p.category === 'bogey').length;
+      const totalRes = dssPois.filter(p => p.category === 'quant' || p.category === 'mining' || p.category === 'salvage').length;
+      const totalTac = dssPois.filter(p => p.category === 'waypoint' || p.category === 'rescue').length;
+
+      const fAll = document.getElementById('dss-filter-all-count'); if (fAll) fAll.textContent = totalAll;
+      const fEn = document.getElementById('dss-filter-enemies-count'); if (fEn) fEn.textContent = totalEnemies;
+      const fRes = document.getElementById('dss-filter-res-count'); if (fRes) fRes.textContent = totalRes;
+      const fTac = document.getElementById('dss-filter-tactical-count') || document.getElementById('dss-filter-tac-count'); if (fTac) fTac.textContent = totalTac;
+
+      // Update Threat Summary Bar
+      const threatBar = document.getElementById('dss-threat-summary-bar');
+      const threatText = document.getElementById('dss-threat-summary-text');
+      if (threatBar && threatText) {
+        const activeHostiles = enriched.filter(p => (p.category === 'hostile' || p.category === 'enemy_capital' || p.category === 'pirate' || p.category === 'enemy_structure' || p.category === 'bogey') && p.status !== 'neutralized');
+        if (activeHostiles.length > 0) {
+          threatBar.style.display = 'flex';
+          const nearest = activeHostiles[0];
+          threatText.innerHTML = '<strong style="color:#ff2a4b;">' + activeHostiles.length + ' CONTACTO(S) ACTIVO(S)</strong> &bull; Más cercano: <span style="color:#ffaa00; font-weight:bold;">' + nearest.name + '</span> a <span style="color:#00ffaa; font-weight:bold;">' + nearest.vector.distKm.toFixed(1) + ' km</span> (Rumbo ' + nearest.vector.bearingDeg.toString().padStart(3, '0') + '°)';
+        } else {
+          threatBar.style.display = 'none';
+        }
+      }
+
+      // Filter contacts according to active tab
+      let listToRender = enriched;
+      if (dssActiveFilter === 'enemies') {
+        listToRender = enriched.filter(p => p.category === 'hostile' || p.category === 'enemy_capital' || p.category === 'pirate' || p.category === 'enemy_structure' || p.category === 'bogey');
+      } else if (dssActiveFilter === 'resources') {
+        listToRender = enriched.filter(p => p.category === 'quant' || p.category === 'mining' || p.category === 'salvage');
+      } else if (dssActiveFilter === 'tactical') {
+        listToRender = enriched.filter(p => p.category === 'waypoint' || p.category === 'rescue');
+      }
+
       let html = '';
-      enriched.forEach(poi => {
+      if (listToRender.length === 0) {
+        html = '<div style="color:var(--text-muted); font-size:12px; text-align:center; padding:24px; font-family:var(--font-mono);">No hay contactos registrados en esta categoría del Grid Táctico.</div>';
+      }
+      listToRender.forEach(poi => {
         let catClass = 'cat-dss-quant';
         let catBadgeClass = 'cat-mining';
         let catLabel = '💎 Quantainium';
-        if (poi.category === 'mining') { catClass = 'cat-dss-mining'; catBadgeClass = 'cat-mining'; catLabel = '⛏️ Minería'; }
+        if (poi.category === 'hostile') { catClass = 'cat-dss-hostile'; catBadgeClass = 'cat-hostile'; catLabel = '🎯 Hostil / Caza'; }
+        else if (poi.category === 'enemy_capital') { catClass = 'cat-dss-hostile'; catBadgeClass = 'cat-hostile'; catLabel = '⚔️ Nave Capital'; }
+        else if (poi.category === 'pirate') { catClass = 'cat-dss-hostile'; catBadgeClass = 'cat-hostile'; catLabel = '🏴‍☠️ Pirata / Bandido'; }
+        else if (poi.category === 'enemy_structure') { catClass = 'cat-dss-hostile'; catBadgeClass = 'cat-hostile'; catLabel = '📡 Torreta / Base'; }
+        else if (poi.category === 'bogey') { catClass = 'cat-dss-bogey'; catBadgeClass = 'cat-bogey'; catLabel = '⚠️ Bogey Amenaza'; }
+        else if (poi.category === 'mining') { catClass = 'cat-dss-mining'; catBadgeClass = 'cat-mining'; catLabel = '⛏️ Minería'; }
         else if (poi.category === 'salvage') { catClass = 'cat-dss-salvage'; catBadgeClass = 'cat-wreck'; catLabel = '📦 Salvage/Pecio'; }
         else if (poi.category === 'rescue') { catClass = 'cat-dss-rescue'; catBadgeClass = 'cat-rescue'; catLabel = '🚨 Rescate SAR'; }
         else if (poi.category === 'waypoint') { catClass = 'cat-dss-waypoint'; catBadgeClass = 'cat-tactical'; catLabel = '🛡️ Baliza Táctica'; }
 
-        let statusClass = 'dss-status-available';
-        let statusLabel = '🟢 DISPONIBLE';
-        if (poi.status === 'extracting') { statusClass = 'dss-status-extracting'; statusLabel = '🟡 EN EXTRACCIÓN'; }
-        else if (poi.status === 'exhausted') { statusClass = 'dss-status-exhausted'; statusLabel = '⚪ AGOTADO'; }
+        const isHostilePoi = (poi.category === 'hostile' || poi.category === 'enemy_capital' || poi.category === 'pirate' || poi.category === 'enemy_structure' || poi.category === 'bogey');
+        let statusClass = isHostilePoi ? 'dss-status-hostile' : 'dss-status-available';
+        let statusLabel = isHostilePoi ? '🔴 AMENAZA ACTIVA' : '🟢 DISPONIBLE';
+
+        if (isHostilePoi) {
+          if (poi.status === 'engaging') { statusClass = 'dss-status-engaging'; statusLabel = '⚔️ EN COMBATE'; }
+          else if (poi.status === 'neutralized') { statusClass = 'dss-status-neutralized'; statusLabel = '☠️ NEUTRALIZADO'; }
+        } else {
+          if (poi.status === 'extracting') { statusClass = 'dss-status-extracting'; statusLabel = '🟡 EN EXTRACCIÓN'; }
+          else if (poi.status === 'exhausted') { statusClass = 'dss-status-exhausted'; statusLabel = '⚪ AGOTADO'; }
+        }
 
         const flightTime = formatFlightTime(poi.vector.dist3d, dssShipSpeed);
         const elevSign = poi.vector.elevationDeg >= 0 ? '+' : '';
@@ -4170,6 +4359,10 @@
               <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); copyDssDiscordReport('${poi.id}')" title="Copiar informe táctico completo para Discord">
                 <span>💬</span> Discord
               </button>
+              ${isHostilePoi ? `
+              <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); copyDssAttackVector('${poi.id}')" title="Copiar orden de aproximación y ataque para la escuadra" style="color:#ff4757; border-color:rgba(255,71,87,0.4);">
+                <span>⚔️</span> Vector Ataque
+              </button>` : ''}
               <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); toggleDssStatus('${poi.id}')" title="Cambiar estado: Disponible / En Extracción / Agotado">
                 <span>🔄</span> Estado
               </button>
@@ -4185,7 +4378,7 @@
     }
 
     // Bi-directional selection function
-    window.dssSelectPoi = function(poiId, source = 'both') {
+    function dssSelectPoi(poiId, source = 'both') {
       dssSelectedPoiId = poiId;
       const poi = dssPois.find(p => p.id === poiId);
       if (!poi) return;
@@ -4235,13 +4428,14 @@
       const card = document.getElementById('dss-card-' + poiId);
       if (card) {
         card.classList.add('dss-card-selected');
-        if (source !== 'matrix') {
+        if (source !== 'matrix' && typeof card.scrollIntoView === 'function') {
           card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
       }
-    };
+    }
+    window.dssSelectPoi = dssSelectPoi;
 
-    window.dssClearSelection = function() {
+    function dssClearSelection() {
       dssSelectedPoiId = null;
       if (dssTargetReticleGroup) dssTargetReticleGroup.visible = false;
       if (dssVectorLineMesh) dssVectorLineMesh.visible = false;
@@ -4249,7 +4443,117 @@
       if (targetBar) targetBar.style.display = 'none';
       document.querySelectorAll('.dss-card').forEach(c => c.classList.remove('dss-card-selected'));
       if (dssControls) dssCameraTargetPos = new THREE.Vector3(0, 0, 0);
+    }
+    window.dssClearSelection = dssClearSelection;
+
+    // Global Action Functions for DSS Hostile & Tactical POIs
+    window.copyDssAttackVector = function(id) {
+      const poi = dssPois.find(p => p.id === id);
+      if (!poi) return;
+      const aX = dssAnchor && dssAnchor.set ? dssAnchor.x : 0;
+      const aY = dssAnchor && dssAnchor.set ? dssAnchor.y : 0;
+      const aZ = dssAnchor && dssAnchor.set ? dssAnchor.z : 0;
+      const v = poi._computedVector || computeDssVector(poi.x, poi.y, poi.z, aX, aY, aZ);
+      const elevSign = v.elevationDeg >= 0 ? '+' : '';
+      const flightTime = formatFlightTime(v.dist3d, dssShipSpeed);
+
+      const order = 'CCBE // ORDEN TÁCTICA DE INTERCEPTACIÓN Y COMBATE\n' +
+        'Objetivo Hostil: ' + poi.name + '\n' +
+        'Tipo / Categoría: ' + poi.category.toUpperCase() + '\n' +
+        'Rumbo de Aproximación: ' + v.bearingDeg.toString().padStart(3, '0') + '°\n' +
+        'Elevación de Tiro (Pitch): ' + elevSign + v.elevationDeg + '°\n' +
+        'Distancia al Blanco: ' + v.distKm.toFixed(2) + ' km (' + Math.round(v.dist3d) + ' m)\n' +
+        'Tiempo de Vuelo a Combate: ' + flightTime + ' (a ' + dssShipSpeed + ' m/s)\n' +
+        'Coordenadas Star Citizen: ' + poi.coords + '\n' +
+        'Instrucción: Interceptar a máxima velocidad de maniobra, romper formación y batir blanco.';
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(order).then(() => {
+          alert('¡Orden de ataque para escuadra copiada al portapapeles!\n\n' + order);
+        }).catch(() => {
+          prompt('Copia la orden de ataque táctica:', order);
+        });
+      } else {
+        prompt('Copia la orden de ataque táctica:', order);
+      }
     };
+
+    window.copyAllDssTargets = function() {
+      const hostiles = dssPois.filter(p => p.category === 'hostile' || p.category === 'enemy_capital' || p.category === 'pirate' || p.category === 'enemy_structure' || p.category === 'bogey');
+      if (hostiles.length === 0) {
+        alert('No hay objetivos hostiles registrados actualmente en el Grid Táctico.');
+        return;
+      }
+      const aX = dssAnchor && dssAnchor.set ? dssAnchor.x : 0;
+      const aY = dssAnchor && dssAnchor.set ? dssAnchor.y : 0;
+      const aZ = dssAnchor && dssAnchor.set ? dssAnchor.z : 0;
+      const ticks = String.fromCharCode(96, 96, 96);
+
+      let report = ticks + 'yaml\n' +
+        'CCBE // REPORTE GENERAL DE AMENAZAS EN GRID TÁCTICO\n' +
+        'Ancla / Origen: ' + (dssAnchor && dssAnchor.name ? dssAnchor.name : 'ESTRELLA (0,0,0)') + '\n' +
+        'Total Contactos Hostiles: ' + hostiles.length + '\n\n';
+
+      hostiles.forEach((h, idx) => {
+        const v = h._computedVector || computeDssVector(h.x, h.y, h.z, aX, aY, aZ);
+        const elevSign = v.elevationDeg >= 0 ? '+' : '';
+        report += '[AMENAZA #' + (idx + 1) + '] ' + h.name + '\n' +
+          '  Categoría: ' + h.category.toUpperCase() + '\n' +
+          '  Rumbo: ' + v.bearingDeg.toString().padStart(3, '0') + '° | Elevación: ' + elevSign + v.elevationDeg + '°\n' +
+          '  Distancia: ' + v.distKm.toFixed(2) + ' km (' + Math.round(v.dist3d) + ' m)\n' +
+          '  Estado: ' + (h.status || 'HOSTILE').toUpperCase() + '\n' +
+          '  Coordenadas: ' + h.coords + '\n\n';
+      });
+      report += ticks;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(report).then(() => {
+          alert('¡Lista completa de ' + hostiles.length + ' objetivos hostiles copiada al portapapeles!');
+        }).catch(() => {
+          prompt('Copia el informe de objetivos hostiles:', report);
+        });
+      } else {
+        prompt('Copia el informe de objetivos hostiles:', report);
+      }
+    };
+
+    window.clearNeutralizedDssTargets = function() {
+      const initialCount = dssPois.length;
+      dssPois = dssPois.filter(p => p.status !== 'neutralized');
+      const removed = initialCount - dssPois.length;
+      if (removed === 0) {
+        alert('No hay objetivos con estado "NEUTRALIZADO" para purgar.');
+        return;
+      }
+      saveDssState();
+      buildDss3DPois();
+      renderDssMatrix();
+      alert('Se purgaron ' + removed + ' objetivos neutralizados del Grid Táctico.');
+    };
+
+    function toggleDssMarkingMode(force) {
+      dssMarkingMode = typeof force === 'boolean' ? force : !dssMarkingMode;
+      const btn = document.getElementById('btn-dss-mark-target-mode');
+      const bar = document.getElementById('dss-hud-marking-bar');
+      const container = document.getElementById('dss-three-canvas-container');
+
+      if (dssMarkingMode) {
+        if (btn) btn.classList.add('marking-active');
+        if (bar) bar.style.display = 'flex';
+        if (container) container.style.cursor = 'crosshair';
+        if (dssControls) dssControls.enableRotate = false; // Bloquear rotación de cámara para marcar con clic
+        if (dssMarkingReticle) dssMarkingReticle.visible = true;
+      } else {
+        if (btn) btn.classList.remove('marking-active');
+        if (bar) bar.style.display = 'none';
+        if (container) container.style.cursor = 'default';
+        if (dssControls) dssControls.enableRotate = true; // Desbloquear rotación normal 3D
+        if (dssMarkingReticle) dssMarkingReticle.visible = false;
+        const tooltip = document.getElementById('dss-3d-tooltip');
+        if (tooltip) tooltip.style.display = 'none';
+      }
+    }
+    window.toggleDssMarkingMode = toggleDssMarkingMode;
 
     // Global Action Functions for DSS POIs
     window.copyDssCockpitVector = function(id) {
@@ -4306,9 +4610,16 @@ ticks;
     window.toggleDssStatus = function(id) {
       const poi = dssPois.find(p => p.id === id);
       if (!poi) return;
-      if (poi.status === 'available') poi.status = 'extracting';
-      else if (poi.status === 'extracting') poi.status = 'exhausted';
-      else poi.status = 'available';
+      const isHostile = (poi.category === 'hostile' || poi.category === 'enemy_capital' || poi.category === 'pirate' || poi.category === 'enemy_structure' || poi.category === 'bogey');
+      if (isHostile) {
+        if (poi.status === 'hostile' || !poi.status) poi.status = 'engaging';
+        else if (poi.status === 'engaging') poi.status = 'neutralized';
+        else poi.status = 'hostile';
+      } else {
+        if (poi.status === 'available') poi.status = 'extracting';
+        else if (poi.status === 'extracting') poi.status = 'exhausted';
+        else poi.status = 'available';
+      }
 
       saveDssState();
       renderDssMatrix();
@@ -4364,6 +4675,39 @@ ticks;
       const sprite = new THREE.Sprite(spriteMat);
       sprite.scale.set(4.0, 0.75, 1.0);
       return sprite;
+    }
+
+    // Build 3D Ground Reticle for Marking Hostile Targets
+    function buildDssMarkingReticle() {
+      const g = new THREE.Group();
+      
+      // Outer tactical circle on floor
+      const ringGeo = new THREE.RingGeometry(0.85, 1.05, 36);
+      ringGeo.rotateX(Math.PI / 2);
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0xff2a4b, side: THREE.DoubleSide, transparent: true, opacity: 0.85 });
+      g.add(new THREE.Mesh(ringGeo, ringMat));
+      
+      // Inner diamond crosshair
+      const dCurve = new THREE.EllipseCurve(0, 0, 0.45, 0.45, 0, Math.PI * 2, false, 0);
+      const dGeo = new THREE.BufferGeometry().setFromPoints(dCurve.getPoints(4));
+      dGeo.rotateX(Math.PI / 2);
+      const dMat = new THREE.LineBasicMaterial({ color: 0xffe600, transparent: true, opacity: 0.95 });
+      g.add(new THREE.LineLoop(dGeo, dMat));
+      
+      // Extended crosshairs
+      const linesGeo = new THREE.BufferGeometry();
+      const pts = [
+        new THREE.Vector3(-1.6, 0, 0), new THREE.Vector3(-0.35, 0, 0),
+        new THREE.Vector3(0.35, 0, 0), new THREE.Vector3(1.6, 0, 0),
+        new THREE.Vector3(0, 0, -1.6), new THREE.Vector3(0, 0, -0.35),
+        new THREE.Vector3(0, 0, 0.35), new THREE.Vector3(0, 0, 1.6)
+      ];
+      linesGeo.setFromPoints(pts);
+      const linesMat = new THREE.LineBasicMaterial({ color: 0xff2a4b, transparent: true, opacity: 0.9 });
+      g.add(new THREE.LineSegments(linesGeo, linesMat));
+
+      g.visible = false;
+      return g;
     }
 
     // Build 3D Holographic Target Reticle
@@ -4463,6 +4807,10 @@ ticks;
       // 8. Setup 3D Target Reticle & Vector Line
       dssTargetReticleGroup = buildDssTargetReticle();
       dssScene.add(dssTargetReticleGroup);
+
+      // Retícula holográfica para marcado de objetivos en Grid
+      dssMarkingReticle = buildDssMarkingReticle();
+      dssScene.add(dssMarkingReticle);
 
       const vLineMat = new THREE.LineDashedMaterial({
         color: 0x00f0ff,
@@ -4759,7 +5107,64 @@ ticks;
         let markerMesh;
         const colHex = getDssCategoryColorHex(poi.category);
 
-        if (poi.category === 'quant') {
+        if (poi.category === 'hostile' || poi.category === 'pirate') {
+          // 🎯 Hostil / Pirata: Caza de Combate Agresivo Rojo Brillante con Retícula de Amenaza
+          const geo = new THREE.ConeGeometry(0.85, 1.6, 4);
+          geo.rotateX(Math.PI);
+          const mat = new THREE.MeshStandardMaterial({
+            color: 0xff2a4b,
+            emissive: 0x990018,
+            emissiveIntensity: 0.95,
+            roughness: 0.15,
+            metalness: 0.85
+          });
+          markerMesh = new THREE.Mesh(geo, mat);
+
+          // Diamond Threat Bracket
+          const bracketCurve = new THREE.EllipseCurve(0, 0, 1.25, 1.25, 0, Math.PI * 2, false, 0);
+          const bracketGeo = new THREE.BufferGeometry().setFromPoints(bracketCurve.getPoints(4));
+          const bracketMat = new THREE.LineBasicMaterial({ color: 0xff2a4b, transparent: true, opacity: 0.85 });
+          const bracketMesh = new THREE.LineLoop(bracketGeo, bracketMat);
+          markerMesh.add(bracketMesh);
+        } else if (poi.category === 'enemy_capital') {
+          // ⚔️ Nave Capital Hostil: Casco Acorazado Alargado en Rojo Carmesí
+          const geo = new THREE.BoxGeometry(1.3, 0.7, 2.5);
+          const mat = new THREE.MeshStandardMaterial({
+            color: 0xcc0025,
+            emissive: 0x660010,
+            emissiveIntensity: 0.9,
+            roughness: 0.25,
+            metalness: 0.9
+          });
+          markerMesh = new THREE.Mesh(geo, mat);
+
+          const ringGeo = new THREE.RingGeometry(1.5, 1.8, 24);
+          ringGeo.rotateX(Math.PI / 2);
+          const ringMat = new THREE.MeshBasicMaterial({ color: 0xff0033, side: THREE.DoubleSide, transparent: true, opacity: 0.7 });
+          markerMesh.add(new THREE.Mesh(ringGeo, ringMat));
+        } else if (poi.category === 'enemy_structure') {
+          // 📡 Torreta / Instalación Hostil: Prisma Hexagonal Fortificado
+          const geo = new THREE.CylinderGeometry(0.9, 1.2, 1.4, 6);
+          const mat = new THREE.MeshStandardMaterial({
+            color: 0xff3b56,
+            emissive: 0x88001a,
+            emissiveIntensity: 0.85,
+            roughness: 0.3,
+            metalness: 0.8
+          });
+          markerMesh = new THREE.Mesh(geo, mat);
+        } else if (poi.category === 'bogey') {
+          // ⚠️ Bogey Desconocido: Diamante Ámbar Parpadeante
+          const geo = new THREE.OctahedronGeometry(0.85, 0);
+          const mat = new THREE.MeshStandardMaterial({
+            color: 0xffaa00,
+            emissive: 0xff6600,
+            emissiveIntensity: 0.95,
+            roughness: 0.2,
+            metalness: 0.7
+          });
+          markerMesh = new THREE.Mesh(geo, mat);
+        } else if (poi.category === 'quant') {
           // 💎 Quantainium: Cristal Sólido Brillante (Limpio, sin cajas de alambre giratorias)
           const geo = new THREE.OctahedronGeometry(0.85, 0);
           const mat = new THREE.MeshStandardMaterial({
@@ -4831,6 +5236,10 @@ ticks;
     }
 
     function getDssCategoryColorHex(cat) {
+      if (cat === 'hostile' || cat === 'pirate') return 0xff2a4b;
+      if (cat === 'enemy_capital') return 0xd60029;
+      if (cat === 'enemy_structure') return 0xff3b56;
+      if (cat === 'bogey') return 0xffaa00;
       if (cat === 'quant') return 0x00ffff;
       if (cat === 'mining') return 0xf5a623;
       if (cat === 'salvage') return 0xc084fc;
@@ -4839,6 +5248,10 @@ ticks;
     }
 
     function getDssCategoryColorCss(cat) {
+      if (cat === 'hostile' || cat === 'pirate') return '#ff2a4b';
+      if (cat === 'enemy_capital') return '#d60029';
+      if (cat === 'enemy_structure') return '#ff3b56';
+      if (cat === 'bogey') return '#ffaa00';
       if (cat === 'quant') return '#00ffff';
       if (cat === 'mining') return '#f5a623';
       if (cat === 'salvage') return '#c084fc';
@@ -4908,6 +5321,38 @@ ticks;
 
         dssRaycaster.setFromCamera(dssMouse, dssCamera);
 
+        // Si está en Modo Marcar Objetivos en Grid:
+        if (dssMarkingMode) {
+          const gridPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+          const intersect = new THREE.Vector3();
+          const hit = dssRaycaster.ray.intersectPlane(gridPlane, intersect);
+
+          if (hit && dssMarkingReticle) {
+            const range = dssCurrentRangeKm || 20;
+            const distCenter = Math.hypot(intersect.x, intersect.z);
+            if (distCenter <= range * 1.15) {
+              dssMarkingReticle.visible = true;
+              dssMarkingReticle.position.set(intersect.x, 0.05, intersect.z);
+
+              let bRad = Math.atan2(intersect.x, -intersect.z);
+              let bDeg = (bRad * (180 / Math.PI) + 360) % 360;
+
+              tooltip.style.display = 'block';
+              tooltip.style.left = Math.min(rect.width - 270, Math.max(10, e.clientX - rect.left + 16)) + 'px';
+              tooltip.style.top = Math.min(rect.height - 110, Math.max(10, e.clientY - rect.top + 16)) + 'px';
+              tooltip.innerHTML = `
+                <div style="font-weight:bold; color:#ff2a4b; font-size:12px; margin-bottom:2px;">🎯 FIJAR CONTACTO HOSTIL EN GRID</div>
+                <div style="color:var(--text-main); font-size:11px;">Rumbo: <strong style="color:var(--accent-amber);">${Math.round(bDeg).toString().padStart(3, '0')}°</strong> | Distancia: <strong style="color:#ff2a4b;">${distCenter.toFixed(1)} km</strong></div>
+                <div style="color:var(--text-muted); font-size:10px; margin-top:2px;">Haz clic en el grid para registrar y guardar este objetivo</div>
+              `;
+              return;
+            } else {
+              dssMarkingReticle.visible = false;
+              tooltip.style.display = 'none';
+            }
+          }
+        }
+
         const interactiveMeshes = [];
         dssPoisGroup.children.forEach(g => {
           g.children.forEach(c => {
@@ -4970,8 +5415,63 @@ ticks;
         tooltip.style.display = 'none';
       });
 
-      // Bi-directional Click: Select in 3D & in Matrix Below
+      // Bi-directional Click: Select in 3D & in Matrix Below OR Mark in Grid
       container.addEventListener('click', () => {
+        if (dssMarkingMode) {
+          const gridPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+          const intersect = new THREE.Vector3();
+          const hit = dssRaycaster.ray.intersectPlane(gridPlane, intersect);
+
+          if (hit) {
+            const range = dssCurrentRangeKm || 20;
+            const distCenter = Math.hypot(intersect.x, intersect.z);
+            if (distCenter <= range * 1.15) {
+              const aX = dssAnchor && dssAnchor.set ? dssAnchor.x : 0;
+              const aY = dssAnchor && dssAnchor.set ? dssAnchor.y : 0;
+              const aZ = dssAnchor && dssAnchor.set ? dssAnchor.z : 0;
+
+              const dxM = intersect.x * 1000;
+              const dyM = -intersect.z * 1000;
+              const dzM = 0;
+
+              const targetX = aX + dxM;
+              const targetY = aY + dyM;
+              const targetZ = aZ + dzM;
+
+              const hostileCount = dssPois.filter(p => p.category === 'hostile' || p.category === 'enemy_capital' || p.category === 'pirate').length + 1;
+              const defName = '🎯 Contacto Hostil 0' + hostileCount;
+              const targetName = prompt('Identificador o Nombre del Contacto Hostil a Fijar:', defName);
+              if (!targetName) return;
+
+              const coordsStr = 'Coordinates: x:' + targetX.toFixed(6) + ' y:' + targetY.toFixed(6) + ' z:' + targetZ.toFixed(6);
+
+              const newTarget = {
+                id: 'poi-' + Date.now(),
+                name: targetName.trim(),
+                category: 'hostile',
+                threatLevel: 'ALTA',
+                x: targetX,
+                y: targetY,
+                z: targetZ,
+                coords: coordsStr,
+                scout: 'Radar Táctico CCBE',
+                purity: 'Amenaza Nivel 3 // En Guardia',
+                mass: 'Caza Ligero / Interceptor',
+                notes: 'Fijado en Grid Táctico a ' + distCenter.toFixed(1) + ' km del Ancla',
+                status: 'hostile',
+                createdAt: Date.now()
+              };
+
+              dssPois.push(newTarget);
+              saveDssState();
+              buildDss3DPois();
+              renderDssMatrix();
+              dssSelectPoi(newTarget.id, '3d');
+              return;
+            }
+          }
+        }
+
         if (dssHoveredMesh && dssHoveredMesh.userData && dssHoveredMesh.userData.poi) {
           const poi = dssHoveredMesh.userData.poi;
           dssSelectPoi(poi.id, '3d');
@@ -5073,6 +5573,64 @@ ticks;
           polarBlock.style.display = 'block';
         });
       }
+
+      // Paste DSS Coords Button
+      const btnPasteDssCoords = document.getElementById('btn-dss-paste-coords');
+      if (btnPasteDssCoords) {
+        btnPasteDssCoords.addEventListener('click', async () => {
+          try {
+            const text = await navigator.clipboard.readText();
+            if (text) {
+              const inputEl = document.getElementById('dss-poi-coords');
+              if (inputEl) inputEl.value = text.trim();
+            }
+          } catch(e) {
+            console.warn('Clipboard read failed:', e);
+            const fallback = prompt('Pega las coordenadas /showlocation aquí:');
+            if (fallback) {
+              const inputEl = document.getElementById('dss-poi-coords');
+              if (inputEl) inputEl.value = fallback.trim();
+            }
+          }
+        });
+      }
+
+      // Toggle Marking Mode Button
+      const btnMarkMode = document.getElementById('btn-dss-mark-target-mode');
+      if (btnMarkMode) {
+        btnMarkMode.addEventListener('click', () => toggleDssMarkingMode());
+      }
+      const btnExitMarkMode = document.getElementById('btn-dss-exit-marking-mode');
+      if (btnExitMarkMode) {
+        btnExitMarkMode.addEventListener('click', () => toggleDssMarkingMode(false));
+      }
+
+      // Filter Buttons in Matrix
+      document.querySelectorAll('.dss-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.dss-filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          dssActiveFilter = btn.dataset.filter || 'all';
+          renderDssMatrix();
+        });
+      });
+
+      // Threat Summary Buttons
+      const btnCopyAll = document.getElementById('btn-dss-copy-all-targets');
+      if (btnCopyAll) {
+        btnCopyAll.addEventListener('click', () => window.copyAllDssTargets());
+      }
+      const btnClearNeut = document.getElementById('btn-dss-clear-neutralized');
+      if (btnClearNeut) {
+        btnClearNeut.addEventListener('click', () => window.clearNeutralizedDssTargets());
+      }
+
+      // ESC key to exit marking mode
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dssMarkingMode) {
+          toggleDssMarkingMode(false);
+        }
+      });
 
       // Add POI Button (supports both btn-dss-save-poi and btn-dss-add-poi)
       const savePoiBtn = document.getElementById('btn-dss-save-poi') || document.getElementById('btn-dss-add-poi');
@@ -5223,11 +5781,20 @@ ticks;
 
       // Export JSON
       document.getElementById('btn-dss-export-json').addEventListener('click', () => {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ anchor: dssAnchor, pois: dssPois }, null, 2));
-        const a = document.createElement('a');
-        a.href = dataStr;
-        a.download = 'CCBE_DeepSpace_Survey_' + Date.now() + '.json';
-        a.click();
+        const jsonStr = JSON.stringify({ anchor: dssAnchor, pois: dssPois }, null, 2);
+        try {
+          const blob = new Blob([jsonStr], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'CCBE_DeepSpace_Survey_' + Date.now() + '.json';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        } catch(e) {
+          prompt('Copia el JSON de prospección del sector:', jsonStr);
+        }
       });
 
       // Clear All
@@ -6032,24 +6599,36 @@ ticks;
 
       // Paste buttons
       document.getElementById('btn-rt-paste-origin').addEventListener('click', async () => {
+        let t = '';
         try {
-          const t = await navigator.clipboard.readText();
-          if (t) document.getElementById('rt-origin-coords').value = t;
-        } catch(e) { console.warn(e); }
+          t = await navigator.clipboard.readText();
+        } catch(e) { console.warn('Clipboard read error:', e); }
+        if (!t) {
+          t = prompt('Pega las coordenadas /showlocation de origen aquí:') || '';
+        }
+        if (t && t.trim()) document.getElementById('rt-origin-coords').value = t.trim();
       });
 
       document.getElementById('btn-rt-paste-target').addEventListener('click', async () => {
+        let t = '';
         try {
-          const t = await navigator.clipboard.readText();
-          if (t) document.getElementById('rt-target-coords').value = t;
-        } catch(e) { console.warn(e); }
+          t = await navigator.clipboard.readText();
+        } catch(e) { console.warn('Clipboard read error:', e); }
+        if (!t) {
+          t = prompt('Pega las coordenadas /showlocation de destino aquí:') || '';
+        }
+        if (t && t.trim()) document.getElementById('rt-target-coords').value = t.trim();
       });
 
       document.getElementById('btn-rt-paste-checkpoint').addEventListener('click', async () => {
+        let t = '';
         try {
-          const t = await navigator.clipboard.readText();
-          if (t) document.getElementById('rt-checkpoint-coords').value = t;
-        } catch(e) { console.warn(e); }
+          t = await navigator.clipboard.readText();
+        } catch(e) { console.warn('Clipboard read error:', e); }
+        if (!t) {
+          t = prompt('Pega las coordenadas /showlocation del punto de control aquí:') || '';
+        }
+        if (t && t.trim()) document.getElementById('rt-checkpoint-coords').value = t.trim();
       });
 
       // Capture Top Telemetry buttons
@@ -6058,6 +6637,8 @@ ticks;
         if (top) {
           document.getElementById('rt-origin-coords').value = top;
           alert('¡Coordenadas superiores cargadas como Punto de Origen!');
+        } else {
+          alert('No hay coordenadas en el campo superior de telemetría.\n\nIntroduce coordenadas arriba o usa el botón "📋 Pegar".');
         }
       });
 
@@ -6066,6 +6647,8 @@ ticks;
         if (top) {
           document.getElementById('rt-target-coords').value = top;
           alert('¡Coordenadas superiores cargadas como Punto de Destino!');
+        } else {
+          alert('No hay coordenadas en el campo superior de telemetría.\n\nIntroduce coordenadas arriba o usa el botón "📋 Pegar".');
         }
       });
 
@@ -6073,6 +6656,9 @@ ticks;
         const top = document.getElementById('input-coords').value.trim();
         if (top) {
           document.getElementById('rt-checkpoint-coords').value = top;
+          alert('¡Coordenadas superiores cargadas como Punto de Control (Checkpoint)!');
+        } else {
+          alert('No hay coordenadas en el campo superior de telemetría.\n\nIntroduce coordenadas arriba o usa el botón "📋 Pegar".');
         }
       });
 
@@ -6140,9 +6726,15 @@ ticks;
       // Button: Copy Voice Order
       document.getElementById('btn-rt-copy-voice-order').addEventListener('click', () => {
         const text = document.getElementById('rt-voice-order-text').textContent.trim();
-        navigator.clipboard.writeText(text).then(() => {
-          alert('¡Orden de corrección de trayectoria copiada al portapapeles!\n\n' + text);
-        });
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            alert('¡Orden de corrección de trayectoria copiada al portapapeles!\n\n' + text);
+          }).catch(() => {
+            prompt('Copia la orden de corrección de trayectoria:', text);
+          });
+        } else {
+          prompt('Copia la orden de corrección de trayectoria:', text);
+        }
       });
 
       // Button: Reset Route

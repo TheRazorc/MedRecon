@@ -197,30 +197,68 @@
           <div class="bg-emerald-950/20 border border-emerald-500/30 rounded-xl p-3.5 space-y-2.5">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5 uppercase tracking-wider">
-                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Puesto Observación 1 (Alfa)
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> P.O. 1 (Alfa) • Observador
               </span>
               <span class="text-xs mono font-bold text-white bg-emerald-900/50 px-2 py-0.5 rounded border border-emerald-500/40" id="valAz1">
                 140°
               </span>
             </div>
-            
-            <div class="grid grid-cols-2 gap-2 text-xs mono">
-              <div>
-                <label class="text-slate-400 block mb-0.5 text-[11px]">X (Este/Oeste en m desde Polar):</label>
-                <input type="number" id="po1X" value="-650" step="50" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white">
+
+            <!-- PASO 1: FIJAR P.O.1 MIRANDO HACIA LA NAVE (PUNTO CERO / LZ) -->
+            <div class="bg-slate-900/70 border border-emerald-500/20 rounded-lg p-2.5 space-y-2 text-xs mono">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-emerald-300 font-bold flex items-center gap-1">
+                  <span>⚓</span> Mirando hacia la Nave (LZ):
+                </span>
+                <span id="po1ShipLabel" class="text-emerald-400 font-bold">763m // 122° [ESE]</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="text-slate-400 block text-[10px] mb-0.5">Distancia a Nave (m):</label>
+                  <input type="number" id="po1DistShip" value="763" min="10" step="25" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
+                </div>
+                <div>
+                  <label class="text-slate-400 block text-[10px] mb-0.5">Azimut a la Nave (°):</label>
+                  <input type="number" id="po1AzShip" value="122" min="0" max="359" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
+                </div>
               </div>
               <div>
-                <label class="text-slate-400 block mb-0.5 text-[11px]">Y (Norte/Sur en m desde Polar):</label>
-                <input type="number" id="po1Y" value="400" step="50" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white">
+                <input type="range" id="sliderPo1AzShip" min="0" max="359" value="122" class="w-full cursor-pointer accent-emerald-400">
+                <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                  <span>000° [N]</span>
+                  <span>090° [E]</span>
+                  <span>180° [S]</span>
+                  <span>270° [W]</span>
+                </div>
               </div>
+              
+              <details class="text-[11px] text-slate-400 pt-1 border-t border-slate-800/80">
+                <summary class="cursor-pointer text-[10px] text-slate-500 hover:text-slate-300 flex items-center justify-between">
+                  <span>Coordenadas Cartesianas X, Y (Opcional)</span>
+                  <span id="po1CoordsSummary" class="text-slate-400 font-bold">[-650m, +400m]</span>
+                </summary>
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                  <div>
+                    <label class="text-[10px] text-slate-500 block">X (m desde Nave):</label>
+                    <input type="number" id="po1X" value="-650" step="25" class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-0.5 text-slate-200">
+                  </div>
+                  <div>
+                    <label class="text-[10px] text-slate-500 block">Y (m desde Nave):</label>
+                    <input type="number" id="po1Y" value="400" step="25" class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-0.5 text-slate-200">
+                  </div>
+                </div>
+              </details>
             </div>
 
-            <div>
+            <!-- PASO 2: APUNTAR AL OBJETIVO (TRIANGULACIÓN) -->
+            <div class="pt-1">
               <div class="flex justify-between text-xs text-slate-400 mb-1">
-                <span>Azimut hacia Objetivo:</span>
-                <span class="mono text-emerald-400 font-bold" id="az1Label">140° [SE]</span>
+                <span class="font-bold text-white flex items-center gap-1">
+                  <span>🎯</span> Azimut hacia el Objetivo:
+                </span>
+                <span class="mono text-emerald-400 font-bold text-sm" id="az1Label">140° [SE]</span>
               </div>
-              <input type="range" id="sliderAz1" min="0" max="359" value="140" class="w-full cursor-pointer">
+              <input type="range" id="sliderAz1" min="0" max="359" value="140" class="w-full cursor-pointer accent-emerald-400">
               <div class="flex justify-between text-[11px] text-slate-500 mono mt-0.5">
                 <span>000° (N)</span>
                 <span>090° (E)</span>
@@ -234,30 +272,68 @@
           <div class="bg-cyan-950/20 border border-cyan-500/30 rounded-xl p-3.5 space-y-2.5">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold text-cyan-400 flex items-center gap-1.5 uppercase tracking-wider">
-                <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Puesto Observación 2 (Bravo)
+                <span class="w-2 h-2 rounded-full bg-cyan-400"></span> P.O. 2 (Bravo) • Observador
               </span>
               <span class="text-xs mono font-bold text-white bg-cyan-900/50 px-2 py-0.5 rounded border border-cyan-500/40" id="valAz2">
                 220°
               </span>
             </div>
-            
-            <div class="grid grid-cols-2 gap-2 text-xs mono">
-              <div>
-                <label class="text-slate-400 block mb-0.5 text-[11px]">X (Este/Oeste en m desde Polar):</label>
-                <input type="number" id="po2X" value="750" step="50" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white">
+
+            <!-- PASO 1: FIJAR P.O.2 MIRANDO HACIA LA NAVE (PUNTO CERO / LZ) -->
+            <div class="bg-slate-900/70 border border-cyan-500/20 rounded-lg p-2.5 space-y-2 text-xs mono">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-cyan-300 font-bold flex items-center gap-1">
+                  <span>⚓</span> Mirando hacia la Nave (LZ):
+                </span>
+                <span id="po2ShipLabel" class="text-cyan-400 font-bold">808m // 248° [OSO]</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="text-slate-400 block text-[10px] mb-0.5">Distancia a Nave (m):</label>
+                  <input type="number" id="po2DistShip" value="808" min="10" step="25" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
+                </div>
+                <div>
+                  <label class="text-slate-400 block text-[10px] mb-0.5">Azimut a la Nave (°):</label>
+                  <input type="number" id="po2AzShip" value="248" min="0" max="359" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
+                </div>
               </div>
               <div>
-                <label class="text-slate-400 block mb-0.5 text-[11px]">Y (Norte/Sur en m desde Polar):</label>
-                <input type="number" id="po2Y" value="300" step="50" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white">
+                <input type="range" id="sliderPo2AzShip" min="0" max="359" value="248" class="w-full cursor-pointer accent-cyan-400">
+                <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                  <span>000° [N]</span>
+                  <span>090° [E]</span>
+                  <span>180° [S]</span>
+                  <span>270° [W]</span>
+                </div>
               </div>
+              
+              <details class="text-[11px] text-slate-400 pt-1 border-t border-slate-800/80">
+                <summary class="cursor-pointer text-[10px] text-slate-500 hover:text-slate-300 flex items-center justify-between">
+                  <span>Coordenadas Cartesianas X, Y (Opcional)</span>
+                  <span id="po2CoordsSummary" class="text-slate-400 font-bold">[+750m, +300m]</span>
+                </summary>
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                  <div>
+                    <label class="text-[10px] text-slate-500 block">X (m desde Nave):</label>
+                    <input type="number" id="po2X" value="750" step="25" class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-0.5 text-slate-200">
+                  </div>
+                  <div>
+                    <label class="text-[10px] text-slate-500 block">Y (m desde Nave):</label>
+                    <input type="number" id="po2Y" value="300" step="25" class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-0.5 text-slate-200">
+                  </div>
+                </div>
+              </details>
             </div>
 
-            <div>
+            <!-- PASO 2: APUNTAR AL OBJETIVO (TRIANGULACIÓN) -->
+            <div class="pt-1">
               <div class="flex justify-between text-xs text-slate-400 mb-1">
-                <span>Azimut hacia Objetivo:</span>
-                <span class="mono text-cyan-400 font-bold" id="az2Label">220° [SO]</span>
+                <span class="font-bold text-white flex items-center gap-1">
+                  <span>🎯</span> Azimut hacia el Objetivo:
+                </span>
+                <span class="mono text-cyan-400 font-bold text-sm" id="az2Label">220° [SO]</span>
               </div>
-              <input type="range" id="sliderAz2" min="0" max="359" value="220" class="w-full cursor-pointer">
+              <input type="range" id="sliderAz2" min="0" max="359" value="220" class="w-full cursor-pointer accent-cyan-400">
               <div class="flex justify-between text-[11px] text-slate-500 mono mt-0.5">
                 <span>000° (N)</span>
                 <span>090° (E)</span>
@@ -326,7 +402,7 @@
         </div>
 
         <!-- TRIANGULATION RESULT BADGE -->
-        <div id="solutionBox" class="p-3.5 rounded-xl border bg-slate-900/90 border-slate-800 space-y-1.5 transition">
+        <div id="solutionBox" class="p-3.5 rounded-xl border bg-slate-900/90 border-slate-800 space-y-2 transition">
           <div class="flex items-center justify-between text-xs">
             <span class="font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
               <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> Solución de Blanco
@@ -342,6 +418,29 @@
           <div class="grid grid-cols-2 gap-2 text-[11px] mono text-slate-400 border-t border-slate-800 pt-1.5">
             <div>Dist. desde P.O.1: <span class="text-emerald-300 font-semibold" id="resDist1">1154 m</span></div>
             <div>Dist. desde P.O.2: <span class="text-cyan-300 font-semibold" id="resDist2">1024 m</span></div>
+          </div>
+          
+          <!-- BOTÓN GUARDAR BLANCO ACTUAL -->
+          <div class="pt-1">
+            <button id="btnSaveTarget" type="button" class="w-full py-2 px-3 rounded-lg bg-red-600/30 hover:bg-red-600/50 border border-red-500/50 text-red-200 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition active:scale-[0.98]">
+              <span>💾</span> Guardar Objetivo en Grid Táctico
+            </button>
+          </div>
+        </div>
+
+        <!-- LISTA DE OBJETIVOS / ENEMIGOS GUARDADOS -->
+        <div id="savedTargetsBox" class="p-3.5 rounded-xl border bg-slate-900/90 border-slate-800 space-y-2">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-300">
+            <span class="flex items-center gap-1.5 uppercase tracking-wider">
+              <span class="w-2 h-2 rounded-full bg-red-400"></span> Objetivos Guardados (<span id="savedTargetsCount">0</span>)
+            </span>
+            <div class="flex gap-2">
+              <button id="btnCopyAllRadio" type="button" class="text-[11px] text-cyan-400 hover:text-cyan-300 mono underline" title="Copiar informe con todos los objetivos">Copiar Todos</button>
+              <button id="btnClearTargets" type="button" class="text-[11px] text-slate-500 hover:text-red-400 mono" title="Vaciar lista">Limpiar</button>
+            </div>
+          </div>
+          <div id="savedTargetsList" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+            <div class="text-[11px] text-slate-500 italic py-2 text-center">No hay objetivos guardados todavía. Usa «Guardar Objetivo en Grid Táctico» para almacenar posiciones de enemigos.</div>
           </div>
         </div>
 
@@ -387,26 +486,45 @@
       panX: 0,
       panY: 0,
       maxRadius: 3000,
-      po1: { x: -650, y: 400, az: 140 },
-      po2: { x: 750, y: 300, az: 220 },
+      // Puestos de Observación con posición respecto a la Nave [0,0]
+      // distShip: Distancia mirando a la nave en metros
+      // azShip: Azimut de brújula apuntando hacia la nave
+      po1: { x: -650, y: 400, az: 140, distShip: 763, azShip: 122 },
+      po2: { x: 750, y: 300, az: 220, distShip: 808, azShip: 248 },
       target: { x: 92, y: -484, valid: true },
+      savedTargets: [],
       mode: 'azimuts',
       dragging: null
     };
 
     const canvas = document.getElementById('radarCanvas');
     const ctx = canvas.getContext('2d');
+
+    // Elementos de PO1
     const sliderAz1 = document.getElementById('sliderAz1');
-    const sliderAz2 = document.getElementById('sliderAz2');
     const valAz1 = document.getElementById('valAz1');
-    const valAz2 = document.getElementById('valAz2');
     const az1Label = document.getElementById('az1Label');
-    const az2Label = document.getElementById('az2Label');
+    const po1DistShip = document.getElementById('po1DistShip');
+    const po1AzShip = document.getElementById('po1AzShip');
+    const sliderPo1AzShip = document.getElementById('sliderPo1AzShip');
+    const po1ShipLabel = document.getElementById('po1ShipLabel');
+    const po1CoordsSummary = document.getElementById('po1CoordsSummary');
     const po1X = document.getElementById('po1X');
     const po1Y = document.getElementById('po1Y');
+
+    // Elementos de PO2
+    const sliderAz2 = document.getElementById('sliderAz2');
+    const valAz2 = document.getElementById('valAz2');
+    const az2Label = document.getElementById('az2Label');
+    const po2DistShip = document.getElementById('po2DistShip');
+    const po2AzShip = document.getElementById('po2AzShip');
+    const sliderPo2AzShip = document.getElementById('sliderPo2AzShip');
+    const po2ShipLabel = document.getElementById('po2ShipLabel');
+    const po2CoordsSummary = document.getElementById('po2CoordsSummary');
     const po2X = document.getElementById('po2X');
     const po2Y = document.getElementById('po2Y');
     
+    // Resultados y HUD
     const resCoords = document.getElementById('resCoords');
     const resVector = document.getElementById('resVector');
     const resDist1 = document.getElementById('resDist1');
@@ -418,12 +536,99 @@
     const hudPO2 = document.getElementById('hudPO2');
     const hudTarget = document.getElementById('hudTarget');
 
+    // Guardado de Objetivos Múltiples
+    const btnSaveTarget = document.getElementById('btnSaveTarget');
+    const savedTargetsCount = document.getElementById('savedTargetsCount');
+    const savedTargetsList = document.getElementById('savedTargetsList');
+    const btnCopyAllRadio = document.getElementById('btnCopyAllRadio');
+    const btnClearTargets = document.getElementById('btnClearTargets');
+
     function getCardinal(deg) {
       const cardinals = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSO', 'SO', 'OSO', 'O', 'ONO', 'NO', 'NNO'];
       const index = Math.round((deg % 360) / 22.5) % 16;
       return cardinals[index];
     }
 
+    // =========================================================
+    // CÁLCULOS BIDIRECCIONALES: AZIMUT A NAVE <-> COORDENADAS X,Y
+    // =========================================================
+    // Cuando el observador en PO1 mira a la nave (situada en [0,0]):
+    // El vector desde PO1 hacia la Nave es: dx = D*sin(azShip), dy = D*cos(azShip)
+    // Por tanto: Nave[0,0] = PO1 + (dx, dy)  ==>  PO1 = (-dx, -dy)
+    function updatePo1FromPolar(dist, azShip) {
+      state.po1.distShip = Math.max(1, dist);
+      state.po1.azShip = (azShip % 360 + 360) % 360;
+      const rad = state.po1.azShip * Math.PI / 180;
+      state.po1.x = Math.round(-state.po1.distShip * Math.sin(rad));
+      state.po1.y = Math.round(-state.po1.distShip * Math.cos(rad));
+
+      if (po1X) po1X.value = state.po1.x;
+      if (po1Y) po1Y.value = state.po1.y;
+      if (po1DistShip) po1DistShip.value = state.po1.distShip;
+      if (po1AzShip) po1AzShip.value = state.po1.azShip;
+      if (sliderPo1AzShip) sliderPo1AzShip.value = state.po1.azShip;
+      if (po1ShipLabel) po1ShipLabel.textContent = `${state.po1.distShip}m // ${state.po1.azShip}° [${getCardinal(state.po1.azShip)}]`;
+      if (po1CoordsSummary) po1CoordsSummary.textContent = `[${state.po1.x > 0 ? '+' : ''}${state.po1.x}m, ${state.po1.y > 0 ? '+' : ''}${state.po1.y}m]`;
+
+      updateReadouts();
+    }
+
+    function updatePo1FromCartesian(x, y) {
+      state.po1.x = x;
+      state.po1.y = y;
+      const dist = Math.hypot(x, y);
+      // Vector desde PO1 hacia la Nave [0,0]: dx = -x, dy = -y
+      const az = (Math.atan2(-x, -y) * 180 / Math.PI + 360) % 360;
+      state.po1.distShip = Math.round(dist);
+      state.po1.azShip = Math.round(az);
+
+      if (po1DistShip) po1DistShip.value = state.po1.distShip;
+      if (po1AzShip) po1AzShip.value = state.po1.azShip;
+      if (sliderPo1AzShip) sliderPo1AzShip.value = state.po1.azShip;
+      if (po1ShipLabel) po1ShipLabel.textContent = `${state.po1.distShip}m // ${state.po1.azShip}° [${getCardinal(state.po1.azShip)}]`;
+      if (po1CoordsSummary) po1CoordsSummary.textContent = `[${state.po1.x > 0 ? '+' : ''}${state.po1.x}m, ${state.po1.y > 0 ? '+' : ''}${state.po1.y}m]`;
+
+      updateReadouts();
+    }
+
+    function updatePo2FromPolar(dist, azShip) {
+      state.po2.distShip = Math.max(1, dist);
+      state.po2.azShip = (azShip % 360 + 360) % 360;
+      const rad = state.po2.azShip * Math.PI / 180;
+      state.po2.x = Math.round(-state.po2.distShip * Math.sin(rad));
+      state.po2.y = Math.round(-state.po2.distShip * Math.cos(rad));
+
+      if (po2X) po2X.value = state.po2.x;
+      if (po2Y) po2Y.value = state.po2.y;
+      if (po2DistShip) po2DistShip.value = state.po2.distShip;
+      if (po2AzShip) po2AzShip.value = state.po2.azShip;
+      if (sliderPo2AzShip) sliderPo2AzShip.value = state.po2.azShip;
+      if (po2ShipLabel) po2ShipLabel.textContent = `${state.po2.distShip}m // ${state.po2.azShip}° [${getCardinal(state.po2.azShip)}]`;
+      if (po2CoordsSummary) po2CoordsSummary.textContent = `[${state.po2.x > 0 ? '+' : ''}${state.po2.x}m, ${state.po2.y > 0 ? '+' : ''}${state.po2.y}m]`;
+
+      updateReadouts();
+    }
+
+    function updatePo2FromCartesian(x, y) {
+      state.po2.x = x;
+      state.po2.y = y;
+      const dist = Math.hypot(x, y);
+      const az = (Math.atan2(-x, -y) * 180 / Math.PI + 360) % 360;
+      state.po2.distShip = Math.round(dist);
+      state.po2.azShip = Math.round(az);
+
+      if (po2DistShip) po2DistShip.value = state.po2.distShip;
+      if (po2AzShip) po2AzShip.value = state.po2.azShip;
+      if (sliderPo2AzShip) sliderPo2AzShip.value = state.po2.azShip;
+      if (po2ShipLabel) po2ShipLabel.textContent = `${state.po2.distShip}m // ${state.po2.azShip}° [${getCardinal(state.po2.azShip)}]`;
+      if (po2CoordsSummary) po2CoordsSummary.textContent = `[${state.po2.x > 0 ? '+' : ''}${state.po2.x}m, ${state.po2.y > 0 ? '+' : ''}${state.po2.y}m]`;
+
+      updateReadouts();
+    }
+
+    // =========================================================
+    // CÁLCULO DE TRIANGULACIÓN Y RAYOS HACIA EL OBJETIVO
+    // =========================================================
     function calculateIntersection() {
       if (state.mode === 'polar') {
         const dist = parseFloat(document.getElementById('polarDist').value) || 1200;
@@ -472,13 +677,13 @@
     function updateReadouts() {
       calculateIntersection();
 
-      valAz1.textContent = `${state.po1.az}°`;
-      az1Label.textContent = `${state.po1.az}° [${getCardinal(state.po1.az)}]`;
-      hudPO1.textContent = `[${Math.round(state.po1.x)}m, ${Math.round(state.po1.y)}m] // ${state.po1.az}°`;
+      if (valAz1) valAz1.textContent = `${state.po1.az}°`;
+      if (az1Label) az1Label.textContent = `${state.po1.az}° [${getCardinal(state.po1.az)}]`;
+      if (hudPO1) hudPO1.textContent = `[${Math.round(state.po1.x)}m, ${Math.round(state.po1.y)}m] // Nave: ${state.po1.distShip}m a ${state.po1.azShip}°`;
 
-      valAz2.textContent = `${state.po2.az}°`;
-      az2Label.textContent = `${state.po2.az}° [${getCardinal(state.po2.az)}]`;
-      hudPO2.textContent = `[${Math.round(state.po2.x)}m, ${Math.round(state.po2.y)}m] // ${state.po2.az}°`;
+      if (valAz2) valAz2.textContent = `${state.po2.az}°`;
+      if (az2Label) az2Label.textContent = `${state.po2.az}° [${getCardinal(state.po2.az)}]`;
+      if (hudPO2) hudPO2.textContent = `[${Math.round(state.po2.x)}m, ${Math.round(state.po2.y)}m] // Nave: ${state.po2.distShip}m a ${state.po2.azShip}°`;
 
       if (state.target.valid) {
         const tx = Math.round(state.target.x);
@@ -486,39 +691,212 @@
         const distLZ = Math.round(Math.hypot(tx, ty));
         let azLZ = Math.round((Math.atan2(tx, ty) * 180 / Math.PI + 360) % 360);
 
-        resCoords.textContent = `X: ${tx > 0 ? '+' : ''}${tx}m, Y: ${ty > 0 ? '+' : ''}${ty}m`;
-        resVector.textContent = `${azLZ}° [${getCardinal(azLZ)}] // ${distLZ}m`;
-        resDist1.textContent = `${Math.round(state.target.dist1)} m`;
-        resDist2.textContent = `${Math.round(state.target.dist2)} m`;
+        if (resCoords) resCoords.textContent = `X: ${tx > 0 ? '+' : ''}${tx}m, Y: ${ty > 0 ? '+' : ''}${ty}m`;
+        if (resVector) resVector.textContent = `${azLZ}° [${getCardinal(azLZ)}] // ${distLZ}m`;
+        if (resDist1) resDist1.textContent = `${Math.round(state.target.dist1)} m`;
+        if (resDist2) resDist2.textContent = `${Math.round(state.target.dist2)} m`;
 
-        solutionStatus.textContent = 'BLANCO FIJADO (LOCK)';
-        solutionStatus.className = 'mono text-[11px] font-bold text-emerald-400 bg-emerald-950/70 border border-emerald-500/30 px-2 py-0.5 rounded';
-        solutionBox.className = 'p-3.5 rounded-xl border bg-slate-900/90 border-emerald-500/40 glow-green space-y-1.5 transition';
-        hudTarget.textContent = `[${tx}m, ${ty}m] // ${distLZ}m de LZ`;
+        if (solutionStatus) {
+          solutionStatus.textContent = 'BLANCO FIJADO (LOCK)';
+          solutionStatus.className = 'mono text-[11px] font-bold text-emerald-400 bg-emerald-950/70 border border-emerald-500/30 px-2 py-0.5 rounded';
+        }
+        if (solutionBox) solutionBox.className = 'p-3.5 rounded-xl border bg-slate-900/90 border-emerald-500/40 glow-green space-y-2 transition';
+        if (hudTarget) hudTarget.textContent = `[${tx}m, ${ty}m] // ${distLZ}m de Nave`;
 
-        radioTransmissionText.value = 
-`[MEDRECON INTEL] // HVT FIJADO
-• Grid-Ref: X: ${tx > 0 ? '+' : ''}${tx}m, Y: ${ty > 0 ? '+' : ''}${ty}m
-• Azimuts: P.O.1 Alfa (${state.po1.az}°) + P.O.2 Bravo (${state.po2.az}°)
-• Vector desde LZ/Base: Rumbo ${azLZ}° a ${distLZ} metros
-• Distancias: ${Math.round(state.target.dist1)}m (P.O.1) // ${Math.round(state.target.dist2)}m (P.O.2)
+        if (radioTransmissionText) {
+          radioTransmissionText.value = 
+`[MEDRECON INTEL] // HVT FIJADO POR TRIANGULACIÓN
+• Punto Cero / Nave: LZ [0,0]
+• P.O.1 Alfa: Mirando a Nave ${state.po1.distShip}m a ${state.po1.azShip}° (Az. Objetivo: ${state.po1.az}°)
+• P.O.2 Bravo: Mirando a Nave ${state.po2.distShip}m a ${state.po2.azShip}° (Az. Objetivo: ${state.po2.az}°)
+• Blanco Triangulado: X: ${tx > 0 ? '+' : ''}${tx}m, Y: ${ty > 0 ? '+' : ''}${ty}m
+• Vector de Ataque desde Nave: Rumbo ${azLZ}° [${getCardinal(azLZ)}] a ${distLZ} metros
+• Distancias de Visión: ${Math.round(state.target.dist1)}m (P.O.1) // ${Math.round(state.target.dist2)}m (P.O.2)
 • Protocolo: WEAPON HOLD // Confirmar vector de aproximación.`;
-
+        }
       } else {
-        resCoords.textContent = 'FUERA DE CONVERGENCIA';
-        resVector.textContent = 'Líneas no cruzan al frente';
-        resDist1.textContent = '---';
-        resDist2.textContent = '---';
-        solutionStatus.textContent = 'ERROR DE CRUCE';
-        solutionStatus.className = 'mono text-[11px] font-bold text-red-400 bg-red-950/70 border border-red-500/30 px-2 py-0.5 rounded';
-        solutionBox.className = 'p-3.5 rounded-xl border bg-slate-900/90 border-red-500/40 glow-red space-y-1.5 transition';
-        hudTarget.textContent = `SIN INTERSECCIÓN`;
-        radioTransmissionText.value = `[MEDRECON INTEL] // ALERTA: Azimuts divergentes. Revisar líneas de visión de P.O.1 y P.O.2.`;
+        if (resCoords) resCoords.textContent = 'FUERA DE CONVERGENCIA';
+        if (resVector) resVector.textContent = 'Líneas no cruzan al frente';
+        if (resDist1) resDist1.textContent = '---';
+        if (resDist2) resDist2.textContent = '---';
+        if (solutionStatus) {
+          solutionStatus.textContent = 'ERROR DE CRUCE';
+          solutionStatus.className = 'mono text-[11px] font-bold text-red-400 bg-red-950/70 border border-red-500/30 px-2 py-0.5 rounded';
+        }
+        if (solutionBox) solutionBox.className = 'p-3.5 rounded-xl border bg-slate-900/90 border-red-500/40 glow-red space-y-2 transition';
+        if (hudTarget) hudTarget.textContent = `SIN INTERSECCIÓN`;
+        if (radioTransmissionText) radioTransmissionText.value = `[MEDRECON INTEL] // ALERTA: Azimuts divergentes. Revisar líneas de visión de P.O.1 y P.O.2.`;
       }
 
       drawRadar();
     }
 
+    // =========================================================
+    // GESTIÓN DE MÚLTIPLES OBJETIVOS GUARDADOS
+    // =========================================================
+    const STORAGE_KEY_TARGETS = 'medrecon_triangulacion_saved_targets';
+
+    function loadSavedTargets() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_TARGETS);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) state.savedTargets = parsed;
+        }
+      } catch(e) {
+        console.warn('Error loading saved targets:', e);
+      }
+      renderSavedTargetsList();
+    }
+
+    function saveTargetsToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY_TARGETS, JSON.stringify(state.savedTargets));
+      } catch(e) {
+        console.warn('Error saving targets:', e);
+      }
+    }
+
+    function saveCurrentTarget() {
+      if (!state.target || !state.target.valid) {
+        alert('Debes tener una solución de blanco válida (intersección activa) para guardar un objetivo.');
+        return;
+      }
+
+      const defaultName = '🎯 Objetivo #' + (state.savedTargets.length + 1) + ' [Hostil]';
+      const name = prompt('Nombre o Identificador del Objetivo Enemigo a Guardar:', defaultName);
+      if (!name) return;
+
+      const tx = Math.round(state.target.x);
+      const ty = Math.round(state.target.y);
+      const distLZ = Math.round(Math.hypot(tx, ty));
+      const azLZ = Math.round((Math.atan2(tx, ty) * 180 / Math.PI + 360) % 360);
+
+      const targetItem = {
+        id: 'tgt-' + Date.now(),
+        name: name.trim(),
+        x: tx,
+        y: ty,
+        distLZ: distLZ,
+        azLZ: azLZ,
+        dist1: Math.round(state.target.dist1),
+        dist2: Math.round(state.target.dist2),
+        az1: state.po1.az,
+        az2: state.po2.az,
+        timestamp: Date.now()
+      };
+
+      state.savedTargets.push(targetItem);
+      saveTargetsToStorage();
+      renderSavedTargetsList();
+      drawRadar();
+      showToast('Objetivo «' + targetItem.name + '» guardado en el Grid Táctico');
+    }
+
+    function deleteSavedTarget(id) {
+      state.savedTargets = state.savedTargets.filter(t => t.id !== id);
+      saveTargetsToStorage();
+      renderSavedTargetsList();
+      drawRadar();
+    }
+
+    function focusSavedTarget(id) {
+      const tgt = state.savedTargets.find(t => t.id === id);
+      if (!tgt) return;
+      if (tgt.az1 !== undefined && sliderAz1) {
+        state.po1.az = tgt.az1;
+        sliderAz1.value = tgt.az1;
+      }
+      if (tgt.az2 !== undefined && sliderAz2) {
+        state.po2.az = tgt.az2;
+        sliderAz2.value = tgt.az2;
+      }
+      updateReadouts();
+      showToast('Enfocando líneas hacia ' + tgt.name);
+    }
+
+    function clearAllSavedTargets() {
+      if (state.savedTargets.length === 0) return;
+      if (confirm('¿Vaciar todos los objetivos guardados del Grid Táctico?')) {
+        state.savedTargets = [];
+        saveTargetsToStorage();
+        renderSavedTargetsList();
+        drawRadar();
+        showToast('Lista de objetivos vaciada');
+      }
+    }
+
+    function copyAllTargetsReport() {
+      if (state.savedTargets.length === 0) {
+        alert('No hay objetivos guardados actualmente. Guarda el objetivo activo con el botón «Guardar Objetivo en Grid Táctico».');
+        return;
+      }
+
+      let report = `[MEDRECON INTEL] // REPORTE GENERAL DE BLANCOS FIJADOS (RED DE OBSERVACIÓN)\n` +
+        `• Base / Nave de Inserción: LZ [0,0]\n` +
+        `• P.O.1 Alfa: Mirando a Nave ${state.po1.distShip}m a ${state.po1.azShip}°\n` +
+        `• P.O.2 Bravo: Mirando a Nave ${state.po2.distShip}m a ${state.po2.azShip}°\n` +
+        `• Total Objetivos Fijados: ${state.savedTargets.length}\n\n`;
+
+      state.savedTargets.forEach((t, i) => {
+        report += `[BLANCO #${i + 1}] ${t.name}\n` +
+          `  - Posición Relativa: X: ${t.x > 0 ? '+' : ''}${t.x}m, Y: ${t.y > 0 ? '+' : ''}${t.y}m\n` +
+          `  - Vector desde Nave/Base: Rumbo ${t.azLZ}° [${getCardinal(t.azLZ)}] a ${t.distLZ} metros\n` +
+          `  - Distancia P.O.1: ${t.dist1}m (Az. ${t.az1}°)\n` +
+          `  - Distancia P.O.2: ${t.dist2}m (Az. ${t.az2}°)\n\n`;
+      });
+      report += `• Transmisión: Armas preparadas. Vectores confirmados para artillería y escuadra.`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(report).then(() => {
+          showToast('Informe de ' + state.savedTargets.length + ' blancos copiado al portapapeles');
+        }).catch(() => {
+          prompt('Copia el informe de todos los objetivos:', report);
+        });
+      } else {
+        prompt('Copia el informe de todos los objetivos:', report);
+      }
+    }
+
+    function renderSavedTargetsList() {
+      if (!savedTargetsList) return;
+      if (savedTargetsCount) savedTargetsCount.textContent = state.savedTargets.length;
+
+      if (state.savedTargets.length === 0) {
+        savedTargetsList.innerHTML = '<div class="text-[11px] text-slate-500 italic py-2 text-center">No hay objetivos guardados todavía. Usa «Guardar Objetivo en Grid Táctico» para almacenar posiciones de enemigos.</div>';
+        return;
+      }
+
+      let html = '';
+      state.savedTargets.forEach((t, idx) => {
+        html += `
+          <div class="bg-slate-950/80 border border-red-500/30 rounded-lg p-2 text-xs mono flex items-center justify-between gap-2 hover:border-red-500/60 transition">
+            <div class="flex items-center gap-2 overflow-hidden">
+              <span class="w-5 h-5 rounded-full bg-red-600/40 text-red-200 border border-red-500/50 flex items-center justify-center font-bold text-[10px] shrink-0">T${idx + 1}</span>
+              <div class="truncate">
+                <div class="text-white font-bold text-[11px] truncate">${t.name}</div>
+                <div class="text-[10px] text-slate-400">Nave: ${t.azLZ}° // ${t.distLZ}m &bull; [X:${t.x > 0 ? '+' : ''}${t.x}m, Y:${t.y > 0 ? '+' : ''}${t.y}m]</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <button type="button" onclick="focusSavedTarget('${t.id}')" class="px-2 py-0.5 bg-cyan-950/60 hover:bg-cyan-900/80 text-cyan-300 border border-cyan-500/40 rounded text-[10px] font-bold" title="Cargar azimuts de este objetivo">
+                Enfocar
+              </button>
+              <button type="button" onclick="deleteSavedTarget('${t.id}')" class="px-1.5 py-0.5 text-slate-500 hover:text-red-400 text-[11px] font-bold" title="Eliminar objetivo">
+                ✕
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      savedTargetsList.innerHTML = html;
+    }
+    window.deleteSavedTarget = deleteSavedTarget;
+    window.focusSavedTarget = focusSavedTarget;
+
+    // =========================================================
+    // DIBUJADO DEL RADAR CANVAS TÁCTICO
+    // =========================================================
     function drawRadar() {
       const rect = canvas.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
@@ -536,6 +914,7 @@
       ctx.fillStyle = '#060913';
       ctx.fillRect(0, 0, w, h);
 
+      // Anillos concéntricos de distancia
       const rings = [500, 1000, 1500, 2000, 2500, 3000];
       ctx.lineWidth = 1;
       
@@ -552,6 +931,7 @@
         ctx.fillText(label, cx + 6, cy - radPix + 12);
       });
 
+      // Ejes cardinales principales
       ctx.beginPath();
       ctx.moveTo(cx, 0); ctx.lineTo(cx, h);
       ctx.moveTo(0, cy); ctx.lineTo(w, cy);
@@ -560,6 +940,7 @@
       ctx.stroke();
       ctx.setLineDash([]);
 
+      // Marcas angulares cada 10°
       const outerRad = state.maxRadius * scale;
       for (let deg = 0; deg < 360; deg += 10) {
         const rad = deg * Math.PI / 180;
@@ -595,15 +976,35 @@
       }
 
       const lzPix = toPix(0, 0);
-      ctx.beginPath();
-      ctx.arc(lzPix.x, lzPix.y, 4, 0, Math.PI * 2);
-      ctx.fillStyle = '#ffffff';
-      ctx.fill();
-      ctx.font = '10px "JetBrains Mono"';
-      ctx.fillStyle = '#94a3b8';
-      ctx.fillText('LZ / CERO', lzPix.x + 8, lzPix.y + 4);
-
       const p1Pix = toPix(state.po1.x, state.po1.y);
+      const p2Pix = toPix(state.po2.x, state.po2.y);
+
+      // 1. LÍNEAS DE REFERENCIA DESDE LA NAVE A LOS PUESTOS DE OBSERVACIÓN
+      ctx.beginPath();
+      ctx.moveTo(lzPix.x, lzPix.y);
+      ctx.lineTo(p1Pix.x, p1Pix.y);
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.35)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 4]);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(lzPix.x, lzPix.y);
+      ctx.lineTo(p2Pix.x, p2Pix.y);
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Etiquetas de distancia de línea base hacia la nave
+      ctx.font = '9px "JetBrains Mono"';
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.7)';
+      ctx.fillText(state.po1.distShip + 'm', (lzPix.x + p1Pix.x) / 2 + 6, (lzPix.y + p1Pix.y) / 2);
+
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.7)';
+      ctx.fillText(state.po2.distShip + 'm', (lzPix.x + p2Pix.x) / 2 + 6, (lzPix.y + p2Pix.y) / 2);
+
+      // 2. RAYO Y MARCADOR DE P.O.1 (ALFA)
       const rad1 = state.po1.az * Math.PI / 180;
       const rayLen = 4500;
       const p1RayEnd = toPix(state.po1.x + rayLen * Math.sin(rad1), state.po1.y + rayLen * Math.cos(rad1));
@@ -630,7 +1031,7 @@
       ctx.font = 'bold 11px "JetBrains Mono"';
       ctx.fillText('P.O. 1 Alfa', p1Pix.x + 10, p1Pix.y - 6);
 
-      const p2Pix = toPix(state.po2.x, state.po2.y);
+      // 3. RAYO Y MARCADOR DE P.O.2 (BRAVO)
       const rad2 = state.po2.az * Math.PI / 180;
       const p2RayEnd = toPix(state.po2.x + rayLen * Math.sin(rad2), state.po2.y + rayLen * Math.cos(rad2));
 
@@ -656,15 +1057,41 @@
       ctx.font = 'bold 11px "JetBrains Mono"';
       ctx.fillText('P.O. 2 Bravo', p2Pix.x + 10, p2Pix.y - 6);
 
+      // 4. OBJETIVOS GUARDADOS ANTERIORMENTE
+      state.savedTargets.forEach((tgt, idx) => {
+        const tgtPix = toPix(tgt.x, tgt.y);
+        ctx.beginPath();
+        ctx.arc(tgtPix.x, tgtPix.y, 9, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.25)';
+        ctx.fill();
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        ctx.font = 'bold 9px "JetBrains Mono"';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('T' + (idx + 1), tgtPix.x, tgtPix.y);
+
+        ctx.textAlign = 'left';
+        ctx.font = '10px "JetBrains Mono"';
+        ctx.fillStyle = '#fca5a5';
+        ctx.fillText(tgt.name, tgtPix.x + 12, tgtPix.y + 3);
+      });
+
+      // 5. SOLUCIÓN DE BLANCO ACTUAL (HVT LOCK)
       if (state.target.valid) {
         const tPix = toPix(state.target.x, state.target.y);
 
         ctx.beginPath();
         ctx.moveTo(lzPix.x, lzPix.y);
         ctx.lineTo(tPix.x, tPix.y);
-        ctx.strokeStyle = 'rgba(239, 68, 68, 0.35)';
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.45)';
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([4, 4]);
         ctx.stroke();
+        ctx.setLineDash([]);
 
         ctx.beginPath();
         ctx.arc(tPix.x, tPix.y, 14, 0, Math.PI * 2);
@@ -673,7 +1100,7 @@
         ctx.stroke();
 
         ctx.beginPath();
-        ctx.arc(tPix.x, tPix.y, 6, 0, Math.PI * 2);
+        ctx.arc(tPix.x, tPix.y, 5, 0, Math.PI * 2);
         ctx.fillStyle = '#ef4444';
         ctx.fill();
 
@@ -689,8 +1116,25 @@
         ctx.fillStyle = '#ef4444';
         ctx.fillText('TARGET LOCK (HVT)', tPix.x + sz + 6, tPix.y + 4);
       }
+
+      // 6. NAVE / BASE EN EL PUNTO CERO (LZ [0,0])
+      ctx.beginPath();
+      ctx.arc(lzPix.x, lzPix.y, 6, 0, Math.PI * 2);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.font = 'bold 10px "JetBrains Mono"';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('🚀 NAVE / BASE [0,0]', lzPix.x + 10, lzPix.y + 4);
     }
 
+    // =========================================================
+    // EVENT LISTENERS: ENTRADAS Y DESLIZADORES
+    // =========================================================
+    // Azimuts hacia el objetivo
     sliderAz1.addEventListener('input', (e) => {
       state.po1.az = parseInt(e.target.value);
       updateReadouts();
@@ -701,22 +1145,64 @@
       updateReadouts();
     });
 
+    // P.O. 1 por Distancia y Azimut a la Nave
+    if (po1DistShip) {
+      po1DistShip.addEventListener('input', (e) => {
+        updatePo1FromPolar(parseFloat(e.target.value) || 10, state.po1.azShip);
+      });
+    }
+    if (po1AzShip) {
+      po1AzShip.addEventListener('input', (e) => {
+        updatePo1FromPolar(state.po1.distShip, parseInt(e.target.value) || 0);
+      });
+    }
+    if (sliderPo1AzShip) {
+      sliderPo1AzShip.addEventListener('input', (e) => {
+        updatePo1FromPolar(state.po1.distShip, parseInt(e.target.value) || 0);
+      });
+    }
+
+    // P.O. 2 por Distancia y Azimut a la Nave
+    if (po2DistShip) {
+      po2DistShip.addEventListener('input', (e) => {
+        updatePo2FromPolar(parseFloat(e.target.value) || 10, state.po2.azShip);
+      });
+    }
+    if (po2AzShip) {
+      po2AzShip.addEventListener('input', (e) => {
+        updatePo2FromPolar(state.po2.distShip, parseInt(e.target.value) || 0);
+      });
+    }
+    if (sliderPo2AzShip) {
+      sliderPo2AzShip.addEventListener('input', (e) => {
+        updatePo2FromPolar(state.po2.distShip, parseInt(e.target.value) || 0);
+      });
+    }
+
+    // Coordenadas manuales X, Y para PO1 y PO2 (compatibilidad bidireccional)
     po1X.addEventListener('input', (e) => {
-      state.po1.x = parseFloat(e.target.value) || 0;
-      updateReadouts();
+      updatePo1FromCartesian(parseFloat(e.target.value) || 0, state.po1.y);
     });
     po1Y.addEventListener('input', (e) => {
-      state.po1.y = parseFloat(e.target.value) || 0;
-      updateReadouts();
+      updatePo1FromCartesian(state.po1.x, parseFloat(e.target.value) || 0);
     });
     po2X.addEventListener('input', (e) => {
-      state.po2.x = parseFloat(e.target.value) || 0;
-      updateReadouts();
+      updatePo2FromCartesian(parseFloat(e.target.value) || 0, state.po2.y);
     });
     po2Y.addEventListener('input', (e) => {
-      state.po2.y = parseFloat(e.target.value) || 0;
-      updateReadouts();
+      updatePo2FromCartesian(state.po2.x, parseFloat(e.target.value) || 0);
     });
+
+    // Guardado de Objetivos
+    if (btnSaveTarget) {
+      btnSaveTarget.addEventListener('click', saveCurrentTarget);
+    }
+    if (btnCopyAllRadio) {
+      btnCopyAllRadio.addEventListener('click', copyAllTargetsReport);
+    }
+    if (btnClearTargets) {
+      btnClearTargets.addEventListener('click', clearAllSavedTargets);
+    }
 
     function updateScaleIndicator() {
       const curRadius = state.maxRadius / state.zoom;
@@ -786,22 +1272,28 @@
     const polarAz = document.getElementById('polarAz');
     const polarAzLabel = document.getElementById('polarAzLabel');
 
-    polarDist.addEventListener('input', updateReadouts);
-    polarAz.addEventListener('input', (e) => {
-      polarAzLabel.textContent = `${e.target.value}° [${getCardinal(parseInt(e.target.value))}]`;
-      updateReadouts();
-    });
+    if (polarDist) polarDist.addEventListener('input', updateReadouts);
+    if (polarAz) {
+      polarAz.addEventListener('input', (e) => {
+        polarAzLabel.textContent = `${e.target.value}° [${getCardinal(parseInt(e.target.value))}]`;
+        updateReadouts();
+      });
+    }
 
     ['tsoQT', 'tsoAtm', 'tsoSigilo', 'tsoCont'].forEach(id => {
-      document.getElementById(id).addEventListener('input', () => {
-        const sum = (parseFloat(document.getElementById('tsoQT').value) || 0) +
-                    (parseFloat(document.getElementById('tsoAtm').value) || 0) +
-                    (parseFloat(document.getElementById('tsoSigilo').value) || 0) +
-                    (parseFloat(document.getElementById('tsoCont').value) || 0);
-        document.getElementById('totalTSO').textContent = `${sum} min`;
-      });
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', () => {
+          const sum = (parseFloat(document.getElementById('tsoQT').value) || 0) +
+                      (parseFloat(document.getElementById('tsoAtm').value) || 0) +
+                      (parseFloat(document.getElementById('tsoSigilo').value) || 0) +
+                      (parseFloat(document.getElementById('tsoCont').value) || 0);
+          document.getElementById('totalTSO').textContent = `${sum} min`;
+        });
+      }
     });
 
+    // Presets con actualización de azimut a la nave
     document.getElementById('presetSelect').addEventListener('change', (e) => {
       const val = e.target.value;
       if (val === 'minlo') {
@@ -820,20 +1312,39 @@
       po1Y.value = state.po1.y;
       po2X.value = state.po2.x;
       po2Y.value = state.po2.y;
-      updateReadouts();
+
+      updatePo1FromCartesian(state.po1.x, state.po1.y);
+      updatePo2FromCartesian(state.po2.x, state.po2.y);
     });
 
     const btnCopyReport = document.getElementById('btnCopyReport');
     const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
 
-    btnCopyReport.addEventListener('click', () => {
-      navigator.clipboard.writeText(radioTransmissionText.value).then(() => {
+    function showToast(msg) {
+      if (toastMsg) toastMsg.textContent = msg;
+      if (toast) {
         toast.classList.remove('translate-y-24', 'opacity-0');
         setTimeout(() => {
           toast.classList.add('translate-y-24', 'opacity-0');
         }, 2500);
+      }
+    }
+
+    if (btnCopyReport) {
+      btnCopyReport.addEventListener('click', () => {
+        const text = radioTransmissionText.value;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            showToast('Reporte militar copiado con éxito');
+          }).catch(() => {
+            prompt('Copia el reporte de transmisión:', text);
+          });
+        } else {
+          prompt('Copia el reporte de transmisión:', text);
+        }
       });
-    });
+    }
 
     let isDragging = false;
     let dragTarget = null;
@@ -876,17 +1387,10 @@
       if (!isDragging) return;
       const pos = getCanvasCoords(e);
       if (dragTarget === 'po1') {
-        state.po1.x = Math.round(pos.x);
-        state.po1.y = Math.round(pos.y);
-        po1X.value = state.po1.x;
-        po1Y.value = state.po1.y;
+        updatePo1FromCartesian(Math.round(pos.x), Math.round(pos.y));
       } else if (dragTarget === 'po2') {
-        state.po2.x = Math.round(pos.x);
-        state.po2.y = Math.round(pos.y);
-        po2X.value = state.po2.x;
-        po2Y.value = state.po2.y;
+        updatePo2FromCartesian(Math.round(pos.x), Math.round(pos.y));
       }
-      updateReadouts();
     });
 
     window.addEventListener('mouseup', () => {
@@ -895,6 +1399,11 @@
     });
 
     window.addEventListener('resize', drawRadar);
+
+    // Inicializar cálculos y cargar objetivos
+    updatePo1FromCartesian(state.po1.x, state.po1.y);
+    updatePo2FromCartesian(state.po2.x, state.po2.y);
+    loadSavedTargets();
     updateReadouts();
 
     // Transfer Coordinates to Planificador
