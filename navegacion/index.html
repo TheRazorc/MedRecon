@@ -1142,7 +1142,33 @@
       grid-template-columns: 1fr auto;
       gap: 14px;
       align-items: center;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .dss-card.dss-card-selected {
+      border-color: var(--accent-cyan) !important;
+      background: rgba(10, 25, 45, 0.96) !important;
+      box-shadow: 0 0 24px rgba(0, 210, 255, 0.45), inset 0 0 15px rgba(0, 210, 255, 0.1) !important;
+      transform: translateY(-2px);
+      position: relative;
+    }
+
+    .dss-card.dss-card-selected::before {
+      content: '🎯 CONTACTO FIJADO EN HOLOMAPA';
+      position: absolute;
+      top: -9px;
+      right: 14px;
+      background: linear-gradient(90deg, var(--accent-cyan), #00ffaa);
+      color: #040812;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 1px 8px;
+      border-radius: 3px;
+      box-shadow: 0 0 10px rgba(0, 210, 255, 0.6);
+      z-index: 2;
     }
 
     @media (max-width: 768px) {
@@ -1190,6 +1216,278 @@
     .dss-status-extracting { background: rgba(245, 166, 35, 0.15); color: #f5a623; border: 1px solid rgba(245, 166, 35, 0.4); }
     .dss-status-exhausted { background: rgba(126, 149, 176, 0.15); color: #7e95b0; border: 1px solid rgba(126, 149, 176, 0.4); }
 
+    /* ========================================================= */
+    /* ESTILOS DE DESPLEGABLES Y NAVEGACIÓN EN RUTA (MÓDULO 03)  */
+    /* ========================================================= */
+    .module-accordion-header {
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      padding: 14px 18px;
+      background: rgba(14, 23, 38, 0.95);
+      border: 1px solid var(--border-hud);
+      border-radius: 4px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .module-accordion-header:hover {
+      background: rgba(18, 30, 50, 0.95);
+      border-color: rgba(0, 210, 255, 0.4);
+    }
+
+    details[open] > .module-accordion-header {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom-color: rgba(0, 210, 255, 0.3);
+      background: rgba(18, 29, 47, 0.98);
+    }
+
+    details > summary span.accordion-arrow {
+      transition: transform 0.25s ease;
+      display: inline-block;
+    }
+
+    details[open] > summary span.accordion-arrow {
+      transform: rotate(180deg);
+    }
+
+    /* ROUTE TRACKER BOXES */
+    .rt-box {
+      background: rgba(8, 14, 24, 0.75);
+      border: 1px solid var(--border-hud);
+      border-radius: 4px;
+      padding: 16px;
+    }
+
+    .rt-telemetry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .rt-telem-card {
+      background: rgba(12, 19, 32, 0.9);
+      border: 1px solid var(--border-hud);
+      border-radius: 4px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .rt-telem-label {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+
+    .rt-telem-val {
+      font-size: 18px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: var(--accent-cyan);
+    }
+
+    .rt-status-good { color: #00ffaa !important; }
+    .rt-status-warn { color: #f5a623 !important; }
+    .rt-status-bad { color: #ff4757 !important; }
+
+    .rt-progress-bar-bg {
+      width: 100%;
+      height: 10px;
+      background: rgba(6, 10, 18, 0.9);
+      border: 1px solid var(--border-hud);
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 8px;
+      position: relative;
+    }
+
+    .rt-progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00d2ff, #00ffaa);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .rt-table-container {
+      margin-top: 14px;
+      overflow-x: auto;
+      border: 1px solid var(--border-hud);
+      border-radius: 4px;
+    }
+
+    .rt-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-align: left;
+    }
+
+    .rt-table th {
+      background: rgba(18, 29, 47, 0.9);
+      padding: 8px 12px;
+      color: var(--accent-cyan);
+      border-bottom: 1px solid var(--border-hud);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .rt-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+    }
+
+    .rt-table tr:hover {
+      background: rgba(0, 210, 255, 0.05);
+    }
+
+    /* Modern Flight Corridor HUD Container */
+    .rt-canvas-hud-wrap {
+      position: relative;
+      width: 100%;
+      height: 260px;
+      background: #02050c;
+      border: 1px solid var(--border-hud);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: inset 0 0 40px rgba(0, 210, 255, 0.04);
+    }
+
+    .telemetry-solution-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .rt-route-def-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 180px auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .rt-checkpoint-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* RESPONSIVE DESIGN: TABLETS & MOBILES */
+    @media (max-width: 1100px) {
+      .rt-route-def-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .container {
+        grid-template-columns: 1fr;
+        padding: 0 12px 30px;
+        gap: 16px;
+        margin: 12px auto;
+      }
+      .telemetry-solution-grid {
+        grid-template-columns: 1fr;
+      }
+      .vg-map-container {
+        flex-direction: column;
+        min-height: auto;
+      }
+      .vg-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 210, 255, 0.2);
+      }
+      .vg-map-viewport {
+        height: 480px;
+      }
+      .dss-grid-2col {
+        grid-template-columns: 1fr !important;
+      }
+      .rt-telemetry-grid {
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 14px;
+      }
+      .header-status {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .module-accordion-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 14px;
+      }
+      .module-accordion-header > div:last-child {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .panel-body {
+        padding: 12px;
+      }
+      .rt-box {
+        padding: 12px;
+      }
+      .presets-row {
+        gap: 6px;
+      }
+      .pill-btn {
+        font-size: 10px;
+        padding: 4px 8px;
+      }
+      .vg-map-viewport {
+        height: 380px;
+      }
+      .dss-canvas-container {
+        height: 380px !important;
+      }
+      .fleet-form {
+        grid-template-columns: 1fr !important;
+      }
+      .input-group {
+        flex-direction: column;
+      }
+      .input-group input {
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .input-group button, .input-group .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .rt-route-def-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .rt-checkpoint-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .rt-canvas-hud-wrap {
+        height: 220px;
+      }
+    }
+
   </style>
   <script src="three.min.js"></script>
   <script src="OrbitControls.js"></script>
@@ -1226,96 +1524,106 @@
 
   <div class="container">
 
-    <!-- INPUT COORDENADAS (FULL WIDTH) -->
-    <div class="panel col-full">
-      <div class="panel-header">
-        <div class="panel-title">
-          <span>🎯</span> Entrada de Telemetría de Navegación
+    <!-- 1ER DESPLEGABLE: TELEMETRÍA ORBITAL, MAPA PLANETARIO & FLEET INTEL -->
+    <details class="panel col-full" id="module-1-telemetry-panel" style="margin-bottom:16px;">
+      <summary class="panel-header module-accordion-header">
+        <div class="panel-title" style="display:flex; align-items:center; gap:10px;">
+          <span>🪐</span> MÓDULO 01 // TELEMETRÍA ORBITAL, MAPA PLANETARIO & FLEET INTEL
+          <span class="badge-cat cat-tactical" style="font-size:10px; font-weight:bold; letter-spacing:1px;">STANTON • PYRO • NYX</span>
         </div>
-        <div class="preset-label">Formato oficial /showlocation (Auto-detección multi-sistema)</div>
-      </div>
-      <div class="panel-body">
-        <div class="input-group">
-          <input type="text" id="input-coords" placeholder="Coordinates: x:... y:... z:..." autocomplete="off">
-          <button class="btn btn-secondary" id="btn-paste">
-            <span>📋</span> Pegar Portapapeles
-          </button>
-          <button class="btn" id="btn-compute">
-            <span>🚀</span> Calcular Ruta
-          </button>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span class="preset-label" style="color:var(--accent-cyan);">Solucionador de Vuelo, Mapamundi y Registro</span>
+          <span class="accordion-arrow" style="font-size:14px; color:var(--accent-cyan); font-family:var(--font-mono);">▼</span>
         </div>
+      </summary>
 
-        <!-- Banner de Notificación y Detección de Sistema Inteligente -->
-        <div id="system-alert-banner" style="display:none; margin-top:10px; padding:10px 14px; border-radius:4px; font-size:12px; font-family:var(--font-mono); align-items:center; justify-content:space-between; gap:10px; transition:all 0.3s ease;">
-          <span id="system-alert-msg" style="flex:1;"></span>
-        </div>
+      <div class="panel-body" style="display:flex; flex-direction:column; gap:20px;">
 
-        <!-- Presets para probar rápido -->
-        <div class="presets-row">
-          <span class="preset-label">Probar ubicaciones:</span>
-          <button class="pill-btn" id="pill-daymar-quant">🪐 Daymar (Stanton)</button>
-          <button class="pill-btn" id="pill-cellin-verse">🌕 Cellin (Stanton)</button>
-          <button class="pill-btn" id="pill-user">🛸 CRU-L1 (Stanton)</button>
-          <button class="pill-btn" id="pill-pyro-terminus">🔥 Pyro VI / Ruin Station (Pyro)</button>
-          <button class="pill-btn" id="pill-pyro-bloom">🌋 Pyro III / Bloom (Pyro)</button>
-          <button class="pill-btn" id="pill-nyx-delamar">🌑 Delamar / Levski (Nyx)</button>
-        </div>
-      </div>
-    </div>
+        <!-- SUB-SECCIÓN 1: ENTRADA DE TELEMETRÍA DE NAVEGACIÓN -->
+        <div class="rt-box">
+          <div style="font-size:12px; font-weight:bold; color:var(--accent-cyan); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <span>🎯 Entrada de Telemetría de Navegación</span>
+            <span class="preset-label">Formato oficial /showlocation (Auto-detección multi-sistema)</span>
+          </div>
 
-    <!-- SOLUCIÓN DE VUELO EN CABINA -->
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title">
-          <span>🚀</span> Solución de Vuelo en Cabina
-        </div>
-        <div id="target-body-badge" class="badge-live" style="color:var(--accent-cyan);">STANDBY</div>
-      </div>
-      <div class="panel-body" id="flight-solution-content">
-        <!-- Render dinámico -->
-      </div>
-    </div>
+          <div class="input-group">
+            <input type="text" id="input-coords" placeholder="Coordinates: x:... y:... z:..." autocomplete="off" value="Coordinates: x:-18930717623.605762 y:-2610077876.153149 z:221253.000000">
+            <button class="btn btn-secondary" id="btn-paste">
+              <span>📋</span> Pegar Portapapeles
+            </button>
+            <button class="btn" id="btn-compute">
+              <span>🚀</span> Calcular Ruta
+            </button>
+          </div>
 
-    <!-- MATRIZ DE MARCADORES ORBITALES (OMS) -->
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title">
-          <span>🌐</span> Matriz de Verificación Orbital (OMs)
-        </div>
-        <div class="preset-label">Distancias directas en cabina</div>
-      </div>
-      <div class="panel-body" style="padding:0;">
-        <table class="hud-table" id="om-table">
-          <thead>
-            <tr>
-              <th>Marcador</th>
-              <th>Orientación Relativa</th>
-              <th>Distancia Directa</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody id="om-table-body">
-            <!-- Render dinámico -->
-          </tbody>
-        </table>
-      </div>
-    </div>
+          <!-- Banner de Notificación y Detección de Sistema Inteligente -->
+          <div id="system-alert-banner" style="display:none; margin-top:10px; padding:10px 14px; border-radius:4px; font-size:12px; font-family:var(--font-mono); align-items:center; justify-content:space-between; gap:10px; transition:all 0.3s ease;">
+            <span id="system-alert-msg" style="flex:1;"></span>
+          </div>
 
-    <!-- MAPAMUNDI PLANO 2D // ESTILO VERSEGUIDE (FULL WIDTH) -->
-    <div class="panel col-full">
-      <div class="panel-header">
-        <div class="panel-title">
-          <span>🗺️</span> Mapamundi de Superficie // Interfaz Táctica VerseGuide
-        </div>
-        <div style="display:flex; align-items:center; gap:16px;">
-          <div style="font-family:var(--font-mono); color:var(--accent-cyan); font-size:12px; font-weight:bold;" id="map-coords-hover-header">
-            LAT: +00.00° | LON: +000.00°
+          <!-- Presets para probar rápido -->
+          <div class="presets-row">
+            <span class="preset-label">Probar ubicaciones:</span>
+            <button class="pill-btn" id="pill-daymar-quant">🪐 Daymar (Stanton)</button>
+            <button class="pill-btn" id="pill-cellin-verse">🌕 Cellin (Stanton)</button>
+            <button class="pill-btn" id="pill-user">🛸 CRU-L1 (Stanton)</button>
+            <button class="pill-btn" id="pill-pyro-terminus">🔥 Pyro VI / Ruin Station (Pyro)</button>
+            <button class="pill-btn" id="pill-pyro-bloom">🌋 Pyro III / Bloom (Pyro)</button>
+            <button class="pill-btn" id="pill-nyx-delamar">🌑 Delamar / Levski (Nyx)</button>
           </div>
         </div>
-      </div>
-      
-      <!-- CONTENEDOR TIPO VERSEGUIDE -->
-      <div class="vg-map-container">
+
+        <!-- SUB-SECCIÓN 2: SOLUCIÓN EN CABINA Y MATRIZ ORBITAL OMS -->
+        <div class="telemetry-solution-grid">
+          <!-- Solución de Vuelo en Cabina -->
+          <div class="rt-box">
+            <div style="font-size:12px; font-weight:bold; color:var(--accent-cyan); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px; display:flex; justify-content:space-between; align-items:center;">
+              <span>🚀 Solución de Vuelo en Cabina</span>
+              <div id="target-body-badge" class="badge-live" style="color:var(--accent-cyan);">STANDBY</div>
+            </div>
+            <div id="flight-solution-content">
+              <!-- Render dinámico -->
+            </div>
+          </div>
+
+          <!-- Matriz de Verificación Orbital (OMs) -->
+          <div class="rt-box">
+            <div style="font-size:12px; font-weight:bold; color:var(--accent-cyan); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px; display:flex; justify-content:space-between; align-items:center;">
+              <span>🌐 Matriz de Verificación Orbital (OMs)</span>
+              <span class="preset-label">Distancias directas en cabina</span>
+            </div>
+            <div style="padding:0; overflow-x:auto;">
+              <table class="hud-table" id="om-table">
+                <thead>
+                  <tr>
+                    <th>Marcador</th>
+                    <th>Orientación Relativa</th>
+                    <th>Distancia Directa</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="om-table-body">
+                  <!-- Render dinámico -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-SECCIÓN 3: MAPAMUNDI PLANO 2D // ESTILO VERSEGUIDE -->
+        <div class="rt-box" style="padding:0; overflow:hidden;">
+          <div class="panel-header" style="background:rgba(18, 29, 47, 0.85); padding:12px 18px; border-bottom:1px solid var(--border-hud); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div class="panel-title">
+              <span>🗺️</span> Mapamundi de Superficie // Interfaz Táctica VerseGuide
+            </div>
+            <div style="display:flex; align-items:center; gap:16px;">
+              <div style="font-family:var(--font-mono); color:var(--accent-cyan); font-size:12px; font-weight:bold;" id="map-coords-hover-header">
+                LAT: +00.00° | LON: +000.00°
+              </div>
+            </div>
+          </div>
+          
+          <div class="vg-map-container">
         
         <!-- SIDEBAR IZQUIERDO VERSEGUIDE -->
         <div class="vg-sidebar">
@@ -1452,26 +1760,18 @@
           <span id="map-status-summary" style="color:var(--accent-cyan); font-family:var(--font-mono);">Proyección Activa: Equirrectangular Cartesiana</span>
         </div>
       </div>
-    </div>
-
-    
-      </div>
-    </div>
-
-    
-
-    <!-- CCBE FLEET INTEL // REGISTRO DE PUNTOS TÁCTICOS (FULL WIDTH) -->
-    <div class="panel col-full">
-      <div class="panel-header">
-        <div class="panel-title">
-          <span>📍</span> CCBE Fleet Intel // Registro de Ubicaciones Compartidas
         </div>
-        <button class="btn btn-secondary btn-sm" id="btn-purge">
-          <span>🧹</span> Purgar Expirados / Minados
-        </button>
-      </div>
-      <div class="panel-body">
-        <div class="fleet-form">
+
+        <!-- SUB-SECCIÓN 4: CCBE FLEET INTEL // REGISTRO DE UBICACIONES COMPARTIDAS -->
+        <div class="rt-box">
+          <div style="font-size:12px; font-weight:bold; color:var(--accent-cyan); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <span>📍 CCBE Fleet Intel // Registro de Ubicaciones Compartidas</span>
+            <button class="btn btn-secondary btn-sm" id="btn-purge">
+              <span>🧹</span> Purgar Expirados / Minados
+            </button>
+          </div>
+          
+          <div class="fleet-form">
           <input type="text" id="save-name" placeholder="Nombre descriptivo (ej: Filón Quantanium 46% x3 rocas)">
           <select id="save-category">
             <option value="mining">⛏️ Minería (Expira en 4h)</option>
@@ -1488,42 +1788,47 @@
         <div id="fleet-poi-list">
           <!-- Render dinámico -->
         </div>
-      </div>
-    </div>
+        </div>
 
-    <!-- DEEP SPACE SURVEY // PROSPECCIÓN Y TRIANGULACIÓN RELATIVA EN ESPACIO PROFUNDO (FULL WIDTH) -->
-    <div class="panel col-full" id="deep-space-survey-panel">
-      <div class="panel-header">
-        <div class="panel-title" style="display:flex; align-items:center; gap:10px;">
-          <span>🛰️</span> Deep Space Survey // Prospección y Triangulación Relativa
-          <span class="badge-cat cat-tactical" style="font-size:10px; font-weight:bold; letter-spacing:1px;">ESPACIO PROFUNDO • AARON HALO</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <button class="btn btn-secondary btn-sm" id="btn-dss-export-json" title="Exportar prospecciones en formato JSON">
-            <span>💾</span> Copia JSON
-          </button>
-          <button class="btn btn-secondary btn-sm" id="btn-dss-clear-all" style="color:var(--accent-red);" title="Limpiar todos los registros">
-            <span>🗑️</span> Vaciar
-          </button>
-        </div>
       </div>
+    </details>
+
+    <!-- 2º DESPLEGABLE: DEEP SPACE SURVEY // HOLOMAPA 3D & PROSPECCIÓN (FULL WIDTH) -->
+    <details class="panel col-full" id="deep-space-survey-panel" style="margin-bottom:16px;">
+      <summary class="panel-header module-accordion-header">
+        <div class="panel-title" style="display:flex; align-items:center; gap:10px;">
+          <span>🛰️</span> MÓDULO 02 // DEEP SPACE SURVEY (HOLOMAPA 3D & PROSPECCIÓN RELATIVA)
+          <span class="badge-cat cat-tactical" style="font-size:10px; font-weight:bold; letter-spacing:1px;">LOCALIZACIÓN ESPACIO PROFUNDO</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="display:flex; align-items:center; gap:8px;" onclick="event.stopPropagation();">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-dss-export-json" title="Exportar prospecciones en formato JSON">
+              <span>💾</span> Copia JSON
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-dss-clear-all" style="color:var(--accent-red);" title="Limpiar todos los registros">
+              <span>🗑️</span> Vaciar
+            </button>
+          </div>
+          <span class="accordion-arrow" style="font-size:14px; color:var(--accent-cyan); font-family:var(--font-mono);">▼</span>
+        </div>
+      </summary>
 
       <div class="panel-body">
         <!-- BARRA DE ANCLA TÁCTICA (NAVE NODRIZA / PUNTO CERO) -->
         <div class="dss-anchor-banner" id="dss-anchor-banner">
           <div style="display:flex; flex-direction:column; gap:4px;">
             <div style="display:flex; align-items:center; gap:8px;">
-              <span class="pulse-dot" id="dss-anchor-pulse" style="background:#00ffaa; box-shadow:0 0 8px #00ffaa;"></span>
-              <span style="font-weight:bold; font-size:13px; color:var(--text-main); font-family:var(--font-mono);" id="dss-anchor-title">ANCLA TÁCTICA: CARRACK NODRIZA CCBE-01</span>
-              <span class="badge-cat cat-tactical" id="dss-anchor-status-badge" style="font-size:10px;">ANCLA ACTIVA (0, 0, 0)</span>
+              <span class="pulse-dot" id="dss-anchor-pulse" style="background:#ffaa00; box-shadow:0 0 8px #ffaa00;"></span>
+              <span style="font-weight:bold; font-size:13px; color:var(--text-main); font-family:var(--font-mono);" id="dss-anchor-title">REFERENCIA: ☀️ ESTRELLA STANTON • CENTRO DEL SISTEMA</span>
+              <span class="badge-cat cat-tactical" id="dss-anchor-status-badge" style="font-size:10px; background:rgba(255,170,0,0.2); color:#ffaa00; border-color:#ffaa00;">ORIGEN (0, 0, 0)</span>
             </div>
             <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);" id="dss-anchor-coords-desc">
-              Punto de Referencia Zero: Nave nodriza estacionaria para cálculo de vectores de aproximación y distancias 3D.
+              Punto de Referencia Zero: Estrella central del sistema • Coordinates: x:0.000000 y:0.000000 z:0.000000
             </div>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-            <button class="btn btn-sm btn-secondary" id="btn-dss-use-current-coords" title="Usar las coordenadas /showlocation cargadas arriba">
-              <span>⚡</span> Usar Telemetría Superior
+            <button class="btn btn-sm btn-secondary" id="btn-dss-use-current-coords" title="Fijar el punto de referencia en la estrella del sistema (Coordinates: x:0 y:0 z:0)">
+              <span>☀️</span> Estrella del Sistema (0, 0, 0)
             </button>
             <button class="btn btn-sm" id="btn-dss-open-anchor-modal">
               <span>⚓</span> Fijar / Editar Ancla
@@ -1542,7 +1847,7 @@
           </div>
 
           <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-bottom:10px;">
-            <input type="text" id="dss-poi-name" placeholder="Nombre descriptivo (ej: Filón Quantainium 48% x3 rocas)">
+            <input type="text" id="dss-poi-name" placeholder="Nombre descriptivo (ej: Filón Quantainium 48% x3 rocas)" value="Filón Quantainium 52.4% // 4 Clústeres">
             <select id="dss-poi-category">
               <option value="quant">💎 Quantainium (Alta Inestabilidad)</option>
               <option value="mining">⛏️ Minería General (Bexalite / Gold / Taranite)</option>
@@ -1556,7 +1861,7 @@
           <!-- INPUT DE POSICIONAMIENTO SEGÚN MODO -->
           <div id="dss-coords-input-block">
             <div class="input-group" style="margin-bottom:8px;">
-              <input type="text" id="dss-poi-coords" placeholder="Pegar /showlocation del yacimiento (Coordinates: x:... y:... z:...)">
+              <input type="text" id="dss-poi-coords" placeholder="Pegar /showlocation del yacimiento (Coordinates: x:... y:... z:...)" value="Coordinates: x:-18930685200.000000 y:-2610038400.000000 z:223100.000000">
               <button class="btn btn-secondary btn-sm" id="btn-dss-paste-coords" type="button" title="Pegar del portapapeles">📋 Pegar</button>
             </div>
           </div>
@@ -1580,27 +1885,25 @@
 
           <!-- METADATOS TÁCTICOS -->
           <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) auto; gap:10px; align-items:center;">
-            <input type="text" id="dss-poi-purity" placeholder="Pureza % (ej: 48.5%)">
-            <input type="text" id="dss-poi-mass" placeholder="Masa / SCU (ej: 32 SCU / 6.200 kg)">
-            <input type="text" id="dss-poi-notes" placeholder="Notas (ej: Escolta hostil a 5km / Terreno accidentado)">
+            <input type="text" id="dss-poi-purity" placeholder="Pureza % (ej: 48.5%)" value="52.4% Quantainium">
+            <input type="text" id="dss-poi-mass" placeholder="Masa / SCU (ej: 32 SCU / 6.200 kg)" value="48 SCU (Inestabilidad Media)">
+            <input type="text" id="dss-poi-notes" placeholder="Notas (ej: Escolta hostil a 5km / Terreno accidentado)" value="Veta de alta pureza. Fractura asistida recomendada.">
             <button class="btn" id="btn-dss-save-poi" type="button" style="white-space:nowrap;">
               <span>💾</span> Registrar Hallazgo
             </button>
           </div>
         </div>
 
-        <!-- TABS DE VISUALIZACIÓN: HOLOMAPA 3D vs MATRIZ TÁCTICA -->
+        <!-- TOOLBAR DE ESCALA Y NAVEGACIÓN DEL HOLOMAPA 3D -->
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; border-bottom:1px solid var(--border-hud); padding-bottom:10px; flex-wrap:wrap; gap:10px;">
-          <div style="display:flex; gap:10px;">
-            <button type="button" class="dss-tab-btn active" id="dss-tab-3d-btn">
-              <span>🌐</span> Holomapa 3D Espacio Profundo
-            </button>
-            <button type="button" class="dss-tab-btn" id="dss-tab-matrix-btn">
-              <span>📋</span> Matriz de Yacimientos & Guía de Vuelo (<span id="dss-count-badge">0</span>)
-            </button>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="font-size:13px; font-weight:bold; color:var(--accent-cyan); text-transform:uppercase; letter-spacing:1px; display:flex; align-items:center; gap:8px;">
+              <span>🌐</span> Holomapa Táctico 3D // Localización Espacio Profundo
+            </div>
+            <span class="badge-cat cat-tactical" style="font-size:10px;">HOLO-SCAN ACTIVO</span>
           </div>
           <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">Escala 3D:</span>
+            <span style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">Escala de Escaneo:</span>
             <button type="button" class="pill-btn dss-range-btn" data-range="5">5 km</button>
             <button type="button" class="pill-btn dss-range-btn active" data-range="20">20 km</button>
             <button type="button" class="pill-btn dss-range-btn" data-range="50">50 km</button>
@@ -1608,42 +1911,49 @@
           </div>
         </div>
 
-        <!-- CONTENIDO VISTA 1: HOLOMAPA 3D ESPACIO PROFUNDO -->
-        <div id="dss-view-3d" style="margin-top:16px;">
-          <div id="dss-3d-viewport" style="position:relative; width:100%; height:520px; background:#02050b; border:1px solid var(--border-hud); border-radius:6px; overflow:hidden; box-shadow: inset 0 0 40px rgba(0,0,0,0.8);">
+        <!-- VIEWPORT PRINCIPAL HOLOMAPA 3D (COCKPIT SCI-FI HUD) -->
+        <div id="dss-view-3d" style="margin-top:14px;">
+          <div id="dss-3d-viewport" style="position:relative; width:100%; height:520px; background:radial-gradient(circle at center, #061126 0%, #02050e 70%, #010307 100%); border:1px solid var(--border-hud); border-radius:6px; overflow:hidden; box-shadow: inset 0 0 50px rgba(0, 210, 255, 0.06), 0 8px 32px rgba(0,0,0,0.6);">
             
             <!-- Three.js Canvas Container -->
             <div id="dss-three-canvas-container" style="width:100%; height:100%;"></div>
 
             <!-- HUD OVERLAY SUPERIOR IZQUIERDA -->
-            <div style="position:absolute; top:12px; left:14px; font-family:var(--font-mono); font-size:11px; color:var(--accent-cyan); pointer-events:none; background:rgba(6,10,18,0.85); padding:6px 12px; border-radius:4px; border:1px solid rgba(0,210,255,0.3); backdrop-filter:blur(4px);">
-              HOLOMAPA 3D // ESCALA: <span id="dss-hud-range" style="font-weight:bold; color:var(--text-main);">20 KM</span> | ANCLA: <span id="dss-hud-anchor-name" style="font-weight:bold; color:var(--accent-green);">CARRACK NODRIZA</span>
+            <div style="position:absolute; top:12px; left:14px; font-family:var(--font-mono); font-size:11px; color:var(--accent-cyan); pointer-events:none; background:rgba(6,10,18,0.88); padding:6px 12px; border-radius:4px; border:1px solid rgba(0,210,255,0.3); backdrop-filter:blur(4px); z-index:5;">
+              HOLO-RADAR // RANGO: <span id="dss-hud-range" style="font-weight:bold; color:var(--text-main);">20 KM</span> | ANCLA: <span id="dss-hud-anchor-name" style="font-weight:bold; color:#ffaa00;">ESTRELLA (0,0,0)</span>
+            </div>
+
+            <!-- HUD TARGET LOCK BANNER (SUPERIOR CENTRO) -->
+            <div id="dss-hud-target-bar" style="display:none; position:absolute; top:12px; left:50%; transform:translateX(-50%); background:rgba(6,12,22,0.94); border:1px solid var(--accent-cyan); border-radius:4px; padding:6px 14px; font-family:var(--font-mono); font-size:11px; color:#fff; box-shadow:0 0 20px rgba(0,210,255,0.5); z-index:10; white-space:nowrap; align-items:center; gap:12px;">
+              <span id="dss-hud-target-text" style="font-weight:bold; color:var(--accent-cyan);">🎯 CONTACTO FIJADO</span>
+              <button type="button" onclick="dssClearSelection()" style="background:rgba(255,71,87,0.2); border:1px solid var(--accent-red); color:var(--accent-red); cursor:pointer; font-size:10px; border-radius:2px; padding:2px 6px; font-family:var(--font-mono);" title="Deseleccionar blanco">✕ LIBERAR</button>
             </div>
 
             <!-- HUD BOTONES DE CÁMARA (SUPERIOR DERECHA) -->
             <div style="position:absolute; top:12px; right:14px; display:flex; gap:6px; flex-wrap:wrap; z-index:5;">
               <button type="button" class="dss-cam-btn active" id="btn-cam-iso" title="Perspectiva Isométrica Táctica 3D">📐 Isométrica 3D</button>
-              <button type="button" class="dss-cam-btn" id="btn-cam-top" title="Vista Cenital Superior (Plano XY)">⬆️ Cenital (Top)</button>
+              <button type="button" class="dss-cam-btn" id="btn-cam-top" title="Vista Cenital Superior (Plano Horizontal)">⬆️ Cenital (Top)</button>
               <button type="button" class="dss-cam-btn" id="btn-cam-side" title="Vista Lateral de Nivel">➡️ Lateral</button>
               <button type="button" class="dss-cam-btn" id="btn-cam-reset" title="Restablecer posición de cámara">🎯 Reset</button>
             </div>
 
             <!-- HUD INSTRUCCIONES DE NAVEGACIÓN 3D (INFERIOR DERECHA) -->
-            <div style="position:absolute; bottom:12px; right:14px; font-family:var(--font-mono); font-size:10px; color:var(--text-muted); pointer-events:none; background:rgba(6,10,18,0.85); padding:4px 10px; border-radius:4px; border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:8px;">
+            <div style="position:absolute; bottom:12px; right:14px; font-family:var(--font-mono); font-size:10px; color:var(--text-muted); pointer-events:none; background:rgba(6,10,18,0.85); padding:4px 10px; border-radius:4px; border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:8px; z-index:5;">
               <span>🖱️ Clic Izq: Rotar 3D</span> &bull; 
               <span>Rueda: Zoom</span> &bull; 
               <span>Clic Dcho: Desplazar</span>
             </div>
 
             <!-- HUD STATUS 3D VIVO (INFERIOR IZQUIERDA) -->
-            <div style="position:absolute; bottom:12px; left:14px; font-family:var(--font-mono); font-size:10px; color:var(--accent-green); pointer-events:none; background:rgba(6,10,18,0.85); padding:4px 10px; border-radius:4px; border:1px solid rgba(0,255,170,0.25); display:flex; align-items:center; gap:6px;">
-              <span class="pulse-dot"></span> ENTORNO HOLOGRÁFICO 3D ACTIVO
+            <div style="position:absolute; bottom:12px; left:14px; font-family:var(--font-mono); font-size:10px; color:var(--accent-green); pointer-events:none; background:rgba(6,10,18,0.85); padding:4px 10px; border-radius:4px; border:1px solid rgba(0,255,170,0.25); display:flex; align-items:center; gap:6px; z-index:5;">
+              <span class="pulse-dot"></span> BARRIDO RADAR EN CURSO &bull; <span id="dss-hud-contacts-count" style="color:var(--text-main); font-weight:bold;">0 CONTACTOS</span>
             </div>
 
             <!-- TOOLTIP FLOTANTE DEL HOLOMAPA 3D -->
-            <div id="dss-3d-tooltip" style="display:none; position:absolute; pointer-events:none; background:rgba(10,16,28,0.96); border:1px solid var(--accent-cyan); border-radius:4px; padding:10px 14px; font-family:var(--font-mono); font-size:11px; z-index:10; box-shadow:0 8px 24px rgba(0,0,0,0.9); min-width:240px;"></div>
+            <div id="dss-3d-tooltip" style="display:none; position:absolute; pointer-events:none; background:rgba(10,16,28,0.96); border:1px solid var(--accent-cyan); border-radius:4px; padding:10px 14px; font-family:var(--font-mono); font-size:11px; z-index:20; box-shadow:0 8px 24px rgba(0,0,0,0.9); min-width:240px;"></div>
           </div>
 
+          <!-- LEYENDA DEL HOLOMAPA 3D -->
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:11px; color:var(--text-muted); font-family:var(--font-mono); flex-wrap:wrap; gap:10px;">
             <div style="display:flex; gap:14px; flex-wrap:wrap;">
               <span><span style="color:#00ffff;">◆</span> 💎 Quantainium</span>
@@ -1652,12 +1962,17 @@
               <span><span style="color:#ff4757;">◆</span> 🚨 Rescate SAR</span>
               <span><span style="color:#00ffaa;">◆</span> 🛡️ Baliza Táctica</span>
             </div>
-            <div>💡 Haz clic en cualquier yacimiento 3D para enfocar la cámara y ver su vector de vuelo.</div>
+            <div style="color:var(--accent-cyan);">💡 Haz clic en cualquier yacimiento 3D para seleccionarlo y localizarlo en la matriz inferior.</div>
           </div>
         </div>
 
-        <!-- CONTENIDO VISTA 2: LISTA DE YACIMIENTOS & VECTORES DE CABINA -->
-        <div id="dss-view-matrix" style="display:none; margin-top:16px;">
+        <!-- MATRIZ DE YACIMIENTOS & GUÍA DE VUELO (SIEMPRE VISIBLE DIRECTAMENTE DEBAJO DEL HOLOMAPA) -->
+        <div id="dss-view-matrix" style="margin-top:24px; border-top:1px solid var(--border-hud); padding-top:16px;">
+          <div style="font-size:13px; font-weight:bold; color:var(--accent-cyan); margin-bottom:12px; text-transform:uppercase; letter-spacing:1px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <span>📋 Matriz de Yacimientos & Guía de Vuelo en Cabina (<span id="dss-count-badge">0</span>)</span>
+            <span style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">Haz clic en cualquier tarjeta para fijar y enfocar la cámara 3D en el Holomapa</span>
+          </div>
+
           <!-- CALCULADORA DE VELOCIDAD DE INTERCEPTACIÓN -->
           <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(9,14,24,0.7); border:1px solid var(--border-hud); border-radius:4px; padding:10px 14px; margin-bottom:12px; font-family:var(--font-mono); font-size:12px; flex-wrap:wrap; gap:10px;">
             <div style="display:flex; align-items:center; gap:8px;">
@@ -1669,7 +1984,7 @@
               </select>
             </div>
             <div style="color:var(--text-muted); font-size:11px;">
-              Los tiempos de vuelo hacia cada yacimiento se recalculan al instante.
+              Tiempos de vuelo y vectores de aproximación calculados en tiempo real hacia cada contacto.
             </div>
           </div>
 
@@ -1679,7 +1994,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </details>
 
     <!-- MODAL PARA FIJAR ANCLA TÁCTICA -->
     <div id="dss-anchor-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:9999; backdrop-filter:blur(6px); justify-content:center; align-items:center; padding:16px;">
@@ -1696,7 +2011,7 @@
           </p>
           <div style="margin-bottom:12px;">
             <label style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted); display:block; margin-bottom:4px;">Nombre / Identificador de la Nodriza:</label>
-            <input type="text" id="dss-anchor-modal-name" placeholder="ej: CARRACK NODRIZA CCBE-01" value="CARRACK NODRIZA CCBE-01">
+            <input type="text" id="dss-anchor-modal-name" placeholder="ej: Polaris CCBE-01 / Base Orbital" value="">
           </div>
           <div style="margin-bottom:14px;">
             <label style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted); display:block; margin-bottom:4px;">Coordenadas /showlocation de la Nodriza:</label>
@@ -1710,20 +2025,256 @@
       </div>
     </div>
 
+    <!-- 3ER DESPLEGABLE: NAVEGACIÓN EN RUTA & CORRECCIÓN DE TRAYECTORIA 3D (FULL WIDTH) -->
+    <details class="panel col-full" id="module-3-route-panel" style="margin-bottom:16px;">
+      <summary class="panel-header module-accordion-header">
+        <div class="panel-title" style="display:flex; align-items:center; gap:10px;">
+          <span>🚀</span> MÓDULO 03 // NAVEGACIÓN EN RUTA & CORRECCIÓN DE TRAYECTORIA 3D
+          <span class="badge-cat cat-rescue" style="font-size:10px; font-weight:bold; letter-spacing:1px;">TELEMETRÍA EN VUELO • DRIFT CONTROL</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="display:flex; align-items:center; gap:8px;" onclick="event.stopPropagation();">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-rt-reset" style="color:var(--accent-red);" title="Reiniciar ruta y vaciar puntos de control">
+              <span>🔄</span> Nueva Ruta
+            </button>
+          </div>
+          <span class="accordion-arrow" style="font-size:14px; color:var(--accent-cyan); font-family:var(--font-mono);">▼</span>
+        </div>
+      </summary>
+
+      <div class="panel-body">
+        <!-- SECCIÓN 1: PLANIFICACIÓN DE RUTA (ORIGEN Y DESTINO) -->
+        <div class="rt-box">
+          <div style="font-size:12px; font-weight:bold; color:var(--accent-cyan); margin-bottom:12px; text-transform:uppercase; letter-spacing:1px; display:flex; justify-content:space-between; align-items:center;">
+            <span>📍 Definición de Ruta Directa (Origen → Destino)</span>
+            <span style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">Modo Coordenadas Relativas /showlocation</span>
+          </div>
+
+          <div class="rt-route-def-grid">
+            <!-- Origen -->
+            <div>
+              <label style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted); display:block; margin-bottom:4px;">1. Punto de Partida (Origen):</label>
+              <div style="display:flex; gap:6px; margin-bottom:4px;">
+                <input type="text" id="rt-origin-name" placeholder="Nombre (ej: Puerto Tressler / Salida)" value="PUNTO DE SALIDA ALPHA">
+              </div>
+              <div class="input-group" style="margin-bottom:0;">
+                <input type="text" id="rt-origin-coords" placeholder="Coordinates: x:... y:... z:..." value="Coordinates: x:-18930700000.000000 y:-2610050000.000000 z:220000.000000">
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-rt-paste-origin" title="Pegar del portapapeles">📋</button>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-rt-use-top-origin" title="Usar telemetría superior">⚡</button>
+              </div>
+            </div>
+
+            <!-- Destino -->
+            <div>
+              <label style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted); display:block; margin-bottom:4px;">2. Punto de Llegada (Destino):</label>
+              <div style="display:flex; gap:6px; margin-bottom:4px;">
+                <input type="text" id="rt-target-name" placeholder="Nombre (ej: Yacimiento Quantainium Beta)" value="DESTINO OBJETIVO // FILÓN">
+              </div>
+              <div class="input-group" style="margin-bottom:0;">
+                <input type="text" id="rt-target-coords" placeholder="Coordinates: x:... y:... z:..." value="Coordinates: x:-18930665000.000000 y:-2610020000.000000 z:224500.000000">
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-rt-paste-target" title="Pegar del portapapeles">📋</button>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-rt-use-top-target" title="Usar telemetría superior">⚡</button>
+              </div>
+            </div>
+
+            <!-- Velocidad -->
+            <div>
+              <label style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted); display:block; margin-bottom:4px;">Velocidad de Vuelo:</label>
+              <select id="rt-ship-speed" style="padding:10px 8px; font-size:12px;">
+                <option value="400">400 m/s (Pesado / Minero)</option>
+                <option value="800" selected>800 m/s (SCM Estándar)</option>
+                <option value="1200">1.200 m/s (Crucero NAV)</option>
+              </select>
+            </div>
+
+            <!-- Botón Trazar -->
+            <div>
+              <button type="button" class="btn" id="btn-rt-compute-plan" style="white-space:nowrap; padding:11px 18px; width:100%;">
+                <span>🧭</span> Trazar Ruta
+              </button>
+            </div>
+          </div>
+
+          <!-- BANNER DE RESUMEN DE RUTA DIRECTA -->
+          <div id="rt-plan-summary" style="margin-top:14px; background:rgba(10,18,30,0.85); border:1px solid rgba(0,210,255,0.3); border-radius:4px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="pulse-dot"></span>
+              <span style="font-weight:bold; font-size:12px; font-family:var(--font-mono); color:var(--text-main);" id="rt-plan-summary-title">RUTA DIRECTA TEÓRICA DEFINIDA</span>
+            </div>
+            <div style="display:flex; gap:16px; font-family:var(--font-mono); font-size:12px; flex-wrap:wrap;">
+              <span>Distancia Total: <strong style="color:#00ffaa;" id="rt-plan-total-dist">-- km</strong></span>
+              <span>Rumbo Inicial: <strong style="color:var(--accent-amber);" id="rt-plan-initial-bearing">--°</strong></span>
+              <span>Elevación: <strong style="color:var(--accent-cyan);" id="rt-plan-initial-pitch">--°</strong></span>
+              <span>Tiempo Estimado: <strong style="color:var(--text-main);" id="rt-plan-total-ete">--</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECCIÓN 2: REGISTRO DE CHECKPOINT EN MARCHA -->
+        <div class="rt-box" style="margin-top:16px;">
+          <div style="font-size:12px; font-weight:bold; color:var(--accent-amber); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <span>📡 Punto de Control en Vuelo (Actualizar Posición Durante el Viaje)</span>
+            <span style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">Introduce tus coordenadas mientras vuelas para evaluar desvío</span>
+          </div>
+
+          <div class="rt-checkpoint-grid">
+            <div class="input-group" style="margin-bottom:0;">
+              <input type="text" id="rt-checkpoint-coords" placeholder="Pegar coordenadas actuales del piloto (/showlocation)" value="Coordinates: x:-18930673750.000000 y:-2610027500.000000 z:223375.000000">
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-rt-paste-checkpoint" title="Pegar del portapapeles">📋 Pegar</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-rt-use-top-checkpoint" title="Capturar telemetría superior">⚡ Capturar</button>
+            </div>
+            <button type="button" class="btn btn-amber" id="btn-rt-add-checkpoint" style="white-space:nowrap; padding:11px 20px;">
+              <span>➕</span> Registrar Checkpoint & Verificar Rumbo
+            </button>
+          </div>
+
+          <!-- PROGRESO DE LA TRAVESÍA -->
+          <div style="margin-top:14px;">
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:11px; color:var(--text-muted); margin-bottom:4px;">
+              <span>PROGRESO DE LA RUTA: <strong style="color:var(--text-main);" id="rt-progress-text">0.0%</strong></span>
+              <span id="rt-progress-segment">0 / 0 km recorridos</span>
+            </div>
+            <div class="rt-progress-bar-bg">
+              <div class="rt-progress-bar-fill" id="rt-progress-bar-fill" style="width:0%;"></div>
+            </div>
+          </div>
+
+          <!-- TARJETAS DE TELEMETRÍA DE CORRECCIÓN -->
+          <div class="rt-telemetry-grid">
+            <!-- 1. Distancia Restante -->
+            <div class="rt-telem-card">
+              <span class="rt-telem-label">Distancia Restante al Blanco</span>
+              <span class="rt-telem-val" id="rt-card-rem-dist">-- km</span>
+              <span style="font-size:10px; font-family:var(--font-mono); color:var(--text-muted);" id="rt-card-rem-meters">-- metros directos</span>
+            </div>
+
+            <!-- 2. Desviación Lateral (Cross-track Drift) -->
+            <div class="rt-telem-card">
+              <span class="rt-telem-label">Desviación Lateral (Drift)</span>
+              <span class="rt-telem-val rt-status-good" id="rt-card-drift-dist">0 m</span>
+              <span style="font-size:10px; font-family:var(--font-mono);" id="rt-card-drift-desc">🟢 EN RUMBO DIRECTO</span>
+            </div>
+
+            <!-- 3. Corrección de Rumbo (Direct-To Vector) -->
+            <div class="rt-telem-card">
+              <span class="rt-telem-label">Rumbo de Corrección en Cabina</span>
+              <span class="rt-telem-val" style="color:var(--accent-amber);" id="rt-card-correction-heading">--°</span>
+              <span style="font-size:10px; font-family:var(--font-mono); color:var(--accent-cyan);" id="rt-card-correction-pitch">Elevación: --°</span>
+            </div>
+
+            <!-- 4. ETA Restante -->
+            <div class="rt-telem-card">
+              <span class="rt-telem-label">Tiempo Estimado (ETA)</span>
+              <span class="rt-telem-val" style="color:var(--text-main);" id="rt-card-eta">--</span>
+              <span style="font-size:10px; font-family:var(--font-mono); color:var(--text-muted);" id="rt-card-eta-speed">Velocidad: 800 m/s</span>
+            </div>
+          </div>
+
+          <!-- INSTRUCCIÓN DE VOZ / ORDEN DE CABINA -->
+          <div style="margin-top:14px; background:rgba(6,10,18,0.9); border:1px solid rgba(0,210,255,0.25); border-radius:4px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div style="flex:1; min-width:260px;">
+              <span style="font-size:10px; font-family:var(--font-mono); color:var(--accent-cyan); text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:2px;">
+                📢 ORDEN DE CABINA / RADIO VOIP:
+              </span>
+              <span style="font-size:12px; font-family:var(--font-mono); font-weight:bold; color:var(--text-main);" id="rt-voice-order-text">
+                [CCBE NAV-RUTA] Define origen y destino para calcular corrección de trayectoria.
+              </span>
+            </div>
+            <button type="button" class="btn btn-sm btn-secondary" id="btn-rt-copy-voice-order">
+              <span>📋</span> Copiar Orden de Corrección
+            </button>
+          </div>
+        </div>
+
+        <!-- SECCIÓN 3: VISUALIZADOR HUD DE TRAYECTORIA Y PERFIL DE RUTA -->
+        <div class="rt-box" style="margin-top:16px;">
+          <div style="font-size:12px; font-weight:bold; color:var(--accent-cyan); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px; display:flex; justify-content:space-between; align-items:center;">
+            <span>🗺️ Perfil de Trayectoria Táctica (Corredor de Vuelo)</span>
+            <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted); display:flex; gap:14px;">
+              <span><span style="color:#00d2ff;">---</span> Ruta Teórica</span>
+              <span><span style="color:#f5a623;">●━●</span> Vuelo Real</span>
+              <span><span style="color:#00ffaa;">▲</span> Nave Actual</span>
+            </div>
+          </div>
+
+          <div class="rt-canvas-hud-wrap">
+            <canvas id="rt-trajectory-canvas" style="display:block; width:100%; height:100%; cursor:crosshair;"></canvas>
+            <div id="rt-canvas-tooltip" style="display:none; position:absolute; pointer-events:none; z-index:30; background:rgba(6, 12, 22, 0.95); border:1px solid var(--accent-cyan); border-radius:4px; padding:8px 12px; font-family:var(--font-mono); font-size:11px; color:#fff; box-shadow:0 0 16px rgba(0,210,255,0.4); transform:translate(-50%, -120%); white-space:nowrap;"></div>
+          </div>
+        </div>
+
+        <!-- SECCIÓN 4: HISTORIAL DE PUNTOS DE CONTROL EN VUELO (CHECKPOINTS LOG) -->
+        <div class="rt-box" style="margin-top:16px;">
+          <div style="font-size:12px; font-weight:bold; color:var(--text-main); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; display:flex; justify-content:space-between; align-items:center;">
+            <span>📋 Historial de Puntos de Control Registrados (<span id="rt-checkpoints-count">0</span>)</span>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-rt-clear-checkpoints" style="color:var(--accent-red);">
+              <span>🧹</span> Limpiar Checkpoints
+            </button>
+          </div>
+
+          <div class="rt-table-container">
+            <table class="rt-table">
+              <thead>
+                <tr>
+                  <th>Fix #</th>
+                  <th>Hora UTC</th>
+                  <th>Dist. Restante</th>
+                  <th>Desvío Lateral</th>
+                  <th>Corrección en Cabina</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody id="rt-checkpoints-tbody">
+                <!-- Render dinámico -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
+
+
+
+
 
   
-    <!-- CINTURÓN DE AARON HALO // ENLACE Y GUÍA SCMINER.ROCKS (DESPLEGABLE AL FINAL) -->
-    <details class="panel col-full" id="aaron-halo-accordion">
-      <summary class="panel-header" style="list-style:none; display:flex; justify-content:space-between; align-items:center; cursor:pointer; user-select:none;">
-        <div class="panel-title">
-          <span>⛏️</span> Minería en el Cinturón Aaron Halo // SCMINER.ROCKS
+    <!-- 4º DESPLEGABLE: CINTURÓN DE AARON HALO // SCMINER.ROCKS (FULL WIDTH) -->
+    <details class="panel col-full" id="aaron-halo-accordion" style="margin-bottom:16px;">
+      <summary class="panel-header module-accordion-header">
+        <div class="panel-title" style="display:flex; align-items:center; gap:10px;">
+          <span>⛏️</span> MÓDULO 04 // CINTURÓN DE AARON HALO • SCMINER.ROCKS
+          <span class="badge-cat cat-mining" style="font-size:10px; font-weight:bold; letter-spacing:1px;">HERRAMIENTA EXTERNA</span>
         </div>
         <div style="display:flex; align-items:center; gap:12px;">
           <span class="preset-label" style="color:var(--accent-amber);">Herramienta Externa Especializada</span>
-          <span style="font-size:14px; color:var(--accent-cyan); font-family:var(--font-mono);">▼</span>
+          <span class="accordion-arrow" style="font-size:14px; color:var(--accent-cyan); font-family:var(--font-mono);">▼</span>
         </div>
       </summary>
       <div class="panel-body">
+        <!-- Rutas de Intercepción Cuántica de Ejemplo -->
+        <div style="margin-bottom:16px; background:rgba(8, 14, 24, 0.85); border:1px solid var(--border-hud); border-radius:6px; padding:16px;">
+          <div style="font-size:13px; font-weight:bold; color:var(--accent-amber); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+            <span>⚡</span> Rutas de Intercepción Cuántica de Ejemplo (Corte en Aaron Halo - Stanton):
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:12px;">
+            <div style="background:rgba(14, 23, 38, 0.85); border:1px solid rgba(0, 210, 255, 0.2); border-left:3px solid var(--accent-cyan); border-radius:4px; padding:12px;">
+              <div style="font-weight:bold; color:var(--text-main); font-size:12px; margin-bottom:4px;">ARC-L1 ➔ HUR-L5 (Banda 5)</div>
+              <div style="font-size:11px; color:var(--accent-cyan); font-family:var(--font-mono); margin-bottom:2px;">Corte Cuántico (U): 14.850.000 km</div>
+              <div style="font-size:11px; color:var(--text-muted);">Densidad máxima de Quantainium y fracturas ricas.</div>
+            </div>
+            <div style="background:rgba(14, 23, 38, 0.85); border:1px solid rgba(0, 210, 255, 0.2); border-left:3px solid var(--accent-amber); border-radius:4px; padding:12px;">
+              <div style="font-weight:bold; color:var(--text-main); font-size:12px; margin-bottom:4px;">CRU-L1 ➔ ArcCorp (Banda 7)</div>
+              <div style="font-size:11px; color:var(--accent-amber); font-family:var(--font-mono); margin-bottom:2px;">Corte Cuántico (U): 12.320.000 km</div>
+              <div style="font-size:11px; color:var(--text-muted);">Cúmulos de Bexalite, Gold y Taranite pura.</div>
+            </div>
+            <div style="background:rgba(14, 23, 38, 0.85); border:1px solid rgba(0, 210, 255, 0.2); border-left:3px solid #00ffaa; border-radius:4px; padding:12px;">
+              <div style="font-weight:bold; color:var(--text-main); font-size:12px; margin-bottom:4px;">Port Tressler ➔ CRU-L5 (Banda 9)</div>
+              <div style="font-size:11px; color:#00ffaa; font-family:var(--font-mono); margin-bottom:2px;">Corte Cuántico (U): 8.910.000 km</div>
+              <div style="font-size:11px; color:var(--text-muted);">Cinturón exterior rico en Laranita y Agricium.</div>
+            </div>
+          </div>
+        </div>
+
         <div style="display:grid; grid-template-columns: 1fr auto; gap:20px; align-items:center; background:rgba(9, 14, 23, 0.7); border:1px solid rgba(0, 210, 255, 0.25); border-radius:6px; padding:20px;">
           <div>
             <div style="font-size:16px; font-weight:bold; color:var(--accent-cyan); margin-bottom:8px; display:flex; align-items:center; gap:8px;">
@@ -1770,6 +2321,7 @@
     let currentAnalysis = null;
     let currentMapBody = 'Daymar';
     let shadowOpacity = 0.55;
+    var dssAnchor = null;
 
     // Alertas y Detección de Sistema
     function showSystemAlert(htmlMsg, type = 'info') {
@@ -1899,6 +2451,17 @@
 
       // Actualizar contenedores del sistema activo
       SC_DATA.containers = SC_DATA.systems[sysName].containers;
+      
+      // Actualizar ancla de estrella en Deep Space Survey si está en modo estrella
+      if (dssAnchor && (dssAnchor.isSun || (dssAnchor.x === 0 && dssAnchor.y === 0))) {
+        if (typeof getSystemStarAnchor === 'function') {
+          dssAnchor = getSystemStarAnchor(sysName);
+          if (typeof saveDssState === 'function') saveDssState();
+          if (typeof updateDssAnchorUI === 'function') updateDssAnchorUI();
+          if (typeof buildDss3DAnchor === 'function') buildDss3DAnchor();
+          if (typeof buildDss3DPois === 'function') buildDss3DPois();
+        }
+      }
 
       // Elegir cuerpo representativo para el mapa si no se especifica uno válido
       let targetBody = newBody;
@@ -1920,25 +2483,58 @@
     let fleetPois = [
       {
         id: 'poi-1',
-        name: 'Filón Ricco Quantanium (46.8% - 5 Rocas)',
+        name: 'Filón Ricco Quantainium (46.8% - 5 Rocas)',
         category: 'mining',
         pilot: 'Guill198',
         body: 'Daymar',
         coords: 'Coordinates: x:-18930717623.605762 y:-2610077876.153149 z:221253.000000',
         lat: 12.4, lon: -42.8,
         createdAt: Date.now() - 3600000 * 1.5,
-        expiresAt: Date.now() + 3600000 * 2.5
+        expiresAt: Date.now() + 3600000 * 4.5
       },
       {
         id: 'poi-2',
-        name: 'Pecio C2 Hércules derribado (Cajas de RMC en bodega)',
+        name: 'Pecio C2 Hercules Derribado (Carga RMC intacta)',
         category: 'wreck',
         pilot: 'Xuru',
         body: 'Daymar',
         coords: 'Coordinates: x:-18910000000.000000 y:-2630000000.000000 z:210000.000000',
         lat: -18.6, lon: 34.2,
         createdAt: Date.now() - 3600000 * 2.5,
-        expiresAt: Date.now() + 3600000 * 5.5
+        expiresAt: Date.now() + 3600000 * 6.5
+      },
+      {
+        id: 'poi-3',
+        name: 'Baliza SAR Médica // Piloto Inconsciente Cutlass Red',
+        category: 'rescue',
+        pilot: 'MedRecon-01',
+        body: 'Daymar',
+        coords: 'Coordinates: x:-18930725400.000000 y:-2610085100.000000 z:219800.000000',
+        lat: 28.1, lon: -105.4,
+        createdAt: Date.now() - 3600000 * 0.5,
+        expiresAt: Date.now() + 3600000 * 3.0
+      },
+      {
+        id: 'poi-4',
+        name: 'Punto de Encuentro Táctico // Escuadrón Escolta Alpha',
+        category: 'tactical',
+        pilot: 'Cmdr-Vanguard',
+        body: 'Daymar',
+        coords: 'Coordinates: x:-18930698000.000000 y:-2610065000.000000 z:222400.000000',
+        lat: -5.2, lon: -12.3,
+        createdAt: Date.now() - 3600000 * 0.8,
+        expiresAt: Date.now() + 3600000 * 8.0
+      },
+      {
+        id: 'poi-5',
+        name: 'Depósito Subterráneo Bexalite + Laranita',
+        category: 'mining',
+        pilot: 'Miner-Prospector',
+        body: 'Daymar',
+        coords: 'Coordinates: x:-18930708000.000000 y:-2610072000.000000 z:220900.000000',
+        lat: 45.7, lon: 88.6,
+        createdAt: Date.now() - 3600000 * 3.0,
+        expiresAt: Date.now() + 3600000 * 5.0
       }
     ];
 
@@ -2654,6 +3250,16 @@
     }
     window.addEventListener('resize', resizeCanvas);
 
+    // Re-renderizar mapa cuando el usuario abre el Desplegable 1
+    const m1Accordion = document.getElementById('module-1-telemetry-panel');
+    if (m1Accordion) {
+      m1Accordion.addEventListener('toggle', () => {
+        if (m1Accordion.open) {
+          setTimeout(resizeCanvas, 80);
+        }
+      });
+    }
+
     // Deslizador de Transparencia de Sombra Noche (0% - 100%)
     window.onShadowOpacityChange = function(val) {
       shadowOpacity = val / 100;
@@ -3260,17 +3866,27 @@
     // =========================================================
     // DEEP SPACE SURVEY & PROSPECCIÓN RELATIVA (LÓGICA TÁCTICA 3D)
     // =========================================================
-    const DSS_KEY_ANCHOR = 'ccbe_dss_anchor_v2';
-    const DSS_KEY_POIS = 'ccbe_dss_pois_v2';
+    const DSS_KEY_ANCHOR = 'ccbe_dss_anchor_v3';
+    const DSS_KEY_POIS = 'ccbe_dss_pois_v3';
 
-    let dssAnchor = {
-      name: "CARRACK NODRIZA CCBE-01",
-      coords: "Coordinates: x:-18930700000.000000 y:-2610050000.000000 z:220000.000000",
-      x: -18930700000,
-      y: -2610050000,
-      z: 220000,
-      set: true
-    };
+    function getSystemStarAnchor(sysName) {
+      const sys = (sysName || (typeof currentSystem !== 'undefined' ? currentSystem : 'Stanton')).toUpperCase();
+      let starName = 'ESTRELLA STANTON';
+      if (sys.includes('PYRO')) starName = 'ESTRELLA PYRO';
+      else if (sys.includes('NYX')) starName = 'ESTRELLA NYX';
+
+      return {
+        name: starName + ' • CENTRO DEL SISTEMA',
+        coords: 'Coordinates: x:0.000000 y:0.000000 z:0.000000',
+        x: 0,
+        y: 0,
+        z: 0,
+        set: true,
+        isSun: true
+      };
+    }
+
+    dssAnchor = getSystemStarAnchor('Stanton');
 
     let dssPois = [
       {
@@ -3290,7 +3906,7 @@
       },
       {
         id: 'dss-demo-2',
-        name: 'Pecio C2 Hercules // Carga RMC',
+        name: 'Pecio C2 Hercules // Carga RMC 64 SCU',
         category: 'salvage',
         scout: 'Scout Vulture-02',
         coords: 'Coordinates: x:-18930714200.000000 y:-2610061500.000000 z:218500.000000',
@@ -3299,13 +3915,13 @@
         z: 218500,
         purity: '100% RMC',
         mass: '64 SCU Hull',
-        notes: 'Pecio a la deriva sin señal activa. Seguro.',
+        notes: 'Pecio a la deriva sin señal hostil. Seguro.',
         status: 'available',
         createdAt: Date.now() - 1000 * 60 * 45
       },
       {
         id: 'dss-demo-3',
-        name: 'Cúmulo Bexalite + Gold',
+        name: 'Cúmulo Bexalite + Gold (Vetas Puras)',
         category: 'mining',
         scout: 'Scout MOLE Alpha',
         coords: 'Coordinates: x:-18930705200.000000 y:-2610045800.000000 z:220800.000000',
@@ -3314,7 +3930,7 @@
         z: 220800,
         purity: '34.8%',
         mass: '45.2 Toneladas',
-        notes: 'Fractura asistida recomendada.',
+        notes: 'Fractura asistida recomendada por dureza.',
         status: 'extracting',
         createdAt: Date.now() - 1000 * 60 * 70
       },
@@ -3332,6 +3948,21 @@
         notes: 'Oxígeno a 18%. Llevar MedPen Hemozal.',
         status: 'available',
         createdAt: Date.now() - 1000 * 60 * 5
+      },
+      {
+        id: 'dss-demo-5',
+        name: 'Baliza Táctica // Punto Reagrupamiento CCBE-Echo',
+        category: 'waypoint',
+        scout: 'Lead Vanguard',
+        coords: 'Coordinates: x:-18930722000.000000 y:-2610031000.000000 z:224100.000000',
+        x: -18930722000,
+        y: -2610031000,
+        z: 224100,
+        purity: 'Frecuencia Segura',
+        mass: 'Baliza Orbital',
+        notes: 'Vector seguro de aproximación para la flota.',
+        status: 'available',
+        createdAt: Date.now() - 1000 * 60 * 90
       }
     ];
 
@@ -3343,11 +3974,27 @@
     // Load persisted state
     try {
       const savedAnchor = localStorage.getItem(DSS_KEY_ANCHOR);
-      if (savedAnchor) dssAnchor = JSON.parse(savedAnchor);
+      if (savedAnchor) {
+        const parsed = JSON.parse(savedAnchor);
+        if (parsed && (parsed.name.includes('CARRACK') || (!parsed.isCustom && parsed.x !== 0))) {
+          dssAnchor = getSystemStarAnchor();
+          localStorage.setItem(DSS_KEY_ANCHOR, JSON.stringify(dssAnchor));
+        } else {
+          dssAnchor = parsed;
+        }
+      } else {
+        dssAnchor = getSystemStarAnchor();
+      }
       const savedPois = localStorage.getItem(DSS_KEY_POIS);
-      if (savedPois) dssPois = JSON.parse(savedPois);
+      if (savedPois) {
+        const parsedPois = JSON.parse(savedPois);
+        if (Array.isArray(parsedPois) && parsedPois.length > 0) {
+          dssPois = parsedPois;
+        }
+      }
     } catch(e) {
       console.warn('DSS: error loading state', e);
+      dssAnchor = getSystemStarAnchor();
     }
 
     function saveDssState() {
@@ -3400,26 +4047,50 @@
       const descEl = document.getElementById('dss-anchor-coords-desc');
       const hudAnchorEl = document.getElementById('dss-hud-anchor-name');
 
-      if (dssAnchor && dssAnchor.set) {
-        titleEl.textContent = 'ANCLA TÁCTICA: ' + dssAnchor.name;
-        badgeEl.textContent = 'ACTIVA (0, 0, 0)';
-        badgeEl.className = 'badge-cat cat-tactical';
-        descEl.textContent = 'Origen Táctico: X: ' + dssAnchor.x.toFixed(0) + ' | Y: ' + dssAnchor.y.toFixed(0) + ' | Z: ' + dssAnchor.z.toFixed(0) + ' (m)';
+      const isStar = !dssAnchor || (dssAnchor.x === 0 && dssAnchor.y === 0 && dssAnchor.z === 0);
+
+      if (isStar) {
+        const starName = dssAnchor && dssAnchor.name ? dssAnchor.name : ('ESTRELLA ' + (typeof currentSystem !== 'undefined' ? currentSystem : 'STANTON').toUpperCase() + ' • CENTRO DEL SISTEMA');
+        if (titleEl) titleEl.textContent = 'REFERENCIA: ☀️ ' + starName;
+        if (badgeEl) {
+          badgeEl.textContent = 'ORIGEN (0, 0, 0)';
+          badgeEl.className = 'badge-cat cat-tactical';
+          badgeEl.style.background = 'rgba(255, 170, 0, 0.2)';
+          badgeEl.style.color = '#ffaa00';
+          badgeEl.style.borderColor = '#ffaa00';
+        }
+        if (descEl) descEl.textContent = 'Punto de Referencia Zero: Estrella central del sistema • Coordinates: x:0.000000 y:0.000000 z:0.000000';
+        if (hudAnchorEl) hudAnchorEl.textContent = 'ESTRELLA (0,0,0)';
+      } else if (dssAnchor && dssAnchor.set) {
+        if (titleEl) titleEl.textContent = 'REFERENCIA: ⚓ ' + dssAnchor.name;
+        if (badgeEl) {
+          badgeEl.textContent = 'ANCLA PERSONALIZADA';
+          badgeEl.className = 'badge-cat cat-tactical';
+          badgeEl.style.background = '';
+          badgeEl.style.color = '';
+          badgeEl.style.borderColor = '';
+        }
+        if (descEl) descEl.textContent = 'Origen Táctico: X: ' + dssAnchor.x.toFixed(0) + ' | Y: ' + dssAnchor.y.toFixed(0) + ' | Z: ' + dssAnchor.z.toFixed(0) + ' (m) • ' + (dssAnchor.coords || '');
         if (hudAnchorEl) hudAnchorEl.textContent = dssAnchor.name;
-      } else {
-        titleEl.textContent = 'ANCLA TÁCTICA NO ESTABLECIDA';
-        badgeEl.textContent = 'STANDBY';
-        badgeEl.className = 'badge-cat cat-mining';
-        descEl.textContent = 'Define una nave nodriza estacionaria (Carrack, Polaris, Cutlass Red, Baliza) como origen (0,0,0).';
-        if (hudAnchorEl) hudAnchorEl.textContent = 'SIN ANCLA';
       }
     }
 
-    // Render Matrix of POIs
+    // State for Bi-directional selection & Modern Holomap
+    let dssSelectedPoiId = null;
+    let dssCameraTargetPos = null;
+    let dssTargetReticleGroup = null;
+    let dssVectorLineMesh = null;
+    let dssRadarSweepMesh = null;
+    let dssDustParticles = null;
+
+    // Render Matrix of POIs (Always visible directly below the 3D Holomap)
     function renderDssMatrix() {
       const container = document.getElementById('dss-poi-card-list');
       const badgeCount = document.getElementById('dss-count-badge');
+      const hudContactsCount = document.getElementById('dss-hud-contacts-count');
+      
       if (badgeCount) badgeCount.textContent = dssPois.length;
+      if (hudContactsCount) hudContactsCount.textContent = dssPois.length + ' CONTACTOS';
 
       if (!dssPois.length) {
         container.innerHTML = '<div style="color:var(--text-muted); font-size:12px; text-align:center; padding:24px; font-family:var(--font-mono);">No hay yacimientos ni prospecciones registradas en este sector.</div>';
@@ -3433,6 +4104,7 @@
 
       const enriched = dssPois.map(poi => {
         const v = computeDssVector(poi.x, poi.y, poi.z, aX, aY, aZ);
+        poi._computedVector = v;
         return Object.assign({}, poi, { vector: v });
       });
 
@@ -3456,9 +4128,10 @@
 
         const flightTime = formatFlightTime(poi.vector.dist3d, dssShipSpeed);
         const elevSign = poi.vector.elevationDeg >= 0 ? '+' : '';
+        const isSelected = poi.id === dssSelectedPoiId;
 
         html += `
-          <div class="dss-card ${catClass}" id="dss-card-${poi.id}">
+          <div class="dss-card ${catClass} ${isSelected ? 'dss-card-selected' : ''}" id="dss-card-${poi.id}" onclick="dssSelectPoi('${poi.id}', 'matrix')">
             <div>
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:4px;">
                 <span style="font-weight:bold; font-size:13px; color:var(--text-main); font-family:var(--font-mono);">${poi.name}</span>
@@ -3473,9 +4146,9 @@
                 <span style="color:var(--text-muted);">|</span>
                 <span style="font-weight:bold; color:var(--accent-cyan);">📐 Elevación: ${elevSign}${poi.vector.elevationDeg}°</span>
                 <span style="color:var(--text-muted);">|</span>
-                <span style="font-weight:bold; color:#00ffaa;">📏 Distancia: ${poi.vector.distKm.toFixed(2)} km</span>
+                <span style="font-weight:bold; color:#00ffaa;">📏 Distancia: ${poi.vector.distKm >= 1000000 ? (poi.vector.distKm / 1000000).toFixed(2) + ' Gm (' + Math.round(poi.vector.distKm).toLocaleString() + ' km)' : (poi.vector.distKm >= 1000 ? (poi.vector.distKm / 1000).toFixed(1) + ' Mkm' : poi.vector.distKm.toFixed(2) + ' km')}</span>
                 <span style="color:var(--text-muted);">|</span>
-                <span style="font-weight:bold; color:var(--text-main);">⏱️ Vuelo (${dssShipSpeed}m/s): ${flightTime}</span>
+                <span style="font-weight:bold; color:var(--text-main);">⏱️ Vuelo: ${poi.vector.distKm >= 100000 ? 'Salto Cuántico (QT)' : formatFlightTime(poi.vector.dist3d, dssShipSpeed)}</span>
               </div>
 
               <!-- Metadata details -->
@@ -3488,16 +4161,19 @@
 
             <!-- Action buttons -->
             <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;">
-              <button class="btn btn-sm btn-secondary" onclick="copyDssCockpitVector('${poi.id}')" title="Copiar instrucción de cabina concisa para dictar por voz">
+              <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); dssSelectPoi('${poi.id}', 'btn')" title="Fijar y enfocar contacto en el Holomapa 3D" style="color:var(--accent-cyan); border-color:rgba(0,210,255,0.4);">
+                <span>🎯</span> Fijar 3D
+              </button>
+              <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); copyDssCockpitVector('${poi.id}')" title="Copiar coordenadas en formato Star Citizen (/showlocation)">
                 <span>📋</span> Copiar Vector
               </button>
-              <button class="btn btn-sm btn-secondary" onclick="copyDssDiscordReport('${poi.id}')" title="Copiar informe táctico completo para Discord">
+              <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); copyDssDiscordReport('${poi.id}')" title="Copiar informe táctico completo para Discord">
                 <span>💬</span> Discord
               </button>
-              <button class="btn btn-sm btn-secondary" onclick="toggleDssStatus('${poi.id}')" title="Cambiar estado: Disponible / En Extracción / Agotado">
+              <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); toggleDssStatus('${poi.id}')" title="Cambiar estado: Disponible / En Extracción / Agotado">
                 <span>🔄</span> Estado
               </button>
-              <button class="btn btn-sm btn-secondary" style="color:var(--accent-red);" onclick="deleteDssPoi('${poi.id}')" title="Eliminar registro">
+              <button class="btn btn-sm btn-secondary" style="color:var(--accent-red);" onclick="event.stopPropagation(); deleteDssPoi('${poi.id}')" title="Eliminar registro">
                 ✕
               </button>
             </div>
@@ -3508,8 +4184,149 @@
       container.innerHTML = html;
     }
 
+    // Bi-directional selection function
+    window.dssSelectPoi = function(poiId, source = 'both') {
+      dssSelectedPoiId = poiId;
+      const poi = dssPois.find(p => p.id === poiId);
+      if (!poi) return;
+
+      const aX = dssAnchor && dssAnchor.set ? dssAnchor.x : 0;
+      const aY = dssAnchor && dssAnchor.set ? dssAnchor.y : 0;
+      const aZ = dssAnchor && dssAnchor.set ? dssAnchor.z : 0;
+      const v = poi._computedVector || computeDssVector(poi.x, poi.y, poi.z, aX, aY, aZ);
+
+      const meshPos = poi._meshPos || new THREE.Vector3(v.dx / 1000, v.dz / 1000, -v.dy / 1000);
+      const posX = meshPos.x;
+      const posY = meshPos.y;
+      const posZ = meshPos.z;
+
+      // 1. Focus 3D Camera & Reticle
+      if (dssPoisGroup && dssControls) {
+        dssCameraTargetPos = new THREE.Vector3(posX, posY, posZ);
+
+        if (dssTargetReticleGroup) {
+          dssTargetReticleGroup.position.set(posX, posY, posZ);
+          dssTargetReticleGroup.visible = true;
+        }
+
+        if (dssVectorLineMesh) {
+          const linePts = [
+            new THREE.Vector3(0, 0.5, 0),
+            new THREE.Vector3(posX, posY, posZ)
+          ];
+          dssVectorLineMesh.geometry.setFromPoints(linePts);
+          dssVectorLineMesh.computeLineDistances();
+          dssVectorLineMesh.visible = true;
+        }
+
+        // Update 3D HUD Target Bar
+        const targetBar = document.getElementById('dss-hud-target-bar');
+        const targetText = document.getElementById('dss-hud-target-text');
+        if (targetBar && targetText) {
+          const elevSign = v.elevationDeg >= 0 ? '+' : '';
+          const fTime = formatFlightTime(v.dist3d, dssShipSpeed);
+          targetText.innerHTML = '🎯 <strong>' + poi.name + '</strong> | Dist: <span style="color:#00ffaa;">' + v.distKm.toFixed(2) + ' km</span> | Rumbo: <span style="color:var(--accent-amber);">' + v.bearingDeg.toString().padStart(3, '0') + '°</span> | Elev: <span style="color:var(--accent-cyan);">' + elevSign + v.elevationDeg + '°</span> | ETA: ' + fTime;
+          targetBar.style.display = 'flex';
+        }
+      }
+
+      // 2. Highlight Matrix Card Below
+      document.querySelectorAll('.dss-card').forEach(c => c.classList.remove('dss-card-selected'));
+      const card = document.getElementById('dss-card-' + poiId);
+      if (card) {
+        card.classList.add('dss-card-selected');
+        if (source !== 'matrix') {
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+    };
+
+    window.dssClearSelection = function() {
+      dssSelectedPoiId = null;
+      if (dssTargetReticleGroup) dssTargetReticleGroup.visible = false;
+      if (dssVectorLineMesh) dssVectorLineMesh.visible = false;
+      const targetBar = document.getElementById('dss-hud-target-bar');
+      if (targetBar) targetBar.style.display = 'none';
+      document.querySelectorAll('.dss-card').forEach(c => c.classList.remove('dss-card-selected'));
+      if (dssControls) dssCameraTargetPos = new THREE.Vector3(0, 0, 0);
+    };
+
+    // Global Action Functions for DSS POIs
+    window.copyDssCockpitVector = function(id) {
+      const poi = dssPois.find(p => p.id === id);
+      if (!poi) return;
+      const x = Number(poi.x).toFixed(6);
+      const y = Number(poi.y).toFixed(6);
+      const z = Number(poi.z).toFixed(6);
+      const text = 'Coordinates: x:' + x + ' y:' + y + ' z:' + z;
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert('¡Coordenadas Star Citizen copiadas al portapapeles!\n\n' + text);
+      }).catch(() => {
+        prompt('Copia las coordenadas en formato Star Citizen (/showlocation):', text);
+      });
+    };
+
+    window.copyDssDiscordReport = function(id) {
+      const poi = dssPois.find(p => p.id === id);
+      if (!poi) return;
+      const aX = dssAnchor && dssAnchor.set ? dssAnchor.x : 0;
+      const aY = dssAnchor && dssAnchor.set ? dssAnchor.y : 0;
+      const aZ = dssAnchor && dssAnchor.set ? dssAnchor.z : 0;
+      const v = poi._computedVector || computeDssVector(poi.x, poi.y, poi.z, aX, aY, aZ);
+      const elevSign = v.elevationDeg >= 0 ? '+' : '';
+      const flightTime = formatFlightTime(v.dist3d, dssShipSpeed);
+      const ticks = String.fromCharCode(96, 96, 96);
+
+      let report = ticks + 'yaml\n' +
+'CCBE // REPORTE DE PROSPECCIÓN EN ESPACIO PROFUNDO\n' +
+'Identificador: ' + poi.name + '\n' +
+'Categoría: ' + poi.category.toUpperCase() + '\n' +
+'Nave Exploradora: ' + poi.scout + '\n' +
+'Punto Ancla / Nodriza: ' + (dssAnchor && dssAnchor.name ? dssAnchor.name : 'NODRIZA') + '\n\n' +
+'VECTOR TÁCTICO DE INTERCEPTACIÓN:\n' +
+'- Rumbo de Cabina: ' + v.bearingDeg.toString().padStart(3, '0') + '°\n' +
+'- Elevación de Morro (Pitch): ' + elevSign + v.elevationDeg + '°\n' +
+'- Distancia Directa 3D: ' + v.distKm.toFixed(2) + ' km (' + Math.round(v.dist3d) + ' m)\n' +
+'- Tiempo de Vuelo Estimado: ' + flightTime + ' (a ' + dssShipSpeed + ' m/s)\n\n' +
+'DATOS DEL YACIMIENTO:\n' +
+'- Pureza / Riqueza: ' + (poi.purity || 'N/A') + '\n' +
+'- Masa / SCU: ' + (poi.mass || 'N/A') + '\n' +
+'- Observaciones: ' + (poi.notes || 'Ninguna') + '\n' +
+'- Estado: ' + (poi.status || 'AVAILABLE').toUpperCase() + '\n' +
+ticks;
+
+      navigator.clipboard.writeText(report).then(() => {
+        alert('¡Reporte táctico para Discord copiado al portapapeles!');
+      }).catch(() => {
+        prompt('Copia el informe para Discord:', report);
+      });
+    };
+
+    window.toggleDssStatus = function(id) {
+      const poi = dssPois.find(p => p.id === id);
+      if (!poi) return;
+      if (poi.status === 'available') poi.status = 'extracting';
+      else if (poi.status === 'extracting') poi.status = 'exhausted';
+      else poi.status = 'available';
+
+      saveDssState();
+      renderDssMatrix();
+      buildDss3DPois();
+    };
+
+    window.deleteDssPoi = function(id) {
+      if (confirm('¿Eliminar este registro de prospección?')) {
+        dssPois = dssPois.filter(p => p.id !== id);
+        saveDssState();
+        dssClearSelection();
+        renderDssMatrix();
+        buildDss3DPois();
+      }
+    };
+
     // =========================================================
-    // MOTOR 3D THREE.JS: HOLOMAPA TÁCTICO ESPACIAL
+    // MOTOR 3D THREE.JS: HOLOMAPA TÁCTICO ESPACIAL (MODERNO)
     // =========================================================
     let dssScene, dssCamera, dssRenderer, dssControls;
     let dssPoisGroup, dssGridGroup, dssAnchorGroup;
@@ -3526,7 +4343,7 @@
       const ctx = canvas.getContext('2d');
 
       // Rounded background
-      ctx.fillStyle = bgStr || 'rgba(6, 12, 22, 0.85)';
+      ctx.fillStyle = bgStr || 'rgba(6, 12, 22, 0.88)';
       ctx.strokeStyle = colorStr || '#00d2ff';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -3549,6 +4366,41 @@
       return sprite;
     }
 
+    // Build 3D Holographic Target Reticle
+    function buildDssTargetReticle() {
+      const g = new THREE.Group();
+      const s = 1.6; // size
+      const corner = 0.5;
+      const pts = [
+        // Top-Left
+        new THREE.Vector3(-s, s - corner, 0), new THREE.Vector3(-s, s, 0),
+        new THREE.Vector3(-s, s, 0), new THREE.Vector3(-s + corner, s, 0),
+        // Top-Right
+        new THREE.Vector3(s - corner, s, 0), new THREE.Vector3(s, s, 0),
+        new THREE.Vector3(s, s, 0), new THREE.Vector3(s, s - corner, 0),
+        // Bottom-Left
+        new THREE.Vector3(-s, -s + corner, 0), new THREE.Vector3(-s, -s, 0),
+        new THREE.Vector3(-s, -s, 0), new THREE.Vector3(-s + corner, -s, 0),
+        // Bottom-Right
+        new THREE.Vector3(s - corner, -s, 0), new THREE.Vector3(s, -s, 0),
+        new THREE.Vector3(s, -s, 0), new THREE.Vector3(s, -s + corner, 0),
+      ];
+      const bracketGeo = new THREE.BufferGeometry().setFromPoints(pts);
+      const bracketMat = new THREE.LineBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.95 });
+      const brackets = new THREE.LineSegments(bracketGeo, bracketMat);
+      g.add(brackets);
+
+      // Inner pulsing reticle ring
+      const ringCurve = new THREE.EllipseCurve(0, 0, 1.0, 1.0, 0, Math.PI * 2, false, 0);
+      const ringGeo = new THREE.BufferGeometry().setFromPoints(ringCurve.getPoints(36));
+      const ringMat = new THREE.LineBasicMaterial({ color: 0xffe600, transparent: true, opacity: 0.85 });
+      const ring = new THREE.LineLoop(ringGeo, ringMat);
+      g.add(ring);
+
+      g.visible = false;
+      return g;
+    }
+
     function initDss3DScene() {
       const container = document.getElementById('dss-three-canvas-container');
       if (!container || !window.THREE) {
@@ -3561,12 +4413,12 @@
       const width = container.clientWidth || 800;
       const height = container.clientHeight || 520;
 
-      // 1. Scene
+      // 1. Scene & Space Fog
       dssScene = new THREE.Scene();
-      dssScene.fog = new THREE.FogExp2(0x02050b, 0.004);
+      dssScene.fog = new THREE.FogExp2(0x02050b, 0.0035);
 
       // 2. Camera
-      dssCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 2000);
+      dssCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 2500);
       setDssCameraIso();
 
       // 3. WebGL Renderer
@@ -3582,35 +4434,23 @@
         dssControls.enableDamping = true;
         dssControls.dampingFactor = 0.06;
         dssControls.screenSpacePanning = true;
-        dssControls.maxDistance = 500;
+        dssControls.maxDistance = 600;
         dssControls.minDistance = 2;
       }
 
       // 5. Lights
-      const ambLight = new THREE.AmbientLight(0xffffff, 0.8);
+      const ambLight = new THREE.AmbientLight(0x243b60, 1.0);
       dssScene.add(ambLight);
 
-      const dirLight = new THREE.DirectionalLight(0x00d2ff, 1.2);
-      dirLight.position.set(30, 50, 40);
+      const dirLight = new THREE.DirectionalLight(0x00d2ff, 1.4);
+      dirLight.position.set(40, 60, 40);
       dssScene.add(dirLight);
 
-      // 6. Deep Space Background Starfield (800 particles)
-      const starGeo = new THREE.BufferGeometry();
-      const starCount = 800;
-      const starPositions = new Float32Array(starCount * 3);
-      for (let i = 0; i < starCount * 3; i += 3) {
-        const u = Math.random();
-        const v = Math.random();
-        const theta = u * 2.0 * Math.PI;
-        const phi = Math.acos(2.0 * v - 1.0);
-        const r = 250 + Math.random() * 250;
-        starPositions[i] = r * Math.sin(phi) * Math.cos(theta);
-        starPositions[i + 1] = r * Math.sin(phi) * Math.sin(theta);
-        starPositions[i + 2] = r * Math.cos(phi);
-      }
-      starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-      const starMat = new THREE.PointsMaterial({ color: 0x6495ed, size: 1.6, transparent: true, opacity: 0.65 });
-      dssScene.add(new THREE.Points(starGeo, starMat));
+      const rimLight = new THREE.DirectionalLight(0xffb703, 0.8);
+      rimLight.position.set(-40, -30, -40);
+      dssScene.add(rimLight);
+
+      // 6. Deep Space Background: Espacio limpio táctico sin partículas cuadradas
 
       // 7. Groups
       dssGridGroup = new THREE.Group();
@@ -3620,12 +4460,28 @@
       dssScene.add(dssAnchorGroup);
       dssScene.add(dssPoisGroup);
 
-      // 8. Build Scene Elements
+      // 8. Setup 3D Target Reticle & Vector Line
+      dssTargetReticleGroup = buildDssTargetReticle();
+      dssScene.add(dssTargetReticleGroup);
+
+      const vLineMat = new THREE.LineDashedMaterial({
+        color: 0x00f0ff,
+        dashSize: 0.6,
+        gapSize: 0.3,
+        linewidth: 2,
+        transparent: true,
+        opacity: 0.95
+      });
+      dssVectorLineMesh = new THREE.Line(new THREE.BufferGeometry(), vLineMat);
+      dssVectorLineMesh.visible = false;
+      dssScene.add(dssVectorLineMesh);
+
+      // 9. Build Scene Elements
       buildDss3DGrid();
       buildDss3DAnchor();
       buildDss3DPois();
 
-      // 9. Raycasting Setup
+      // 10. Raycasting Setup
       dssRaycaster = new THREE.Raycaster();
       dssMouse = new THREE.Vector2();
 
@@ -3673,7 +4529,6 @@
     // Build Tactical 3D Reference Grid (Ground plane Y = 0)
     function buildDss3DGrid() {
       if (!dssGridGroup) return;
-      // Clear existing
       while (dssGridGroup.children.length > 0) {
         dssGridGroup.remove(dssGridGroup.children[0]);
       }
@@ -3687,14 +4542,13 @@
         const curve = new THREE.EllipseCurve(0, 0, radius, radius, 0, Math.PI * 2, false, 0);
         const points = curve.getPoints(96);
         const geo = new THREE.BufferGeometry().setFromPoints(points);
-        // Rotate to XZ plane
         geo.rotateX(Math.PI / 2);
 
         const isOuter = frac === 1.0;
         const mat = new THREE.LineBasicMaterial({
           color: 0x00d2ff,
           transparent: true,
-          opacity: isOuter ? 0.6 : 0.22,
+          opacity: isOuter ? 0.65 : 0.25,
           linewidth: isOuter ? 2 : 1
         });
         const line = new THREE.LineLoop(geo, mat);
@@ -3708,6 +4562,19 @@
         dssGridGroup.add(distSprite);
       });
 
+      // Outer Ring Tick Marks (every 10 degrees)
+      const tickGeo = new THREE.BufferGeometry();
+      const tickPts = [];
+      for (let deg = 0; deg < 360; deg += 10) {
+        const rad = deg * (Math.PI / 180);
+        const len = deg % 30 === 0 ? range * 0.04 : range * 0.02;
+        tickPts.push(new THREE.Vector3(range * Math.cos(rad), 0, range * Math.sin(rad)));
+        tickPts.push(new THREE.Vector3((range + len) * Math.cos(rad), 0, (range + len) * Math.sin(rad)));
+      }
+      tickGeo.setFromPoints(tickPts);
+      const tickMat = new THREE.LineBasicMaterial({ color: 0x00d2ff, transparent: true, opacity: 0.45 });
+      dssGridGroup.add(new THREE.LineSegments(tickGeo, tickMat));
+
       // Crosshairs / Cardinal Axes Lines
       const axisGeo = new THREE.BufferGeometry();
       const axisPts = [
@@ -3715,22 +4582,37 @@
         new THREE.Vector3(0, 0, -range), new THREE.Vector3(0, 0, range)
       ];
       axisGeo.setFromPoints(axisPts);
-      const axisMat = new THREE.LineBasicMaterial({ color: 0x00d2ff, transparent: true, opacity: 0.35 });
-      const axesLines = new THREE.LineSegments(axisGeo, axisMat);
-      dssGridGroup.add(axesLines);
+      const axisMat = new THREE.LineBasicMaterial({ color: 0x00d2ff, transparent: true, opacity: 0.4 });
+      dssGridGroup.add(new THREE.LineSegments(axisGeo, axisMat));
 
       // Radial Guides every 30 deg
       const radGeo = new THREE.BufferGeometry();
       const radPts = [];
       for (let deg = 30; deg < 360; deg += 30) {
-        if (deg % 90 === 0) continue; // skip main crosshairs
+        if (deg % 90 === 0) continue;
         const rad = deg * (Math.PI / 180);
         radPts.push(new THREE.Vector3(0, 0, 0));
         radPts.push(new THREE.Vector3(range * Math.cos(rad), 0, range * Math.sin(rad)));
       }
       radGeo.setFromPoints(radPts);
-      const radMat = new THREE.LineBasicMaterial({ color: 0x00d2ff, transparent: true, opacity: 0.12 });
+      const radMat = new THREE.LineBasicMaterial({ color: 0x00d2ff, transparent: true, opacity: 0.14 });
       dssGridGroup.add(new THREE.LineSegments(radGeo, radMat));
+
+      // Rotating Holographic Radar Sweep Wedge
+      const sweepGeo = new THREE.RingGeometry(0.1, range, 48, 1, 0, Math.PI / 4);
+      sweepGeo.rotateX(Math.PI / 2);
+      const sweepMat = new THREE.MeshBasicMaterial({
+        color: 0x00d2ff,
+        transparent: true,
+        opacity: 0.12,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+      dssRadarSweepMesh = new THREE.Mesh(sweepGeo, sweepMat);
+      dssRadarSweepMesh.position.set(0, 0.02, 0);
+      dssGridGroup.add(dssRadarSweepMesh);
+
+      // Espacio limpio: Sin cajas de alambre ni partículas cuadradas flotando en el radar
 
       // Cardinal Labels Sprites
       const cardN = makeDssTextSprite('000° [NORTE]', '#00d2ff', 'rgba(0, 210, 255, 0.18)');
@@ -3750,41 +4632,56 @@
       dssGridGroup.add(cardW);
     }
 
-    // Build Central 3D Anchor (Nave Nodriza at 0,0,0)
+    // Build Central 3D Anchor (Star Citizen Carrack-class Mothership at 0,0,0)
     function buildDss3DAnchor() {
       if (!dssAnchorGroup) return;
       while (dssAnchorGroup.children.length > 0) {
         dssAnchorGroup.remove(dssAnchorGroup.children[0]);
       }
 
-      // 1. Futuristic Arrowhead Ship Mesh
-      const shipGeo = new THREE.ConeGeometry(0.8, 2.0, 4);
-      shipGeo.rotateX(Math.PI / 2); // Point forward (-Z)
-      const shipMat = new THREE.MeshStandardMaterial({
-        color: 0x00ffaa,
-        emissive: 0x00ffaa,
-        emissiveIntensity: 0.8,
-        wireframe: true
+      // ☀️ 3D Sun Sphere at (0,0,0) - Centro del Sistema
+      const sunGroup = new THREE.Group();
+      const sunGeo = new THREE.SphereGeometry(1.6, 32, 32);
+      const sunMat = new THREE.MeshStandardMaterial({
+        color: 0xffaa00,
+        emissive: 0xff8800,
+        emissiveIntensity: 1.2,
+        roughness: 0.2
       });
-      const shipMesh = new THREE.Mesh(shipGeo, shipMat);
-      shipMesh.position.set(0, 0.5, 0);
-      dssAnchorGroup.add(shipMesh);
+      const sunMesh = new THREE.Mesh(sunGeo, sunMat);
+      sunGroup.add(sunMesh);
 
-      // Glowing Center Light
-      const pLight = new THREE.PointLight(0x00ffaa, 2.0, 15);
-      pLight.position.set(0, 1, 0);
-      dssAnchorGroup.add(pLight);
+      // Solar Corona Ring
+      const coronaGeo = new THREE.RingGeometry(1.9, 2.5, 48);
+      coronaGeo.rotateX(Math.PI / 2);
+      const coronaMat = new THREE.MeshBasicMaterial({
+        color: 0xffcc00,
+        transparent: true,
+        opacity: 0.45,
+        side: THREE.DoubleSide
+      });
+      const coronaMesh = new THREE.Mesh(coronaGeo, coronaMat);
+      sunGroup.add(coronaMesh);
 
-      // Center sphere
-      const sphGeo = new THREE.SphereGeometry(0.3, 16, 16);
-      const sphMat = new THREE.MeshBasicMaterial({ color: 0x00ffaa });
-      dssAnchorGroup.add(new THREE.Mesh(sphGeo, sphMat));
+      sunGroup.position.set(0, 0.8, 0);
+      dssAnchorGroup.add(sunGroup);
 
-      // Radar Pulse Wave Ring
-      const pulseGeo = new THREE.RingGeometry(0.1, 0.25, 48);
+      const sunLight = new THREE.PointLight(0xffb703, 3.2, 50);
+      sunLight.position.set(0, 1.5, 0);
+      dssAnchorGroup.add(sunLight);
+
+      const sys = (typeof currentSystem !== 'undefined' ? currentSystem : 'STANTON').toUpperCase();
+      const starLabel = dssAnchor && dssAnchor.name ? dssAnchor.name : ('☀️ ESTRELLA ' + sys + ' (0,0,0)');
+      const anchorSprite = makeDssTextSprite(starLabel, '#ffb703', 'rgba(40, 25, 0, 0.85)');
+      anchorSprite.scale.set(5.2, 0.85, 1.0);
+      anchorSprite.position.set(0, 3.2, 0);
+      dssAnchorGroup.add(anchorSprite);
+
+      // Radar Pulse Sonar Ring
+      const pulseGeo = new THREE.RingGeometry(0.1, 0.3, 48);
       pulseGeo.rotateX(Math.PI / 2);
       const pulseMat = new THREE.MeshBasicMaterial({
-        color: 0x00ffaa,
+        color: 0xffaa00,
         transparent: true,
         opacity: 0.8,
         side: THREE.DoubleSide
@@ -3792,16 +4689,8 @@
       dssRadarPulseRing = new THREE.Mesh(pulseGeo, pulseMat);
       dssRadarPulseRing.position.set(0, 0.05, 0);
       dssAnchorGroup.add(dssRadarPulseRing);
-
-      // Anchor 3D Sprite Label
-      const anchorName = dssAnchor && dssAnchor.set ? dssAnchor.name : 'ORIGEN (0,0,0)';
-      const anchorSprite = makeDssTextSprite('⚓ ' + anchorName, '#00ffaa', 'rgba(0, 40, 25, 0.85)');
-      anchorSprite.scale.set(4.5, 0.85, 1.0);
-      anchorSprite.position.set(0, 2.2, 0);
-      dssAnchorGroup.add(anchorSprite);
     }
 
-    // Build 3D Yacimientos / POIs
     function buildDss3DPois() {
       if (!dssPoisGroup) return;
       while (dssPoisGroup.children.length > 0) {
@@ -3816,15 +4705,25 @@
         const v = computeDssVector(poi.x, poi.y, poi.z, aX, aY, aZ);
         poi._computedVector = v;
 
-        // Position in km units:
-        // Three.js +X = East (dx/1000)
-        // Three.js +Y = Elevation (dz/1000)
-        // Three.js -Z = North (dy/1000 -> posZ = -dy/1000)
-        const posX = v.dx / 1000;
-        const posY = v.dz / 1000;
-        const posZ = -v.dy / 1000;
+        let posX, posY, posZ;
+        const range = dssCurrentRangeKm || 20;
 
-        // Group for this POI
+        if (v.distKm <= range) {
+          // Local scale within range (1 unit = 1 km)
+          posX = v.dx / 1000;
+          posY = v.dz / 1000;
+          posZ = -v.dy / 1000;
+        } else {
+          // Astronomical / System-scale distance from the Star:
+          // Project along the exact 3D vector direction at a clearly visible orbital radius within the holomap!
+          const dir = new THREE.Vector3(v.dx, v.dz, -v.dy).normalize();
+          const visualDist = range * 0.72;
+          posX = dir.x * visualDist;
+          posY = dir.y * visualDist;
+          posZ = dir.z * visualDist;
+        }
+        poi._meshPos = new THREE.Vector3(posX, posY, posZ);
+
         const poiNode = new THREE.Group();
 
         // 1. Altitude Stem (Vertical line from floor Y=0 to posY)
@@ -3843,7 +4742,7 @@
         stemLine.computeLineDistances();
         poiNode.add(stemLine);
 
-        // 2. Floor Target Footprint Ring at (posX, 0, posZ)
+        // 2. Floor Target Footprint Ring
         const footGeo = new THREE.RingGeometry(0.3, 0.45, 24);
         footGeo.rotateX(Math.PI / 2);
         const footMat = new THREE.MeshBasicMaterial({
@@ -3861,53 +4760,53 @@
         const colHex = getDssCategoryColorHex(poi.category);
 
         if (poi.category === 'quant') {
-          // 💎 Quantainium: Rotating Crystal Octahedron
-          const geo = new THREE.OctahedronGeometry(0.8, 0);
+          // 💎 Quantainium: Cristal Sólido Brillante (Limpio, sin cajas de alambre giratorias)
+          const geo = new THREE.OctahedronGeometry(0.85, 0);
           const mat = new THREE.MeshStandardMaterial({
-            color: colHex,
-            emissive: colHex,
-            emissiveIntensity: 0.85,
-            wireframe: false,
+            color: 0x00ffff,
+            emissive: 0x00ffff,
+            emissiveIntensity: 0.9,
+            roughness: 0.1,
+            metalness: 0.9
+          });
+          markerMesh = new THREE.Mesh(geo, mat);
+        } else if (poi.category === 'mining') {
+          // ⛏️ Minería: Asteroide Dorado con Vetas Metálicas
+          const geo = new THREE.DodecahedronGeometry(0.8, 0);
+          const mat = new THREE.MeshStandardMaterial({
+            color: 0xf5a623,
+            emissive: 0xf5a623,
+            emissiveIntensity: 0.7,
+            roughness: 0.3,
+            metalness: 0.7
+          });
+          markerMesh = new THREE.Mesh(geo, mat);
+        } else if (poi.category === 'salvage') {
+          // 📦 Salvage / Pecio: Núcleo Tecnológico Sólido (Limpio, sin cubos giratorios)
+          const geo = new THREE.OctahedronGeometry(0.85, 0);
+          const mat = new THREE.MeshStandardMaterial({
+            color: 0xc084fc,
+            emissive: 0xc084fc,
+            emissiveIntensity: 0.8,
             roughness: 0.2,
             metalness: 0.8
           });
           markerMesh = new THREE.Mesh(geo, mat);
-        } else if (poi.category === 'mining') {
-          // ⛏️ Minería: Polyhedral Asteroid Dodecahedron
-          const geo = new THREE.DodecahedronGeometry(0.75, 0);
-          const mat = new THREE.MeshStandardMaterial({
-            color: colHex,
-            emissive: colHex,
-            emissiveIntensity: 0.65,
-            roughness: 0.4,
-            metalness: 0.6
-          });
-          markerMesh = new THREE.Mesh(geo, mat);
-        } else if (poi.category === 'salvage') {
-          // 📦 Salvage / Pecio: Cargo Container Box
-          const geo = new THREE.BoxGeometry(0.9, 0.9, 0.9);
-          const mat = new THREE.MeshStandardMaterial({
-            color: colHex,
-            emissive: colHex,
-            emissiveIntensity: 0.7,
-            wireframe: true
-          });
-          markerMesh = new THREE.Mesh(geo, mat);
         } else if (poi.category === 'rescue') {
-          // 🚨 SAR: Medical Emergency Pulsing Icosahedron
-          const geo = new THREE.IcosahedronGeometry(0.7, 0);
+          // 🚨 SAR: Medical Emergency Pulsing Beacon
+          const geo = new THREE.IcosahedronGeometry(0.75, 0);
           const mat = new THREE.MeshStandardMaterial({
-            color: colHex,
-            emissive: colHex,
-            emissiveIntensity: 0.95
+            color: 0xff4757,
+            emissive: 0xff4757,
+            emissiveIntensity: 1.0
           });
           markerMesh = new THREE.Mesh(geo, mat);
         } else {
-          // 🛡️ Waypoint: Satellite Cone / Diamond
+          // 🛡️ Waypoint: Tactical Beacon
           const geo = new THREE.ConeGeometry(0.65, 1.4, 4);
           const mat = new THREE.MeshStandardMaterial({
-            color: colHex,
-            emissive: colHex,
+            color: 0x00ffaa,
+            emissive: 0x00ffaa,
             emissiveIntensity: 0.75,
             wireframe: true
           });
@@ -3919,7 +4818,10 @@
         poiNode.add(markerMesh);
 
         // 4. Billboard Sprite Label
-        const labelText = poi.name.substring(0, 16) + ' (' + v.distKm.toFixed(1) + 'k)';
+        const distStr = v.distKm >= 1000000 
+          ? (v.distKm / 1000000).toFixed(2) + ' Gm' 
+          : (v.distKm >= 1000 ? (v.distKm / 1000).toFixed(1) + ' Mkm' : v.distKm.toFixed(1) + ' km');
+        const labelText = poi.name.substring(0, 16) + ' (' + distStr + ')';
         const labelSprite = makeDssTextSprite(labelText, getDssCategoryColorCss(poi.category));
         labelSprite.position.set(posX, posY + 1.25, posZ);
         poiNode.add(labelSprite);
@@ -3950,23 +4852,33 @@
       if (dssAnimFrameId) cancelAnimationFrame(dssAnimFrameId);
 
       function loop() {
-        if (dssActiveTab === 'radar' && dssRenderer && dssScene && dssCamera) {
+        if (dssRenderer && dssScene && dssCamera) {
           // 1. Update OrbitControls
-          if (dssControls) dssControls.update();
-
-          // 2. Animate POI meshes (gently rotate crystals)
-          if (dssPoisGroup) {
-            dssPoisGroup.children.forEach(group => {
-              group.children.forEach(child => {
-                if (child.isMesh && child.userData && child.userData.poi) {
-                  child.rotation.y += 0.018;
-                  child.rotation.x += 0.008;
-                }
-              });
-            });
+          if (dssControls) {
+            // Smooth Camera Target Interpolation (Glide to Selected POI)
+            if (dssCameraTargetPos) {
+              dssControls.target.lerp(dssCameraTargetPos, 0.08);
+              if (dssControls.target.distanceTo(dssCameraTargetPos) < 0.05) {
+                dssCameraTargetPos = null;
+              }
+            }
+            dssControls.update();
           }
 
-          // 3. Animate Radar Pulse Wave
+          // 2. Animate Target Reticle (Billboard & Rotate)
+          if (dssTargetReticleGroup && dssTargetReticleGroup.visible) {
+            dssTargetReticleGroup.quaternion.copy(dssCamera.quaternion);
+            dssTargetReticleGroup.rotateZ(0.015);
+          }
+
+          // 3. Rotate Radar Sweep Beam
+          if (dssRadarSweepMesh) {
+            dssRadarSweepMesh.rotation.y -= 0.015;
+          }
+
+          // Marcadores POI estables y nítidos: Sin giros ni cuadrados que obstruyan la visión
+
+          // 6. Animate Radar Pulse Wave
           if (dssRadarPulseRing) {
             dssPulseRadius += dssCurrentRangeKm * 0.004;
             if (dssPulseRadius > dssCurrentRangeKm) {
@@ -3984,7 +4896,7 @@
       loop();
     }
 
-    // 3D Mouse Interactivity (Raycasting & Tooltip)
+    // 3D Mouse Interactivity (Raycasting & Tooltip & Click)
     function setupDss3DInteractions(container) {
       const tooltip = document.getElementById('dss-3d-tooltip');
 
@@ -3996,12 +4908,18 @@
 
         dssRaycaster.setFromCamera(dssMouse, dssCamera);
 
-        // Gather all interactive POI meshes
         const interactiveMeshes = [];
         dssPoisGroup.children.forEach(g => {
           g.children.forEach(c => {
-            if (c.isMesh && c.userData && c.userData.poi) {
-              interactiveMeshes.push(c);
+            if (c.userData && c.userData.poi) {
+              // Can be mesh or group
+              if (c.isMesh) interactiveMeshes.push(c);
+              else if (c.children) {
+                c.children.forEach(sub => {
+                  sub.userData = c.userData;
+                  interactiveMeshes.push(sub);
+                });
+              }
             }
           });
         });
@@ -4052,144 +4970,13 @@
         tooltip.style.display = 'none';
       });
 
+      // Bi-directional Click: Select in 3D & in Matrix Below
       container.addEventListener('click', () => {
         if (dssHoveredMesh && dssHoveredMesh.userData && dssHoveredMesh.userData.poi) {
           const poi = dssHoveredMesh.userData.poi;
-          // Smooth focus or switch to matrix card
-          switchDssTab('matrix');
-          setTimeout(() => {
-            const card = document.getElementById('dss-card-' + poi.id);
-            if (card) {
-              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              card.style.borderColor = 'var(--accent-cyan)';
-              card.style.boxShadow = '0 0 25px rgba(0, 210, 255, 0.45)';
-              setTimeout(() => {
-                card.style.borderColor = '';
-                card.style.boxShadow = '';
-              }, 2200);
-            }
-          }, 100);
+          dssSelectPoi(poi.id, '3d');
         }
       });
-
-      // Window resize handling
-      window.addEventListener('resize', () => {
-        if (!dssRenderer || !dssCamera || !container) return;
-        const w = container.clientWidth;
-        const h = container.clientHeight;
-        if (w > 0 && h > 0) {
-          dssCamera.aspect = w / h;
-          dssCamera.updateProjectionMatrix();
-          dssRenderer.setSize(w, h);
-        }
-      });
-    }
-
-    // Global Action Functions for DSS POIs
-    window.copyDssCockpitVector = function(id) {
-      const poi = dssPois.find(p => p.id === id);
-      if (!poi) return;
-      const aX = dssAnchor && dssAnchor.set ? dssAnchor.x : 0;
-      const aY = dssAnchor && dssAnchor.set ? dssAnchor.y : 0;
-      const aZ = dssAnchor && dssAnchor.set ? dssAnchor.z : 0;
-      const v = computeDssVector(poi.x, poi.y, poi.z, aX, aY, aZ);
-      const elevSign = v.elevationDeg >= 0 ? '+' : '';
-      const flightTime = formatFlightTime(v.dist3d, dssShipSpeed);
-
-      const text = '[CCBE NAV] ' + dssAnchor.name + ' -> ' + poi.name + ': RUMBO ' + v.bearingDeg.toString().padStart(3, '0') + '° | ELEV ' + elevSign + v.elevationDeg + '° | DIST ' + v.distKm.toFixed(1) + 'km | VUELO (' + dssShipSpeed + 'm/s): ' + flightTime;
-      navigator.clipboard.writeText(text).then(() => {
-        alert('¡Vector de cabina copiado al portapapeles!\n\n' + text);
-      });
-    };
-
-    window.copyDssDiscordReport = function(id) {
-      const poi = dssPois.find(p => p.id === id);
-      if (!poi) return;
-      const aX = dssAnchor && dssAnchor.set ? dssAnchor.x : 0;
-      const aY = dssAnchor && dssAnchor.set ? dssAnchor.y : 0;
-      const aZ = dssAnchor && dssAnchor.set ? dssAnchor.z : 0;
-      const v = computeDssVector(poi.x, poi.y, poi.z, aX, aY, aZ);
-      const elevSign = v.elevationDeg >= 0 ? '+' : '';
-      const flightTime = formatFlightTime(v.dist3d, dssShipSpeed);
-      const ticks = '```';
-
-      let report = ticks + 'yaml\n' +
-'CCBE // REPORTE DE PROSPECCIÓN EN ESPACIO PROFUNDO\n' +
-'Identificador: ' + poi.name + '\n' +
-'Categoría: ' + poi.category.toUpperCase() + '\n' +
-'Nave Exploradora: ' + poi.scout + '\n' +
-'Punto Ancla / Nodriza: ' + dssAnchor.name + '\n\n' +
-'VECTOR TÁCTICO DE INTERCEPTACIÓN:\n' +
-'- Rumbo de Cabina: ' + v.bearingDeg.toString().padStart(3, '0') + '°\n' +
-'- Elevación de Morro (Pitch): ' + elevSign + v.elevationDeg + '°\n' +
-'- Distancia Directa 3D: ' + v.distKm.toFixed(2) + ' km (' + Math.round(v.dist3d) + ' m)\n' +
-'- Tiempo de Vuelo Estimado: ' + flightTime + ' (a ' + dssShipSpeed + ' m/s)\n\n' +
-'DATOS DEL YACIMIENTO:\n' +
-'- Pureza / Riqueza: ' + (poi.purity || 'N/A') + '\n' +
-'- Masa / SCU: ' + (poi.mass || 'N/A') + '\n' +
-'- Observaciones: ' + (poi.notes || 'Ninguna') + '\n' +
-'- Estado: ' + poi.status.toUpperCase() + '\n' +
-ticks;
-
-      navigator.clipboard.writeText(report).then(() => {
-        alert('¡Reporte táctico para Discord copiado al portapapeles!');
-      });
-    };
-
-    window.toggleDssStatus = function(id) {
-      const poi = dssPois.find(p => p.id === id);
-      if (!poi) return;
-      if (poi.status === 'available') poi.status = 'extracting';
-      else if (poi.status === 'extracting') poi.status = 'exhausted';
-      else poi.status = 'available';
-
-      saveDssState();
-      renderDssMatrix();
-      buildDss3DPois();
-    };
-
-    window.deleteDssPoi = function(id) {
-      if (confirm('¿Eliminar este registro de prospección?')) {
-        dssPois = dssPois.filter(p => p.id !== id);
-        saveDssState();
-        renderDssMatrix();
-        buildDss3DPois();
-      }
-    };
-
-    function switchDssTab(tab) {
-      dssActiveTab = tab;
-      const tab3dBtn = document.getElementById('dss-tab-3d-btn');
-      const tabMatrixBtn = document.getElementById('dss-tab-matrix-btn');
-      const view3d = document.getElementById('dss-view-3d');
-      const viewMatrix = document.getElementById('dss-view-matrix');
-
-      if (tab === 'radar') {
-        tab3dBtn.classList.add('active');
-        tabMatrixBtn.classList.remove('active');
-        view3d.style.display = 'block';
-        viewMatrix.style.display = 'none';
-
-        // Trigger renderer resize when showing
-        setTimeout(() => {
-          const container = document.getElementById('dss-three-canvas-container');
-          if (container && dssRenderer && dssCamera) {
-            const w = container.clientWidth;
-            const h = container.clientHeight;
-            if (w > 0 && h > 0) {
-              dssCamera.aspect = w / h;
-              dssCamera.updateProjectionMatrix();
-              dssRenderer.setSize(w, h);
-            }
-          }
-        }, 50);
-      } else {
-        tab3dBtn.classList.remove('active');
-        tabMatrixBtn.classList.add('active');
-        view3d.style.display = 'none';
-        viewMatrix.style.display = 'block';
-        renderDssMatrix();
-      }
     }
 
     // Initialization and Event Bindings
@@ -4199,10 +4986,6 @@ ticks;
 
       // Init 3D Scene
       initDss3DScene();
-
-      // Tab Buttons
-      document.getElementById('dss-tab-3d-btn').addEventListener('click', () => switchDssTab('radar'));
-      document.getElementById('dss-tab-matrix-btn').addEventListener('click', () => switchDssTab('matrix'));
 
       // Range Selector Buttons (5, 20, 50, 100 km)
       document.querySelectorAll('.dss-range-btn').forEach(btn => {
@@ -4216,6 +4999,7 @@ ticks;
           buildDss3DAnchor();
           buildDss3DPois();
           setDssCameraIso();
+          if (dssSelectedPoiId) dssSelectPoi(dssSelectedPoiId);
         });
       });
 
@@ -4251,6 +5035,7 @@ ticks;
       if (btnCamReset) {
         btnCamReset.addEventListener('click', () => {
           setActiveCamBtn(btnCamIso);
+          dssClearSelection();
           setDssCameraIso();
         });
       }
@@ -4261,6 +5046,7 @@ ticks;
         speedSelect.addEventListener('change', (e) => {
           dssShipSpeed = parseFloat(e.target.value) || 800;
           renderDssMatrix();
+          if (dssSelectedPoiId) dssSelectPoi(dssSelectedPoiId);
         });
       }
 
@@ -4270,200 +5056,178 @@ ticks;
       const coordsBlock = document.getElementById('dss-coords-input-block');
       const polarBlock = document.getElementById('dss-polar-input-block');
 
-      modeCoordsBtn.addEventListener('click', () => {
-        dssInputMode = 'coords';
-        modeCoordsBtn.classList.add('active');
-        modePolarBtn.classList.remove('active');
-        coordsBlock.style.display = 'block';
-        polarBlock.style.display = 'none';
-      });
+      if (modeCoordsBtn && modePolarBtn) {
+        modeCoordsBtn.addEventListener('click', () => {
+          dssInputMode = 'coords';
+          modeCoordsBtn.classList.add('active');
+          modePolarBtn.classList.remove('active');
+          coordsBlock.style.display = 'block';
+          polarBlock.style.display = 'none';
+        });
 
-      modePolarBtn.addEventListener('click', () => {
-        dssInputMode = 'polar';
-        modePolarBtn.classList.add('active');
-        modeCoordsBtn.classList.remove('active');
-        coordsBlock.style.display = 'none';
-        polarBlock.style.display = 'block';
-      });
+        modePolarBtn.addEventListener('click', () => {
+          dssInputMode = 'polar';
+          modePolarBtn.classList.add('active');
+          modeCoordsBtn.classList.remove('active');
+          coordsBlock.style.display = 'none';
+          polarBlock.style.display = 'block';
+        });
+      }
 
-      // Paste Coords button
-      document.getElementById('btn-dss-paste-coords').addEventListener('click', async () => {
-        try {
-          const text = await navigator.clipboard.readText();
-          if (text) document.getElementById('dss-poi-coords').value = text;
-        } catch(e) {
-          console.warn('Clipboard read failed', e);
-        }
-      });
+      // Add POI Button (supports both btn-dss-save-poi and btn-dss-add-poi)
+      const savePoiBtn = document.getElementById('btn-dss-save-poi') || document.getElementById('btn-dss-add-poi');
+      if (savePoiBtn) {
+        savePoiBtn.addEventListener('click', () => {
+          const nameEl = document.getElementById('dss-poi-name');
+          const catEl = document.getElementById('dss-poi-category');
+          const scoutEl = document.getElementById('dss-poi-scout');
+          const purityEl = document.getElementById('dss-poi-purity');
+          const massEl = document.getElementById('dss-poi-mass');
+          const notesEl = document.getElementById('dss-poi-notes');
 
-      // Register POI button
-      document.getElementById('btn-dss-save-poi').addEventListener('click', () => {
-        const name = document.getElementById('dss-poi-name').value.trim();
-        const cat = document.getElementById('dss-poi-category').value;
-        const scout = document.getElementById('dss-poi-scout').value.trim() || 'Scout MedRecon';
-        const purity = document.getElementById('dss-poi-purity').value.trim();
-        const mass = document.getElementById('dss-poi-mass').value.trim();
-        const notes = document.getElementById('dss-poi-notes').value.trim();
+          const name = nameEl ? nameEl.value.trim() : '';
+          const cat = catEl ? catEl.value : 'quant';
+          const scout = scoutEl ? (scoutEl.value.trim() || 'Scout CCBE') : 'Scout CCBE';
+          const purity = purityEl ? purityEl.value.trim() : '';
+          const mass = massEl ? massEl.value.trim() : '';
+          const notes = notesEl ? notesEl.value.trim() : '';
 
-        if (!name) {
-          alert('Por favor, indica un nombre o etiqueta para el yacimiento.');
-          return;
-        }
-
-        let pX = 0, pY = 0, pZ = 0;
-        let coordsText = '';
-
-        const aX = dssAnchor && dssAnchor.set ? dssAnchor.x : 0;
-        const aY = dssAnchor && dssAnchor.set ? dssAnchor.y : 0;
-        const aZ = dssAnchor && dssAnchor.set ? dssAnchor.z : 0;
-
-        if (dssInputMode === 'coords') {
-          const rawCoords = document.getElementById('dss-poi-coords').value.trim();
-          const parsed = parseShowLocation(rawCoords);
-          if (!parsed) {
-            alert('Coordenadas /showlocation no válidas. Debe contener formato "Coordinates: x:... y:... z:...".');
-            return;
-          }
-          pX = parsed.x;
-          pY = parsed.y;
-          pZ = parsed.z;
-          coordsText = rawCoords;
-        } else {
-          // Polar mode: distance, heading, elevation
-          const distKm = parseFloat(document.getElementById('dss-polar-dist').value);
-          const headingDeg = parseFloat(document.getElementById('dss-polar-heading').value);
-          const elevDeg = parseFloat(document.getElementById('dss-polar-elevation').value) || 0;
-
-          if (isNaN(distKm) || isNaN(headingDeg)) {
-            alert('Por favor indica la distancia al ancla (km) y el rumbo (0-359°).');
+          if (!name) {
+            alert('Por favor introduce un nombre o identificador para el yacimiento.');
             return;
           }
 
-          const distM = distKm * 1000;
-          const elevRad = elevDeg * (Math.PI / 180);
-          const headingRad = headingDeg * (Math.PI / 180);
+          let pt = null;
+          let coordsStr = '';
 
-          const dz = distM * Math.sin(elevRad);
-          const distH = distM * Math.cos(elevRad);
-          const dx = distH * Math.sin(headingRad);
-          const dy = distH * Math.cos(headingRad);
+          if (dssInputMode === 'coords') {
+            const coordsEl = document.getElementById('dss-poi-coords');
+            const rawCoords = coordsEl ? coordsEl.value.trim() : '';
+            pt = parseShowLocation(rawCoords);
+            if (!pt) {
+              alert('Coordenadas /showlocation no válidas. Introduce el formato "Coordinates: x:... y:... z:...".');
+              return;
+            }
+            coordsStr = rawCoords;
+          } else {
+            if (!dssAnchor || !dssAnchor.set) {
+              alert('El Modo Telémetro requiere un Punto Ancla activo para calcular las coordenadas espaciales.');
+              return;
+            }
+            const distEl = document.getElementById('dss-polar-dist') || document.getElementById('dss-polar-dist-km');
+            const headingEl = document.getElementById('dss-polar-heading') || document.getElementById('dss-polar-bearing');
+            const elevEl = document.getElementById('dss-polar-elevation') || document.getElementById('dss-polar-pitch');
 
-          pX = aX + dx;
-          pY = aY + dy;
-          pZ = aZ + dz;
-          coordsText = 'Coordinates: x:' + pX.toFixed(2) + ' y:' + pY.toFixed(2) + ' z:' + pZ.toFixed(2);
-        }
+            const distM = (parseFloat(distEl ? distEl.value : 0) || 0) * 1000;
+            const bDeg = parseFloat(headingEl ? headingEl.value : 0) || 0;
+            const eDeg = parseFloat(elevEl ? elevEl.value : 0) || 0;
 
-        const newPoi = {
-          id: 'dss-' + Date.now(),
-          name,
-          category: cat,
-          scout,
-          coords: coordsText,
-          x: pX,
-          y: pY,
-          z: pZ,
-          purity,
-          mass,
-          notes,
-          status: 'available',
-          createdAt: Date.now()
-        };
+            if (distM <= 0) {
+              alert('Introduce una distancia válida mayor a 0 km.');
+              return;
+            }
 
-        dssPois.unshift(newPoi);
-        saveDssState();
-        renderDssMatrix();
-        buildDss3DPois();
+            pt = computeDssPointFromPolar(dssAnchor.x, dssAnchor.y, dssAnchor.z, distM, bDeg, eDeg);
+            coordsStr = 'Coordinates: x:' + pt.x.toFixed(6) + ' y:' + pt.y.toFixed(6) + ' z:' + pt.z.toFixed(6);
+          }
 
-        // Reset form inputs
-        document.getElementById('dss-poi-name').value = '';
-        document.getElementById('dss-poi-coords').value = '';
-        document.getElementById('dss-poi-purity').value = '';
-        document.getElementById('dss-poi-mass').value = '';
-        document.getElementById('dss-poi-notes').value = '';
+          const newPoi = {
+            id: 'poi-' + Date.now(),
+            name,
+            category: cat,
+            x: pt.x,
+            y: pt.y,
+            z: pt.z,
+            coords: coordsStr,
+            scout,
+            purity: purity || '48.2%',
+            mass: mass || '32 SCU',
+            notes: notes || 'Contacto registrado en espacio profundo',
+            status: 'available',
+            timestamp: Date.now()
+          };
 
-        alert('¡Yacimiento "' + name + '" registrado con éxito en Deep Space Survey!');
-      });
+          dssPois.push(newPoi);
+          saveDssState();
+          renderDssMatrix();
+          buildDss3DPois();
 
-      // Use Current Coords button
+          // Auto-select newly created POI
+          dssSelectPoi(newPoi.id);
+
+          if (nameEl) nameEl.value = '';
+          const coordsInput = document.getElementById('dss-poi-coords');
+          if (dssInputMode === 'coords' && coordsInput) coordsInput.value = '';
+          alert('¡Hallazgo registrado con éxito en el sector!');
+        });
+      }
+
+      // Button: Establecer Punto de Referencia en la Estrella del Sistema (0, 0, 0)
       document.getElementById('btn-dss-use-current-coords').addEventListener('click', () => {
-        const topCoords = document.getElementById('input-coords').value.trim();
-        const parsed = parseShowLocation(topCoords);
-        if (!parsed) {
-          alert('No hay coordenadas /showlocation válidas cargadas en la entrada superior de navegación.');
-          return;
-        }
-
-        dssAnchor = {
-          name: 'NODRIZA (TELEMETRÍA SUPERIOR)',
-          coords: topCoords,
-          x: parsed.x,
-          y: parsed.y,
-          z: parsed.z,
-          set: true
-        };
-
+        const sys = (typeof currentSystem !== 'undefined' ? currentSystem : 'Stanton').toUpperCase();
+        dssAnchor = getSystemStarAnchor(sys);
         saveDssState();
         updateDssAnchorUI();
         renderDssMatrix();
         buildDss3DAnchor();
         buildDss3DPois();
-        alert('¡Punto Ancla establecido con la telemetría actual de cabina!');
+        setDssCameraIso();
+        alert('¡Punto de referencia fijado en la ESTRELLA del sistema ' + sys + '!\n\nCoordinates: x:0.000000 y:0.000000 z:0.000000');
       });
 
-      // Anchor Modal Controls
-      const anchorModal = document.getElementById('dss-anchor-modal');
-      document.getElementById('btn-dss-open-anchor-modal').addEventListener('click', () => {
-        document.getElementById('dss-anchor-modal-name').value = dssAnchor ? dssAnchor.name : 'CARRACK NODRIZA CCBE-01';
-        document.getElementById('dss-anchor-modal-coords').value = dssAnchor && dssAnchor.coords ? dssAnchor.coords : document.getElementById('input-coords').value.trim();
-        anchorModal.style.display = 'flex';
+      // Modal Anchor Event Handlers
+      const modal = document.getElementById('dss-anchor-modal');
+      const openModalBtn = document.getElementById('btn-dss-open-anchor-modal');
+      const closeModalBtn = document.getElementById('btn-close-anchor-modal');
+      const cancelModalBtn = document.getElementById('btn-cancel-anchor-modal');
+      const saveModalBtn = document.getElementById('btn-save-anchor-modal');
+
+      openModalBtn.addEventListener('click', () => {
+        if (dssAnchor && dssAnchor.set) {
+          document.getElementById('dss-anchor-modal-name').value = dssAnchor.name;
+          document.getElementById('dss-anchor-modal-coords').value = dssAnchor.coords || '';
+        }
+        modal.style.display = 'flex';
       });
 
-      document.getElementById('btn-close-anchor-modal').addEventListener('click', () => anchorModal.style.display = 'none');
-      document.getElementById('btn-cancel-anchor-modal').addEventListener('click', () => anchorModal.style.display = 'none');
+      function closeModal() { modal.style.display = 'none'; }
+      closeModalBtn.addEventListener('click', closeModal);
+      cancelModalBtn.addEventListener('click', closeModal);
 
-      document.getElementById('btn-save-anchor-modal').addEventListener('click', () => {
-        const name = document.getElementById('dss-anchor-modal-name').value.trim() || 'NAVE NODRIZA';
-        const rawCoords = document.getElementById('dss-anchor-modal-coords').value.trim();
-        const parsed = parseShowLocation(rawCoords);
-
+      saveModalBtn.addEventListener('click', () => {
+        const aName = document.getElementById('dss-anchor-modal-name').value.trim() || 'PUNTO DE REFERENCIA TÁCTICO';
+        const aCoords = document.getElementById('dss-anchor-modal-coords').value.trim();
+        const parsed = parseShowLocation(aCoords);
         if (!parsed) {
-          alert('Por favor introduce un formato válido de /showlocation para el ancla.');
+          alert('Por favor introduce un formato válido de /showlocation para el Punto Ancla.');
           return;
         }
 
         dssAnchor = {
-          name,
-          coords: rawCoords,
+          name: aName,
           x: parsed.x,
           y: parsed.y,
           z: parsed.z,
+          coords: aCoords,
           set: true
         };
-
         saveDssState();
         updateDssAnchorUI();
         renderDssMatrix();
         buildDss3DAnchor();
         buildDss3DPois();
-        anchorModal.style.display = 'none';
-        alert('¡Ancla táctica "' + name + '" activada correctamente!');
+        setDssCameraIso();
+        closeModal();
+        alert('¡Punto Ancla configurado y activado!');
       });
 
       // Export JSON
       document.getElementById('btn-dss-export-json').addEventListener('click', () => {
-        const exportData = {
-          anchor: dssAnchor,
-          pois: dssPois,
-          exportedAt: new Date().toISOString()
-        };
-        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ anchor: dssAnchor, pois: dssPois }, null, 2));
         const a = document.createElement('a');
-        a.href = url;
+        a.href = dataStr;
         a.download = 'CCBE_DeepSpace_Survey_' + Date.now() + '.json';
         a.click();
-        URL.revokeObjectURL(url);
       });
 
       // Clear All
@@ -4471,6 +5235,7 @@ ticks;
         if (confirm('¿Vaciar todos los yacimientos y prospecciones del sector?')) {
           dssPois = [];
           saveDssState();
+          dssClearSelection();
           renderDssMatrix();
           buildDss3DPois();
         }
@@ -4478,7 +5243,937 @@ ticks;
     }
 
     // Call DSS Initialization
-    initDeepSpaceSurvey();
+    try {
+      initDeepSpaceSurvey();
+    } catch(err) {
+      console.error('Error initializing Deep Space Survey:', err);
+    }
+
+    // Auto-resize Three.js canvas when DSS accordion toggles
+    const dssAccordion = document.getElementById('deep-space-survey-panel');
+    if (dssAccordion) {
+      dssAccordion.addEventListener('toggle', () => {
+        if (dssAccordion.open && dssRenderer && dssCamera) {
+          setTimeout(() => {
+            const container = document.getElementById('dss-three-canvas-container');
+            if (container) {
+              const w = container.clientWidth || 800;
+              const h = container.clientHeight || 520;
+              if (w > 0 && h > 0) {
+                dssCamera.aspect = w / h;
+                dssCamera.updateProjectionMatrix();
+                dssRenderer.setSize(w, h);
+                if (dssControls) dssControls.update();
+                dssRenderer.render(dssScene, dssCamera);
+              }
+            }
+          }, 80);
+        }
+      });
+    }
+
+    // Global window resize for DSS 3D
+    window.addEventListener('resize', () => {
+      if (dssRenderer && dssCamera) {
+        const container = document.getElementById('dss-three-canvas-container');
+        if (container && container.clientWidth > 0 && container.clientHeight > 0) {
+          dssCamera.aspect = container.clientWidth / container.clientHeight;
+          dssCamera.updateProjectionMatrix();
+          dssRenderer.setSize(container.clientWidth, container.clientHeight);
+          if (dssControls) dssControls.update();
+          dssRenderer.render(dssScene, dssCamera);
+        }
+      }
+    });
+
+    // Auto-redraw trajectory canvas when Route accordion toggles
+    const rtAccordion = document.getElementById('module-3-route-panel');
+    if (rtAccordion) {
+      rtAccordion.addEventListener('toggle', () => {
+        if (rtAccordion.open) {
+          setTimeout(() => {
+            if (typeof updateRtUI === 'function') updateRtUI();
+            if (typeof drawRtTrajectoryCanvas === 'function') drawRtTrajectoryCanvas();
+          }, 80);
+        }
+      });
+    }
+
+    // =========================================================
+    // NAVEGACIÓN EN RUTA & CORRECCIÓN DE TRAYECTORIA 3D (LÓGICA)
+    // =========================================================
+    const RT_KEY = 'ccbe_route_tracker_v3';
+
+    let rtRoute = {
+      originName: "PUNTO DE PARTIDA // BASE ALPHA",
+      originCoords: "Coordinates: x:-18930700000.000000 y:-2610050000.000000 z:220000.000000",
+      origin: { x: -18930700000, y: -2610050000, z: 220000 },
+      targetName: "DESTINO OBJETIVO // FILÓN QUANT",
+      targetCoords: "Coordinates: x:-18930665000.000000 y:-2610020000.000000 z:224500.000000",
+      target: { x: -18930665000, y: -2610020000, z: 224500 },
+      speedMps: 800,
+      checkpoints: [
+        {
+          id: 'cp-demo-1',
+          coords: "Coordinates: x:-18930691250.000000 y:-2610042500.000000 z:221125.000000",
+          x: -18930691250,
+          y: -2610042500,
+          z: 221125,
+          timestamp: Date.now() - 1000 * 60 * 15
+        },
+        {
+          id: 'cp-demo-2',
+          coords: "Coordinates: x:-18930682100.000000 y:-2610035800.000000 z:222250.000000",
+          x: -18930682100,
+          y: -2610035800,
+          z: 222250,
+          timestamp: Date.now() - 1000 * 60 * 7
+        },
+        {
+          id: 'cp-demo-3',
+          coords: "Coordinates: x:-18930673750.000000 y:-2610027500.000000 z:223375.000000",
+          x: -18930673750,
+          y: -2610027500,
+          z: 223375,
+          timestamp: Date.now() - 1000 * 60 * 2
+        }
+      ]
+    };
+
+    // Load persisted route
+    try {
+      const savedRt = localStorage.getItem(RT_KEY);
+      if (savedRt) {
+        const parsedRt = JSON.parse(savedRt);
+        if (parsedRt && parsedRt.origin && parsedRt.target && Array.isArray(parsedRt.checkpoints) && parsedRt.checkpoints.length > 0) {
+          rtRoute = parsedRt;
+        }
+      }
+    } catch(e) {
+      console.warn('RT: error loading route state', e);
+    }
+
+    function saveRtState() {
+      try {
+        localStorage.setItem(RT_KEY, JSON.stringify(rtRoute));
+      } catch(e) {
+        console.warn('RT: error saving route state', e);
+      }
+    }
+
+    // Geometry & Avionics Calculations
+    function rtComputeHeadingPitch(fromPt, toPt) {
+      const dx = toPt.x - fromPt.x;
+      const dy = toPt.y - fromPt.y;
+      const dz = toPt.z - fromPt.z;
+      const dist3d = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      const distH = Math.sqrt(dx * dx + dy * dy);
+
+      let bRad = Math.atan2(dx, dy);
+      let bDeg = (bRad * (180 / Math.PI) + 360) % 360;
+
+      let eRad = distH > 0 ? Math.atan2(dz, distH) : (dz >= 0 ? Math.PI / 2 : -Math.PI / 2);
+      let eDeg = eRad * (180 / Math.PI);
+
+      return {
+        dx, dy, dz,
+        dist3d,
+        distKm: dist3d / 1000,
+        distH,
+        bearingDeg: Math.round(bDeg),
+        elevationDeg: parseFloat(eDeg.toFixed(1))
+      };
+    }
+
+    function rtComputeDrift(S, D, P) {
+      const vx = D.x - S.x;
+      const vy = D.y - S.y;
+      const vz = D.z - S.z;
+      const lineLenSq = vx * vx + vy * vy + vz * vz;
+      if (lineLenSq === 0) return { driftDistM: 0, driftDistKm: 0, t: 0, sideStr: 'EN RUTA' };
+
+      const wx = P.x - S.x;
+      const wy = P.y - S.y;
+      const wz = P.z - S.z;
+
+      // Projection factor t along direct route
+      const t = (wx * vx + wy * vy + wz * vz) / lineLenSq;
+
+      // Projected point on theoretical line
+      const projX = S.x + t * vx;
+      const projY = S.y + t * vy;
+      const projZ = S.z + t * vz;
+
+      // 3D Distance from P to line
+      const driftDistM = Math.sqrt((P.x - projX) ** 2 + (P.y - projY) ** 2 + (P.z - projZ) ** 2);
+
+      // Determine Port (Babor / Left) vs Starboard (Estribor / Right) in horizontal plane
+      const cross = vx * wy - vy * wx;
+      let sideStr = 'EN RUTA';
+      if (driftDistM > 100) {
+        sideStr = cross > 0 ? 'Estribor (Der)' : 'Babor (Izq)';
+      }
+
+      return {
+        driftDistM: Math.round(driftDistM),
+        driftDistKm: parseFloat((driftDistM / 1000).toFixed(2)),
+        t,
+        sideStr
+      };
+    }
+
+    function rtFormatEta(distMeters, speedMps) {
+      if (!speedMps || speedMps <= 0) speedMps = 800;
+      const seconds = distMeters / speedMps;
+      if (seconds < 60) return Math.round(seconds) + 's';
+      const mins = Math.floor(seconds / 60);
+      const remSec = Math.round(seconds % 60);
+      return mins + 'm ' + remSec + 's';
+    }
+
+    // Update Route UI & Calculations
+    function updateRtUI() {
+      if (!rtRoute.origin || !rtRoute.target) return;
+
+      // 1. Theoretical Direct Route
+      const theoretical = rtComputeHeadingPitch(rtRoute.origin, rtRoute.target);
+      const elevSign = theoretical.elevationDeg >= 0 ? '+' : '';
+
+      document.getElementById('rt-plan-total-dist').textContent = theoretical.distKm.toFixed(2) + ' km';
+      document.getElementById('rt-plan-initial-bearing').textContent = theoretical.bearingDeg.toString().padStart(3, '0') + '°';
+      document.getElementById('rt-plan-initial-pitch').textContent = elevSign + theoretical.elevationDeg + '°';
+      document.getElementById('rt-plan-total-ete').textContent = rtFormatEta(theoretical.dist3d, rtRoute.speedMps);
+      document.getElementById('rt-card-eta-speed').textContent = 'Velocidad: ' + rtRoute.speedMps + ' m/s';
+
+      // 2. Current Position Evaluation (use latest checkpoint if any, else origin)
+      const hasCheckpoints = rtRoute.checkpoints && rtRoute.checkpoints.length > 0;
+      const currentPos = hasCheckpoints ? rtRoute.checkpoints[rtRoute.checkpoints.length - 1] : rtRoute.origin;
+
+      const currentToTarget = rtComputeHeadingPitch(currentPos, rtRoute.target);
+      const drift = rtComputeDrift(rtRoute.origin, rtRoute.target, currentPos);
+
+      // Distances & Progress
+      const distRemKm = currentToTarget.distKm;
+      const totalKm = theoretical.distKm;
+      let progressPct = totalKm > 0 ? Math.max(0, Math.min(100, ((totalKm - distRemKm) / totalKm) * 100)) : 0;
+
+      document.getElementById('rt-card-rem-dist').textContent = distRemKm.toFixed(2) + ' km';
+      document.getElementById('rt-card-rem-meters').textContent = Math.round(currentToTarget.dist3d) + ' m directos';
+
+      document.getElementById('rt-progress-text').textContent = progressPct.toFixed(1) + '%';
+      document.getElementById('rt-progress-segment').textContent = (totalKm - distRemKm).toFixed(1) + ' / ' + totalKm.toFixed(1) + ' km';
+      document.getElementById('rt-progress-bar-fill').style.width = progressPct.toFixed(1) + '%';
+
+      // Drift Readout
+      const cardDriftDist = document.getElementById('rt-card-drift-dist');
+      const cardDriftDesc = document.getElementById('rt-card-drift-desc');
+
+      if (drift.driftDistM < 150) {
+        cardDriftDist.textContent = drift.driftDistM + ' m';
+        cardDriftDist.className = 'rt-telem-val rt-status-good';
+        cardDriftDesc.textContent = '🟢 EN RUMBO DIRECTO';
+        cardDriftDesc.className = 'rt-status-good';
+      } else if (drift.driftDistM < 1000) {
+        cardDriftDist.textContent = drift.driftDistM + ' m (' + drift.sideStr + ')';
+        cardDriftDist.className = 'rt-telem-val rt-status-warn';
+        cardDriftDesc.textContent = '🟡 DESVÍO MODERADO (' + drift.sideStr + ')';
+        cardDriftDesc.className = 'rt-status-warn';
+      } else {
+        cardDriftDist.textContent = drift.driftDistKm.toFixed(2) + ' km (' + drift.sideStr + ')';
+        cardDriftDist.className = 'rt-telem-val rt-status-bad';
+        cardDriftDesc.textContent = '🔴 DESVIACIÓN SEVERA (' + drift.sideStr + ')';
+        cardDriftDesc.className = 'rt-status-bad';
+      }
+
+      // Course Correction Readout
+      const corrSign = currentToTarget.elevationDeg >= 0 ? '+' : '';
+      document.getElementById('rt-card-correction-heading').textContent = currentToTarget.bearingDeg.toString().padStart(3, '0') + '°';
+      document.getElementById('rt-card-correction-pitch').textContent = 'Elevación: ' + corrSign + currentToTarget.elevationDeg + '°';
+      document.getElementById('rt-card-eta').textContent = rtFormatEta(currentToTarget.dist3d, rtRoute.speedMps);
+
+      // Voice Order Readout
+      const voiceText = '[CCBE NAV-RUTA] CORRECCIÓN: Virar a Rumbo ' + currentToTarget.bearingDeg.toString().padStart(3, '0') + '° | Elev ' + corrSign + currentToTarget.elevationDeg + '° | Dist Restante: ' + distRemKm.toFixed(1) + ' km | Desvío: ' + drift.driftDistM + 'm (' + drift.sideStr + ') | ETA: ' + rtFormatEta(currentToTarget.dist3d, rtRoute.speedMps);
+      document.getElementById('rt-voice-order-text').textContent = voiceText;
+
+      // 3. Render Checkpoints Table
+      renderRtCheckpointsTable();
+
+      // 4. Render 2D Trajectory Canvas
+      drawRtTrajectoryCanvas();
+    }
+
+    function renderRtCheckpointsTable() {
+      const tbody = document.getElementById('rt-checkpoints-tbody');
+      const countEl = document.getElementById('rt-checkpoints-count');
+      if (!tbody) return;
+
+      const list = rtRoute.checkpoints || [];
+      if (countEl) countEl.textContent = list.length;
+
+      if (!list.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:16px;">Sin checkpoints registrados aún. Registra tu posición durante el vuelo.</td></tr>';
+        return;
+      }
+
+      let html = '';
+      list.forEach((cp, idx) => {
+        const toTarget = rtComputeHeadingPitch(cp, rtRoute.target);
+        const drift = rtComputeDrift(rtRoute.origin, rtRoute.target, cp);
+        const timeStr = cp.timestamp ? new Date(cp.timestamp).toLocaleTimeString('es-ES') : '--:--:--';
+        const sign = toTarget.elevationDeg >= 0 ? '+' : '';
+
+        html += `
+          <tr>
+            <td style="font-weight:bold; color:var(--accent-cyan);">Fix ${idx + 1}</td>
+            <td style="color:var(--text-muted);">${timeStr}</td>
+            <td style="color:#00ffaa; font-weight:bold;">${toTarget.distKm.toFixed(2)} km</td>
+            <td><span class="${drift.driftDistM < 150 ? 'rt-status-good' : (drift.driftDistM < 1000 ? 'rt-status-warn' : 'rt-status-bad')}">${drift.driftDistM}m (${drift.sideStr})</span></td>
+            <td style="color:var(--accent-amber); font-weight:bold;">Rumbo ${toTarget.bearingDeg.toString().padStart(3, '0')}° | Elev ${sign}${toTarget.elevationDeg}°</td>
+            <td>
+              <button class="btn btn-sm btn-secondary" style="color:var(--accent-red); padding:2px 6px;" onclick="deleteRtCheckpoint('${cp.id}')" title="Eliminar este checkpoint">✕</button>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    // Modern High-Tech Spatial Trajectory Corridor HUD (Star Citizen Cockpit Style)
+    let rtCanvasStars = null;
+
+    function getRtCanvasStars(w, h) {
+      if (rtCanvasStars && rtCanvasStars.w === w && rtCanvasStars.h === h) {
+        return rtCanvasStars.stars;
+      }
+      const stars = [];
+      const count = Math.round(Math.min(130, (w * h) / 1500));
+      let seed = 42;
+      function rnd() {
+        seed = (seed * 9301 + 49297) % 233280;
+        return seed / 233280;
+      }
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: rnd() * w,
+          y: rnd() * h,
+          r: 0.5 + rnd() * 1.5,
+          alpha: 0.2 + rnd() * 0.75,
+          color: rnd() > 0.8 ? '#00d2ff' : (rnd() > 0.65 ? '#ffe600' : '#ffffff')
+        });
+      }
+      rtCanvasStars = { w, h, stars };
+      return stars;
+    }
+
+    function drawRtTrajectoryCanvas() {
+      const canvas = document.getElementById('rt-trajectory-canvas');
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const w = rect.width;
+      const h = rect.height;
+      if (w === 0 || h === 0) return;
+
+      if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+      }
+
+      const ctx = canvas.getContext('2d');
+      ctx.save();
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, w, h);
+
+      // 1. Deep Space Cosmic Nebula Background
+      const bgGrad = ctx.createRadialGradient(w * 0.5, h * 0.5, 20, w * 0.5, h * 0.5, Math.max(w, h) * 0.7);
+      bgGrad.addColorStop(0, '#060f22');
+      bgGrad.addColorStop(0.5, '#030814');
+      bgGrad.addColorStop(1, '#010308');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      // Stable Cosmic Starfield
+      const stars = getRtCanvasStars(w, h);
+      stars.forEach(st => {
+        ctx.beginPath();
+        ctx.arc(st.x, st.y, st.r, 0, Math.PI * 2);
+        ctx.fillStyle = st.color;
+        ctx.globalAlpha = st.alpha;
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1.0;
+
+      const padX = Math.max(70, Math.min(120, w * 0.12));
+      const centerY = h / 2;
+      const corridorH = Math.min(50, h * 0.22);
+      const availableW = w - padX * 2;
+
+      // 2. Cockpit HUD Tactical Grid Lines
+      ctx.strokeStyle = 'rgba(0, 210, 255, 0.08)';
+      ctx.lineWidth = 1;
+      [-corridorH * 1.5, -corridorH * 0.75, corridorH * 0.75, corridorH * 1.5].forEach(dy => {
+        ctx.beginPath();
+        ctx.moveTo(0, centerY + dy);
+        ctx.lineTo(w, centerY + dy);
+        ctx.stroke();
+      });
+
+      // Perspective vertical division markers
+      for (let gx = padX; gx <= w - padX; gx += availableW / 8) {
+        ctx.strokeStyle = 'rgba(0, 210, 255, 0.06)';
+        ctx.beginPath();
+        ctx.moveTo(gx, centerY - corridorH * 1.6);
+        ctx.lineTo(gx, centerY + corridorH * 1.6);
+        ctx.stroke();
+      }
+
+      // 3. Safety Flight Corridor Bands (±1000m tolerance)
+      const corrGrad = ctx.createLinearGradient(0, centerY - corridorH, 0, centerY + corridorH);
+      corrGrad.addColorStop(0, 'rgba(0, 255, 170, 0.08)');
+      corrGrad.addColorStop(0.5, 'rgba(0, 210, 255, 0.02)');
+      corrGrad.addColorStop(1, 'rgba(0, 255, 170, 0.08)');
+      ctx.fillStyle = corrGrad;
+      ctx.fillRect(padX, centerY - corridorH, availableW, corridorH * 2);
+
+      // Corridor boundary lines with glow
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 255, 170, 0.4)';
+      ctx.shadowBlur = 6;
+      ctx.strokeStyle = 'rgba(0, 255, 170, 0.35)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(padX, centerY - corridorH);
+      ctx.lineTo(w - padX, centerY - corridorH);
+      ctx.moveTo(padX, centerY + corridorH);
+      ctx.lineTo(w - padX, centerY + corridorH);
+      ctx.stroke();
+      ctx.restore();
+
+      // Corridor Edge HUD Labels
+      ctx.fillStyle = 'rgba(0, 255, 170, 0.6)';
+      ctx.font = '9px monospace';
+      ctx.textAlign = 'right';
+      ctx.fillText('+1000m [BABOR]', padX - 8, centerY - corridorH + 3);
+      ctx.fillText('-1000m [ESTRIBOR]', padX - 8, centerY + corridorH + 3);
+
+      // 4. Holographic Quantum Waypoint Gates along Theoretical Path
+      const gateWaypoints = [0.25, 0.50, 0.75];
+      gateWaypoints.forEach((gw, idx) => {
+        const gx = padX + gw * availableW;
+        const gateH = corridorH * 0.9;
+
+        ctx.save();
+        ctx.strokeStyle = 'rgba(0, 210, 255, 0.35)';
+        ctx.shadowColor = '#00d2ff';
+        ctx.shadowBlur = 8;
+        ctx.lineWidth = 1.2;
+
+        // Top Bracket
+        ctx.beginPath();
+        ctx.moveTo(gx - 8, centerY - gateH + 8);
+        ctx.lineTo(gx - 8, centerY - gateH);
+        ctx.lineTo(gx + 8, centerY - gateH);
+        ctx.lineTo(gx + 8, centerY - gateH + 8);
+        ctx.stroke();
+
+        // Bottom Bracket
+        ctx.beginPath();
+        ctx.moveTo(gx - 8, centerY + gateH - 8);
+        ctx.lineTo(gx - 8, centerY + gateH);
+        ctx.lineTo(gx + 8, centerY + gateH);
+        ctx.lineTo(gx + 8, centerY + gateH - 8);
+        ctx.stroke();
+
+        // Mid cross tick
+        ctx.beginPath();
+        ctx.moveTo(gx - 4, centerY);
+        ctx.lineTo(gx + 4, centerY);
+        ctx.stroke();
+        ctx.restore();
+
+        // Gate Tag
+        ctx.fillStyle = 'rgba(0, 210, 255, 0.7)';
+        ctx.font = '8px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('WP-0' + (idx + 1) + ' [' + Math.round(gw * 100) + '%]', gx, centerY - gateH - 6);
+      });
+
+      // 5. Theoretical Golden Route Laser Beam
+      ctx.save();
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.65)';
+      ctx.shadowColor = '#00f0ff';
+      ctx.shadowBlur = 10;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 6]);
+      ctx.beginPath();
+      ctx.moveTo(padX, centerY);
+      ctx.lineTo(w - padX, centerY);
+      ctx.stroke();
+      ctx.restore();
+
+      // 6. Draw Checkpoints and Actual Flight Trail
+      const cps = rtRoute.checkpoints || [];
+      const nodeHitList = [];
+
+      // Origin Beacon Marker
+      ctx.save();
+      ctx.shadowColor = '#00d2ff';
+      ctx.shadowBlur = 12;
+      ctx.fillStyle = '#00d2ff';
+      ctx.beginPath();
+      ctx.arc(padX, centerY, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Outer beacon ring
+      ctx.strokeStyle = 'rgba(0, 210, 255, 0.6)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(padX, centerY, 10, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.fillStyle = '#00d2ff';
+      ctx.font = 'bold 10px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('ORIGEN // DEP', padX, centerY + 24);
+      nodeHitList.push({
+        x: padX, y: centerY, r: 14,
+        title: 'ORIGEN: ' + (rtRoute.originName || 'PUNTO DE SALIDA'),
+        desc: 'Coordenadas de partida /showlocation'
+      });
+
+      // Destination Target Lock Reticle
+      const tgtX = w - padX;
+      const tgtY = centerY;
+      ctx.save();
+      ctx.shadowColor = '#ff4757';
+      ctx.shadowBlur = 14;
+
+      // Lock square brackets [ + ]
+      ctx.strokeStyle = '#ff4757';
+      ctx.lineWidth = 1.8;
+      const retS = 12;
+      // Top-Left
+      ctx.beginPath();
+      ctx.moveTo(tgtX - retS, tgtY - retS + 5);
+      ctx.lineTo(tgtX - retS, tgtY - retS);
+      ctx.lineTo(tgtX - retS + 5, tgtY - retS);
+      ctx.stroke();
+      // Top-Right
+      ctx.beginPath();
+      ctx.moveTo(tgtX + retS - 5, tgtY - retS);
+      ctx.lineTo(tgtX + retS, tgtY - retS);
+      ctx.lineTo(tgtX + retS, tgtY - retS + 5);
+      ctx.stroke();
+      // Bottom-Left
+      ctx.beginPath();
+      ctx.moveTo(tgtX - retS, tgtY + retS - 5);
+      ctx.lineTo(tgtX - retS, tgtY + retS);
+      ctx.lineTo(tgtX - retS + 5, tgtY + retS);
+      ctx.stroke();
+      // Bottom-Right
+      ctx.beginPath();
+      ctx.moveTo(tgtX + retS - 5, tgtY + retS);
+      ctx.lineTo(tgtX + retS, tgtY + retS);
+      ctx.lineTo(tgtX + retS, tgtY + retS - 5);
+      ctx.stroke();
+
+      // Center cross
+      ctx.beginPath();
+      ctx.moveTo(tgtX - 4, tgtY);
+      ctx.lineTo(tgtX + 4, tgtY);
+      ctx.moveTo(tgtX, tgtY - 4);
+      ctx.lineTo(tgtX, tgtY + 4);
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.fillStyle = '#ff4757';
+      ctx.font = 'bold 10px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('DESTINO // LOCK', tgtX, tgtY + 24);
+      nodeHitList.push({
+        x: tgtX, y: tgtY, r: 16,
+        title: 'DESTINO: ' + (rtRoute.targetName || 'OBJETIVO'),
+        desc: 'Punto de Llegada Fijo /showlocation'
+      });
+
+      // Draw Checkpoints Track
+      let lastFixX = padX;
+      let lastFixY = centerY;
+
+      cps.forEach((cp, idx) => {
+        const drift = rtComputeDrift(rtRoute.origin, rtRoute.target, cp);
+        const clampedT = Math.max(0, Math.min(1, drift.t));
+        const canvasX = padX + clampedT * availableW;
+
+        // Map lateral drift: 1000m = corridorH px
+        const sideMult = drift.sideStr.includes('Babor') ? -1 : 1;
+        const driftPx = Math.max(-corridorH * 1.5, Math.min(corridorH * 1.5, (drift.driftDistM / 1000) * corridorH * sideMult));
+        const canvasY = centerY + driftPx;
+
+        // Flight trail line from previous fix
+        ctx.save();
+        ctx.strokeStyle = '#f5a623';
+        ctx.shadowColor = 'rgba(245, 166, 35, 0.6)';
+        ctx.shadowBlur = 8;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(lastFixX, lastFixY);
+        ctx.lineTo(canvasX, canvasY);
+        ctx.stroke();
+        ctx.restore();
+
+        // Drift Leader Line to Centerline
+        ctx.save();
+        ctx.strokeStyle = drift.driftDistM > 500 ? 'rgba(255, 71, 87, 0.6)' : 'rgba(245, 166, 35, 0.4)';
+        ctx.setLineDash([2, 3]);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(canvasX, centerY);
+        ctx.lineTo(canvasX, canvasY);
+        ctx.stroke();
+        ctx.restore();
+
+        // Checkpoint Node Diamond
+        ctx.save();
+        ctx.shadowColor = '#f5a623';
+        ctx.shadowBlur = 10;
+        ctx.fillStyle = '#ffb703';
+        ctx.beginPath();
+        ctx.moveTo(canvasX, canvasY - 5);
+        ctx.lineTo(canvasX + 5, canvasY);
+        ctx.lineTo(canvasX, canvasY + 5);
+        ctx.lineTo(canvasX - 5, canvasY);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        // Checkpoint Tag
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 9px monospace';
+        ctx.textAlign = 'center';
+        const tagY = canvasY < centerY ? canvasY - 10 : canvasY + 16;
+        ctx.fillText('FIX ' + (idx + 1), canvasX, tagY);
+
+        nodeHitList.push({
+          x: canvasX,
+          y: canvasY,
+          r: 12,
+          title: 'FIX 0' + (idx + 1) + ' // ' + new Date(cp.timestamp || Date.now()).toISOString().substring(11, 19) + ' UTC',
+          desc: 'Desvío: ' + drift.driftDistM + 'm (' + drift.sideStr + ')'
+        });
+
+        lastFixX = canvasX;
+        lastFixY = canvasY;
+      });
+
+      // 7. Active Ship Glyph at current position
+      if (cps.length > 0) {
+        ctx.save();
+        ctx.translate(lastFixX, lastFixY);
+
+        // Compute heading angle towards destination
+        const angleToTarget = Math.atan2(tgtY - lastFixY, tgtX - lastFixX);
+        ctx.rotate(angleToTarget);
+
+        // Dual Plasma Thruster Flame Plumes
+        const flameGrad = ctx.createLinearGradient(-16, 0, -4, 0);
+        flameGrad.addColorStop(0, 'rgba(0, 210, 255, 0)');
+        flameGrad.addColorStop(0.7, 'rgba(0, 210, 255, 0.7)');
+        flameGrad.addColorStop(1, '#00ffaa');
+
+        ctx.fillStyle = flameGrad;
+        // Port thruster flame
+        ctx.beginPath();
+        ctx.moveTo(-5, -4);
+        ctx.lineTo(-14, -2);
+        ctx.lineTo(-5, 0);
+        ctx.closePath();
+        ctx.fill();
+        // Starboard thruster flame
+        ctx.beginPath();
+        ctx.moveTo(-5, 0);
+        ctx.lineTo(-14, 2);
+        ctx.lineTo(-5, 4);
+        ctx.closePath();
+        ctx.fill();
+
+        // Combat Fighter Ship Hull (Star Citizen Silhouette)
+        ctx.shadowColor = '#00ffaa';
+        ctx.shadowBlur = 10;
+        ctx.fillStyle = '#0a1d2e';
+        ctx.strokeStyle = '#00ffaa';
+        ctx.lineWidth = 1.8;
+
+        ctx.beginPath();
+        ctx.moveTo(12, 0);        // Nose
+        ctx.lineTo(-6, -8);       // Left wingtip
+        ctx.lineTo(-4, -3);       // Left engine intake
+        ctx.lineTo(-7, 0);        // Aft center
+        ctx.lineTo(-4, 3);        // Right engine intake
+        ctx.lineTo(-6, 8);        // Right wingtip
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Cockpit canopy glow
+        ctx.fillStyle = '#00d2ff';
+        ctx.beginPath();
+        ctx.arc(2, 0, 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // 8. Projected Direct-To Intercept Vector (Course Correction)
+        ctx.save();
+        ctx.strokeStyle = 'rgba(255, 230, 0, 0.75)';
+        ctx.shadowColor = '#ffe600';
+        ctx.shadowBlur = 8;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(lastFixX, lastFixY);
+        ctx.lineTo(tgtX, tgtY);
+        ctx.stroke();
+        ctx.restore();
+
+        // Intercept Angle Badge
+        const midX = (lastFixX + tgtX) / 2;
+        const midY = (lastFixY + tgtY) / 2;
+        const currentToTarget = rtComputeHeadingPitch(cps[cps.length - 1], rtRoute.target);
+        ctx.fillStyle = 'rgba(8, 16, 28, 0.85)';
+        ctx.strokeStyle = '#ffe600';
+        ctx.lineWidth = 1;
+        const badgeW = 74;
+        ctx.fillRect(midX - badgeW/2, midY - 10, badgeW, 18);
+        ctx.strokeRect(midX - badgeW/2, midY - 10, badgeW, 18);
+        ctx.fillStyle = '#ffe600';
+        ctx.font = 'bold 9px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('CORR: ' + currentToTarget.bearingDeg.toString().padStart(3, '0') + '°', midX, midY + 3);
+
+        nodeHitList.push({
+          x: lastFixX,
+          y: lastFixY,
+          r: 16,
+          title: 'NAVE ACTUAL // EN CORREDOR',
+          desc: 'Rumbo Directo: ' + currentToTarget.bearingDeg + '° | Dist: ' + currentToTarget.distKm.toFixed(1) + ' km'
+        });
+      }
+
+      ctx.restore();
+      canvas._rtNodes = nodeHitList;
+    }
+
+    function setupRtCanvasInteractions() {
+      const canvas = document.getElementById('rt-trajectory-canvas');
+      const tooltip = document.getElementById('rt-canvas-tooltip');
+      if (!canvas || !tooltip) return;
+
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        const nodes = canvas._rtNodes || [];
+
+        let hit = null;
+        for (let i = nodes.length - 1; i >= 0; i--) {
+          const n = nodes[i];
+          const dist = Math.hypot(mouseX - n.x, mouseY - n.y);
+          if (dist <= (n.r || 14)) {
+            hit = n;
+            break;
+          }
+        }
+
+        if (hit) {
+          tooltip.style.display = 'block';
+          tooltip.style.left = hit.x + 'px';
+          tooltip.style.top = hit.y + 'px';
+          tooltip.innerHTML = '<strong style="color:var(--accent-cyan);">' + hit.title + '</strong><br><span style="font-size:10px; color:#e1eaf5;">' + hit.desc + '</span>';
+          canvas.style.cursor = 'pointer';
+        } else {
+          tooltip.style.display = 'none';
+          canvas.style.cursor = 'crosshair';
+        }
+      });
+
+      canvas.addEventListener('mouseleave', () => {
+        tooltip.style.display = 'none';
+        canvas.style.cursor = 'crosshair';
+      });
+
+      window.addEventListener('resize', () => {
+        drawRtTrajectoryCanvas();
+      });
+    }
+
+    window.deleteRtCheckpoint = function(id) {
+      rtRoute.checkpoints = (rtRoute.checkpoints || []).filter(c => c.id !== id);
+      saveRtState();
+      updateRtUI();
+    };
+
+    // Route Tracker Event Bindings
+    function initRouteTracker() {
+      // Sync initial form inputs with state
+      if (rtRoute.originName) document.getElementById('rt-origin-name').value = rtRoute.originName;
+      if (rtRoute.originCoords) document.getElementById('rt-origin-coords').value = rtRoute.originCoords;
+      if (rtRoute.targetName) document.getElementById('rt-target-name').value = rtRoute.targetName;
+      if (rtRoute.targetCoords) document.getElementById('rt-target-coords').value = rtRoute.targetCoords;
+      if (rtRoute.speedMps) document.getElementById('rt-ship-speed').value = rtRoute.speedMps;
+
+      // Speed change listener
+      document.getElementById('rt-ship-speed').addEventListener('change', (e) => {
+        rtRoute.speedMps = parseFloat(e.target.value) || 800;
+        saveRtState();
+        updateRtUI();
+      });
+
+      // Paste buttons
+      document.getElementById('btn-rt-paste-origin').addEventListener('click', async () => {
+        try {
+          const t = await navigator.clipboard.readText();
+          if (t) document.getElementById('rt-origin-coords').value = t;
+        } catch(e) { console.warn(e); }
+      });
+
+      document.getElementById('btn-rt-paste-target').addEventListener('click', async () => {
+        try {
+          const t = await navigator.clipboard.readText();
+          if (t) document.getElementById('rt-target-coords').value = t;
+        } catch(e) { console.warn(e); }
+      });
+
+      document.getElementById('btn-rt-paste-checkpoint').addEventListener('click', async () => {
+        try {
+          const t = await navigator.clipboard.readText();
+          if (t) document.getElementById('rt-checkpoint-coords').value = t;
+        } catch(e) { console.warn(e); }
+      });
+
+      // Capture Top Telemetry buttons
+      document.getElementById('btn-rt-use-top-origin').addEventListener('click', () => {
+        const top = document.getElementById('input-coords').value.trim();
+        if (top) {
+          document.getElementById('rt-origin-coords').value = top;
+          alert('¡Coordenadas superiores cargadas como Punto de Origen!');
+        }
+      });
+
+      document.getElementById('btn-rt-use-top-target').addEventListener('click', () => {
+        const top = document.getElementById('input-coords').value.trim();
+        if (top) {
+          document.getElementById('rt-target-coords').value = top;
+          alert('¡Coordenadas superiores cargadas como Punto de Destino!');
+        }
+      });
+
+      document.getElementById('btn-rt-use-top-checkpoint').addEventListener('click', () => {
+        const top = document.getElementById('input-coords').value.trim();
+        if (top) {
+          document.getElementById('rt-checkpoint-coords').value = top;
+        }
+      });
+
+      // Button: Trazar Ruta
+      document.getElementById('btn-rt-compute-plan').addEventListener('click', () => {
+        const oName = document.getElementById('rt-origin-name').value.trim() || 'ORIGEN';
+        const oCoords = document.getElementById('rt-origin-coords').value.trim();
+        const tName = document.getElementById('rt-target-name').value.trim() || 'DESTINO';
+        const tCoords = document.getElementById('rt-target-coords').value.trim();
+
+        const parsedO = parseShowLocation(oCoords);
+        const parsedT = parseShowLocation(tCoords);
+
+        if (!parsedO) {
+          alert('Por favor introduce un formato válido de /showlocation para el Punto de Partida.');
+          return;
+        }
+        if (!parsedT) {
+          alert('Por favor introduce un formato válido de /showlocation para el Punto de Llegada (Destino).');
+          return;
+        }
+
+        rtRoute.originName = oName;
+        rtRoute.originCoords = oCoords;
+        rtRoute.origin = { x: parsedO.x, y: parsedO.y, z: parsedO.z };
+
+        rtRoute.targetName = tName;
+        rtRoute.targetCoords = tCoords;
+        rtRoute.target = { x: parsedT.x, y: parsedT.y, z: parsedT.z };
+
+        saveRtState();
+        updateRtUI();
+        alert('¡Ruta directa trazada correctamente! Ahora puedes registrar checkpoints durante el vuelo.');
+      });
+
+      // Button: Add Checkpoint
+      document.getElementById('btn-rt-add-checkpoint').addEventListener('click', () => {
+        const rawCoords = document.getElementById('rt-checkpoint-coords').value.trim();
+        const parsed = parseShowLocation(rawCoords);
+
+        if (!parsed) {
+          alert('Coordenadas /showlocation no válidas para el Checkpoint. Debe contener "Coordinates: x:... y:... z:...".');
+          return;
+        }
+
+        const newCp = {
+          id: 'cp-' + Date.now(),
+          coords: rawCoords,
+          x: parsed.x,
+          y: parsed.y,
+          z: parsed.z,
+          timestamp: Date.now()
+        };
+
+        if (!rtRoute.checkpoints) rtRoute.checkpoints = [];
+        rtRoute.checkpoints.push(newCp);
+
+        saveRtState();
+        updateRtUI();
+
+        document.getElementById('rt-checkpoint-coords').value = '';
+        alert('¡Checkpoint registrado! Telemetría y corrección de rumbo actualizadas.');
+      });
+
+      // Button: Copy Voice Order
+      document.getElementById('btn-rt-copy-voice-order').addEventListener('click', () => {
+        const text = document.getElementById('rt-voice-order-text').textContent.trim();
+        navigator.clipboard.writeText(text).then(() => {
+          alert('¡Orden de corrección de trayectoria copiada al portapapeles!\n\n' + text);
+        });
+      });
+
+      // Button: Reset Route
+      document.getElementById('btn-rt-reset').addEventListener('click', () => {
+        if (confirm('¿Deseas reiniciar la ruta actual y vaciar los checkpoints registrados?')) {
+          rtRoute.checkpoints = [];
+          saveRtState();
+          updateRtUI();
+        }
+      });
+
+      // Button: Clear Checkpoints only
+      document.getElementById('btn-rt-clear-checkpoints').addEventListener('click', () => {
+        if (confirm('¿Vaciar todos los puntos de control registrados en esta ruta?')) {
+          rtRoute.checkpoints = [];
+          saveRtState();
+          updateRtUI();
+        }
+      });
+
+      // Initial Update
+      setupRtCanvasInteractions();
+      updateRtUI();
+    }
+
+    // Call Route Tracker Initialization
+    try {
+      initRouteTracker();
+    } catch(err) {
+      console.error('Error initializing Route Tracker:', err);
+    }
 
   </script>
 </body>
