@@ -206,48 +206,100 @@
 
             <!-- PASO 1: FIJAR P.O.1 MIRANDO HACIA LA NAVE (PUNTO CERO / LZ) -->
             <div class="bg-slate-900/70 border border-emerald-500/20 rounded-lg p-2.5 space-y-2 text-xs mono">
+              <!-- Selector de Metodología (3 Vías) -->
               <div class="flex items-center justify-between text-[11px]">
                 <span class="text-emerald-300 font-bold flex items-center gap-1">
-                  <span>⚓</span> Mirando hacia la Nave (LZ):
+                  <span>⚓</span> Fijar Posición P.O.1:
                 </span>
                 <span id="po1ShipLabel" class="text-emerald-400 font-bold">763m // 122° [ESE]</span>
               </div>
-              <div class="grid grid-cols-2 gap-2">
-                <div>
-                  <label class="text-slate-400 block text-[10px] mb-0.5">Distancia a Nave (m):</label>
-                  <input type="number" id="po1DistShip" value="763" min="10" step="25" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
-                </div>
-                <div>
-                  <label class="text-slate-400 block text-[10px] mb-0.5">Azimut a la Nave (°):</label>
-                  <input type="number" id="po1AzShip" value="122" min="0" max="359" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
-                </div>
+
+              <!-- Botones de Metodología -->
+              <div class="grid grid-cols-3 gap-1 p-0.5 bg-slate-950 rounded-lg border border-slate-800 text-[10px]">
+                <button type="button" id="btnPo1MethodPolar" class="py-1 px-1 rounded font-bold bg-emerald-500 text-slate-950 transition">
+                  ⚓ Polar (HUD)
+                </button>
+                <button type="button" id="btnPo1MethodCart" class="py-1 px-1 rounded font-bold text-slate-400 hover:text-white transition">
+                  📐 Cartesiano
+                </button>
+                <button type="button" id="btnPo1MethodLoc" class="py-1 px-1 rounded font-bold text-slate-400 hover:text-white transition">
+                  🛰️ /showlocation
+                </button>
               </div>
-              <div>
-                <input type="range" id="sliderPo1AzShip" min="0" max="359" value="122" class="w-full cursor-pointer accent-emerald-400">
-                <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
-                  <span>000° [N]</span>
-                  <span>090° [E]</span>
-                  <span>180° [S]</span>
-                  <span>270° [W]</span>
-                </div>
-              </div>
-              
-              <details class="text-[11px] text-slate-400 pt-1 border-t border-slate-800/80">
-                <summary class="cursor-pointer text-[10px] text-slate-500 hover:text-slate-300 flex items-center justify-between">
-                  <span>Coordenadas Cartesianas X, Y (Opcional)</span>
-                  <span id="po1CoordsSummary" class="text-slate-400 font-bold">[-650m, +400m]</span>
-                </summary>
-                <div class="grid grid-cols-2 gap-2 pt-2">
+
+              <!-- VÍA 1: POLAR / HUD (MIRANDO A LA NAVE) -->
+              <div id="po1SubPolar" class="space-y-2">
+                <div class="grid grid-cols-2 gap-2">
                   <div>
-                    <label class="text-[10px] text-slate-500 block">X (m desde Nave):</label>
-                    <input type="number" id="po1X" value="-650" step="25" class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-0.5 text-slate-200">
+                    <label class="text-slate-400 block text-[10px] mb-0.5">Distancia a Nave (m):</label>
+                    <input type="number" id="po1DistShip" value="763" min="10" step="25" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
                   </div>
                   <div>
-                    <label class="text-[10px] text-slate-500 block">Y (m desde Nave):</label>
-                    <input type="number" id="po1Y" value="400" step="25" class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-0.5 text-slate-200">
+                    <label class="text-slate-400 block text-[10px] mb-0.5">Azimut a la Nave (°):</label>
+                    <input type="number" id="po1AzShip" value="122" min="0" max="359" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
                   </div>
                 </div>
-              </details>
+                <div>
+                  <input type="range" id="sliderPo1AzShip" min="0" max="359" value="122" class="w-full cursor-pointer accent-emerald-400">
+                  <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                    <span>000° [N]</span>
+                    <span>090° [E]</span>
+                    <span>180° [S]</span>
+                    <span>270° [W]</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- VÍA 2: CARTESIANO (X, Y RELATIVAS) -->
+              <div id="po1SubCart" class="space-y-2 hidden">
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="text-[10px] text-slate-400 block mb-0.5">X (m desde Nave, E+/W-):</label>
+                    <input type="number" id="po1X" value="-650" step="25" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
+                  </div>
+                  <div>
+                    <label class="text-[10px] text-slate-400 block mb-0.5">Y (m desde Nave, N+/S-):</label>
+                    <input type="number" id="po1Y" value="400" step="25" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
+                  </div>
+                </div>
+                <div class="p-1.5 bg-slate-950/80 rounded border border-slate-800 text-[10px] text-slate-400 flex justify-between">
+                  <span>Coord Relativas: <strong id="po1CoordsSummary" class="text-emerald-400">[-650m, +400m]</strong></span>
+                  <span id="po1CartVector" class="text-slate-400 font-bold">122° // 763m</span>
+                </div>
+              </div>
+
+              <!-- VÍA 3: TELEMETRÍA /SHOWLOCATION -->
+              <div id="po1SubLoc" class="space-y-2 hidden">
+                <div>
+                  <div class="flex items-center justify-between mb-0.5">
+                    <label class="text-slate-400 text-[10px]">1º /showlocation Nave (LZ [0,0]):</label>
+                    <button type="button" id="btnPastePo1Ship" class="text-[10px] text-emerald-400 hover:text-emerald-300 flex items-center gap-1 font-bold">
+                      📋 Pegar Nave
+                    </button>
+                  </div>
+                  <input type="text" id="po1LocShip" value="Coordinates: x:-18930700000.000000 y:-26100580000.000000 z:220000.000000" placeholder="Coordinates: x:... y:... z:..." class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 font-mono">
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between mb-0.5">
+                    <label class="text-slate-400 text-[10px]">2º /showlocation P.O. 1 (Alfa):</label>
+                    <button type="button" id="btnPastePo1PO" class="text-[10px] text-emerald-400 hover:text-emerald-300 flex items-center gap-1 font-bold">
+                      📋 Pegar P.O.1
+                    </button>
+                  </div>
+                  <input type="text" id="po1LocPO" value="Coordinates: x:-18930700650.000000 y:-26100579600.000000 z:220000.000000" placeholder="Coordinates: x:... y:... z:..." class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 font-mono">
+                </div>
+
+                <div class="flex gap-2 pt-0.5">
+                  <button type="button" id="btnApplyPo1Loc" class="flex-1 py-1 px-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded text-[11px] transition flex items-center justify-center gap-1 shadow-sm">
+                    ⚡ Calcular y Fijar P.O.1
+                  </button>
+                </div>
+
+                <div id="po1LocFeedback" class="text-[10px] text-emerald-400/90 bg-emerald-950/40 p-1.5 rounded border border-emerald-500/20 font-mono">
+                  ΔX: -650m | ΔY: +400m | ΔZ: 0m | Dist 3D: 763m | Az Nave: 122°
+                </div>
+              </div>
             </div>
 
             <!-- PASO 2: APUNTAR AL OBJETIVO (TRIANGULACIÓN) -->
@@ -281,48 +333,100 @@
 
             <!-- PASO 1: FIJAR P.O.2 MIRANDO HACIA LA NAVE (PUNTO CERO / LZ) -->
             <div class="bg-slate-900/70 border border-cyan-500/20 rounded-lg p-2.5 space-y-2 text-xs mono">
+              <!-- Selector de Metodología (3 Vías) -->
               <div class="flex items-center justify-between text-[11px]">
                 <span class="text-cyan-300 font-bold flex items-center gap-1">
-                  <span>⚓</span> Mirando hacia la Nave (LZ):
+                  <span>⚓</span> Fijar Posición P.O.2:
                 </span>
                 <span id="po2ShipLabel" class="text-cyan-400 font-bold">808m // 248° [OSO]</span>
               </div>
-              <div class="grid grid-cols-2 gap-2">
-                <div>
-                  <label class="text-slate-400 block text-[10px] mb-0.5">Distancia a Nave (m):</label>
-                  <input type="number" id="po2DistShip" value="808" min="10" step="25" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
-                </div>
-                <div>
-                  <label class="text-slate-400 block text-[10px] mb-0.5">Azimut a la Nave (°):</label>
-                  <input type="number" id="po2AzShip" value="248" min="0" max="359" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
-                </div>
+
+              <!-- Botones de Metodología -->
+              <div class="grid grid-cols-3 gap-1 p-0.5 bg-slate-950 rounded-lg border border-slate-800 text-[10px]">
+                <button type="button" id="btnPo2MethodPolar" class="py-1 px-1 rounded font-bold bg-cyan-500 text-slate-950 transition">
+                  ⚓ Polar (HUD)
+                </button>
+                <button type="button" id="btnPo2MethodCart" class="py-1 px-1 rounded font-bold text-slate-400 hover:text-white transition">
+                  📐 Cartesiano
+                </button>
+                <button type="button" id="btnPo2MethodLoc" class="py-1 px-1 rounded font-bold text-slate-400 hover:text-white transition">
+                  🛰️ /showlocation
+                </button>
               </div>
-              <div>
-                <input type="range" id="sliderPo2AzShip" min="0" max="359" value="248" class="w-full cursor-pointer accent-cyan-400">
-                <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
-                  <span>000° [N]</span>
-                  <span>090° [E]</span>
-                  <span>180° [S]</span>
-                  <span>270° [W]</span>
-                </div>
-              </div>
-              
-              <details class="text-[11px] text-slate-400 pt-1 border-t border-slate-800/80">
-                <summary class="cursor-pointer text-[10px] text-slate-500 hover:text-slate-300 flex items-center justify-between">
-                  <span>Coordenadas Cartesianas X, Y (Opcional)</span>
-                  <span id="po2CoordsSummary" class="text-slate-400 font-bold">[+750m, +300m]</span>
-                </summary>
-                <div class="grid grid-cols-2 gap-2 pt-2">
+
+              <!-- VÍA 1: POLAR / HUD (MIRANDO A LA NAVE) -->
+              <div id="po2SubPolar" class="space-y-2">
+                <div class="grid grid-cols-2 gap-2">
                   <div>
-                    <label class="text-[10px] text-slate-500 block">X (m desde Nave):</label>
-                    <input type="number" id="po2X" value="750" step="25" class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-0.5 text-slate-200">
+                    <label class="text-slate-400 block text-[10px] mb-0.5">Distancia a Nave (m):</label>
+                    <input type="number" id="po2DistShip" value="808" min="10" step="25" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
                   </div>
                   <div>
-                    <label class="text-[10px] text-slate-500 block">Y (m desde Nave):</label>
-                    <input type="number" id="po2Y" value="300" step="25" class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-0.5 text-slate-200">
+                    <label class="text-slate-400 block text-[10px] mb-0.5">Azimut a la Nave (°):</label>
+                    <input type="number" id="po2AzShip" value="248" min="0" max="359" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
                   </div>
                 </div>
-              </details>
+                <div>
+                  <input type="range" id="sliderPo2AzShip" min="0" max="359" value="248" class="w-full cursor-pointer accent-cyan-400">
+                  <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                    <span>000° [N]</span>
+                    <span>090° [E]</span>
+                    <span>180° [S]</span>
+                    <span>270° [W]</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- VÍA 2: CARTESIANO (X, Y RELATIVAS) -->
+              <div id="po2SubCart" class="space-y-2 hidden">
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="text-[10px] text-slate-400 block mb-0.5">X (m desde Nave, E+/W-):</label>
+                    <input type="number" id="po2X" value="750" step="25" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
+                  </div>
+                  <div>
+                    <label class="text-[10px] text-slate-400 block mb-0.5">Y (m desde Nave, N+/S-):</label>
+                    <input type="number" id="po2Y" value="300" step="25" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold">
+                  </div>
+                </div>
+                <div class="p-1.5 bg-slate-950/80 rounded border border-slate-800 text-[10px] text-slate-400 flex justify-between">
+                  <span>Coord Relativas: <strong id="po2CoordsSummary" class="text-cyan-400">[+750m, +300m]</strong></span>
+                  <span id="po2CartVector" class="text-slate-400 font-bold">248° // 808m</span>
+                </div>
+              </div>
+
+              <!-- VÍA 3: TELEMETRÍA /SHOWLOCATION -->
+              <div id="po2SubLoc" class="space-y-2 hidden">
+                <div>
+                  <div class="flex items-center justify-between mb-0.5">
+                    <label class="text-slate-400 text-[10px]">1º /showlocation Nave (LZ [0,0]):</label>
+                    <button type="button" id="btnPastePo2Ship" class="text-[10px] text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-bold">
+                      📋 Pegar Nave
+                    </button>
+                  </div>
+                  <input type="text" id="po2LocShip" value="Coordinates: x:-18930700000.000000 y:-26100580000.000000 z:220000.000000" placeholder="Coordinates: x:... y:... z:..." class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 font-mono">
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between mb-0.5">
+                    <label class="text-slate-400 text-[10px]">2º /showlocation P.O. 2 (Bravo):</label>
+                    <button type="button" id="btnPastePo2PO" class="text-[10px] text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-bold">
+                      📋 Pegar P.O.2
+                    </button>
+                  </div>
+                  <input type="text" id="po2LocPO" value="Coordinates: x:-18930699250.000000 y:-26100579700.000000 z:220000.000000" placeholder="Coordinates: x:... y:... z:..." class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 font-mono">
+                </div>
+
+                <div class="flex gap-2 pt-0.5">
+                  <button type="button" id="btnApplyPo2Loc" class="flex-1 py-1 px-2 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold rounded text-[11px] transition flex items-center justify-center gap-1 shadow-sm">
+                    ⚡ Calcular y Fijar P.O.2
+                  </button>
+                </div>
+
+                <div id="po2LocFeedback" class="text-[10px] text-cyan-400/90 bg-cyan-950/40 p-1.5 rounded border border-cyan-500/20 font-mono">
+                  ΔX: +750m | ΔY: +300m | ΔZ: 0m | Dist 3D: 808m | Az Nave: 248°
+                </div>
+              </div>
             </div>
 
             <!-- PASO 2: APUNTAR AL OBJETIVO (TRIANGULACIÓN) -->
@@ -418,6 +522,17 @@
           <div class="grid grid-cols-2 gap-2 text-[11px] mono text-slate-400 border-t border-slate-800 pt-1.5">
             <div>Dist. desde P.O.1: <span class="text-emerald-300 font-semibold" id="resDist1">1154 m</span></div>
             <div>Dist. desde P.O.2: <span class="text-cyan-300 font-semibold" id="resDist2">1024 m</span></div>
+          </div>
+
+          <!-- /SHOWLOCATION ESTIMADO DEL BLANCO -->
+          <div class="p-2 bg-slate-950/80 rounded border border-red-500/30 flex items-center justify-between gap-2 text-[10px] mono">
+            <div class="truncate">
+              <span class="text-red-400 font-bold block">🛰️ /showlocation Reconstruido del Blanco:</span>
+              <span id="targetShowLocText" class="text-slate-300 font-mono select-all truncate">Coordinates: x:... y:... z:...</span>
+            </div>
+            <button type="button" id="btnCopyTargetShowLoc" class="px-2.5 py-1 bg-red-600/30 hover:bg-red-600/50 text-red-200 border border-red-500/50 rounded font-bold text-[10px] uppercase tracking-wider shrink-0 transition flex items-center gap-1 active:scale-95" title="Copiar /showlocation del blanco al portapapeles">
+              📋 Copiar
+            </button>
           </div>
           
           <!-- BOTÓN GUARDAR BLANCO ACTUAL -->
@@ -550,6 +665,54 @@
     }
 
     // =========================================================
+    // PARSEADOR Y CALCULADORA DE TELEMETRÍA /SHOWLOCATION
+    // =========================================================
+    function getTargetShowLocation(targetX, targetY) {
+      const rawShip = (document.getElementById('po1LocShip') && document.getElementById('po1LocShip').value) ||
+                      (document.getElementById('po2LocShip') && document.getElementById('po2LocShip').value) || '';
+      const shipParsed = parseShowLocation(rawShip);
+      if (shipParsed) {
+        const tgtX = shipParsed.x + targetX;
+        const tgtY = shipParsed.y + targetY;
+        const tgtZ = shipParsed.z;
+        return `Coordinates: x:${tgtX.toFixed(6)} y:${tgtY.toFixed(6)} z:${tgtZ.toFixed(6)}`;
+      }
+      return `Coordinates: x:${targetX.toFixed(6)} y:${targetY.toFixed(6)} z:0.000000`;
+    }
+
+    function parseShowLocation(text) {
+      if (!text) return null;
+      const m = text.match(/x:\s*([\-\d.]+)\s*y:\s*([\-\d.]+)\s*z:\s*([\-\d.]+)/i);
+      if (m) {
+        return { x: parseFloat(m[1]), y: parseFloat(m[2]), z: parseFloat(m[3]) };
+      }
+      const nums = text.match(/[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?/g);
+      if (nums && nums.length >= 3) {
+        return { x: parseFloat(nums[0]), y: parseFloat(nums[1]), z: parseFloat(nums[2]) };
+      }
+      return null;
+    }
+
+    function calcFromShowLocation(shipLoc, poLoc) {
+      const dx = poLoc.x - shipLoc.x;
+      const dy = poLoc.y - shipLoc.y;
+      const dz = poLoc.z - shipLoc.z;
+      const dist3D = Math.hypot(dx, dy, dz);
+      const dist2D = Math.hypot(dx, dy);
+      const X = Math.round(dx);
+      const Y = Math.round(dy);
+      const azShip = (Math.round(Math.atan2(-dx, -dy) * 180 / Math.PI) + 360) % 360;
+      return {
+        dx: X,
+        dy: Y,
+        dz: Math.round(dz),
+        dist3D: Math.round(dist3D),
+        dist2D: Math.round(dist2D),
+        azShip
+      };
+    }
+
+    // =========================================================
     // CÁLCULOS BIDIRECCIONALES: AZIMUT A NAVE <-> COORDENADAS X,Y
     // =========================================================
     // Cuando el observador en PO1 mira a la nave (situada en [0,0]):
@@ -567,8 +730,10 @@
       if (po1DistShip) po1DistShip.value = state.po1.distShip;
       if (po1AzShip) po1AzShip.value = state.po1.azShip;
       if (sliderPo1AzShip) sliderPo1AzShip.value = state.po1.azShip;
-      if (po1ShipLabel) po1ShipLabel.textContent = `${state.po1.distShip}m // ${state.po1.azShip}° [${getCardinal(state.po1.azShip)}]`;
+            if (po1ShipLabel) po1ShipLabel.textContent = `${state.po1.distShip}m // ${state.po1.azShip}° [${getCardinal(state.po1.azShip)}]`;
       if (po1CoordsSummary) po1CoordsSummary.textContent = `[${state.po1.x > 0 ? '+' : ''}${state.po1.x}m, ${state.po1.y > 0 ? '+' : ''}${state.po1.y}m]`;
+      const po1CartVector = document.getElementById('po1CartVector');
+      if (po1CartVector) po1CartVector.textContent = `${state.po1.azShip}° // ${state.po1.distShip}m`;
 
       updateReadouts();
     }
@@ -582,11 +747,15 @@
       state.po1.distShip = Math.round(dist);
       state.po1.azShip = Math.round(az);
 
+      if (po1X && document.activeElement !== po1X) po1X.value = state.po1.x;
+      if (po1Y && document.activeElement !== po1Y) po1Y.value = state.po1.y;
       if (po1DistShip) po1DistShip.value = state.po1.distShip;
       if (po1AzShip) po1AzShip.value = state.po1.azShip;
       if (sliderPo1AzShip) sliderPo1AzShip.value = state.po1.azShip;
       if (po1ShipLabel) po1ShipLabel.textContent = `${state.po1.distShip}m // ${state.po1.azShip}° [${getCardinal(state.po1.azShip)}]`;
       if (po1CoordsSummary) po1CoordsSummary.textContent = `[${state.po1.x > 0 ? '+' : ''}${state.po1.x}m, ${state.po1.y > 0 ? '+' : ''}${state.po1.y}m]`;
+      const po1CartVector = document.getElementById('po1CartVector');
+      if (po1CartVector) po1CartVector.textContent = `${state.po1.azShip}° // ${state.po1.distShip}m`;
 
       updateReadouts();
     }
@@ -603,8 +772,10 @@
       if (po2DistShip) po2DistShip.value = state.po2.distShip;
       if (po2AzShip) po2AzShip.value = state.po2.azShip;
       if (sliderPo2AzShip) sliderPo2AzShip.value = state.po2.azShip;
-      if (po2ShipLabel) po2ShipLabel.textContent = `${state.po2.distShip}m // ${state.po2.azShip}° [${getCardinal(state.po2.azShip)}]`;
+            if (po2ShipLabel) po2ShipLabel.textContent = `${state.po2.distShip}m // ${state.po2.azShip}° [${getCardinal(state.po2.azShip)}]`;
       if (po2CoordsSummary) po2CoordsSummary.textContent = `[${state.po2.x > 0 ? '+' : ''}${state.po2.x}m, ${state.po2.y > 0 ? '+' : ''}${state.po2.y}m]`;
+      const po2CartVector = document.getElementById('po2CartVector');
+      if (po2CartVector) po2CartVector.textContent = `${state.po2.azShip}° // ${state.po2.distShip}m`;
 
       updateReadouts();
     }
@@ -617,11 +788,15 @@
       state.po2.distShip = Math.round(dist);
       state.po2.azShip = Math.round(az);
 
+      if (po2X && document.activeElement !== po2X) po2X.value = state.po2.x;
+      if (po2Y && document.activeElement !== po2Y) po2Y.value = state.po2.y;
       if (po2DistShip) po2DistShip.value = state.po2.distShip;
       if (po2AzShip) po2AzShip.value = state.po2.azShip;
       if (sliderPo2AzShip) sliderPo2AzShip.value = state.po2.azShip;
       if (po2ShipLabel) po2ShipLabel.textContent = `${state.po2.distShip}m // ${state.po2.azShip}° [${getCardinal(state.po2.azShip)}]`;
       if (po2CoordsSummary) po2CoordsSummary.textContent = `[${state.po2.x > 0 ? '+' : ''}${state.po2.x}m, ${state.po2.y > 0 ? '+' : ''}${state.po2.y}m]`;
+      const po2CartVector = document.getElementById('po2CartVector');
+      if (po2CartVector) po2CartVector.textContent = `${state.po2.azShip}° // ${state.po2.distShip}m`;
 
       updateReadouts();
     }
@@ -695,6 +870,10 @@
         if (resVector) resVector.textContent = `${azLZ}° [${getCardinal(azLZ)}] // ${distLZ}m`;
         if (resDist1) resDist1.textContent = `${Math.round(state.target.dist1)} m`;
         if (resDist2) resDist2.textContent = `${Math.round(state.target.dist2)} m`;
+
+        const targetShowLocText = document.getElementById('targetShowLocText');
+        const currentTgtShowLoc = getTargetShowLocation(tx, ty);
+        if (targetShowLocText) targetShowLocText.textContent = currentTgtShowLoc;
 
         if (solutionStatus) {
           solutionStatus.textContent = 'BLANCO FIJADO (LOCK)';
@@ -783,6 +962,7 @@
         dist2: Math.round(state.target.dist2),
         az1: state.po1.az,
         az2: state.po2.az,
+        showLocation: getTargetShowLocation(tx, ty),
         timestamp: Date.now()
       };
 
@@ -839,7 +1019,9 @@
         `• Total Objetivos Fijados: ${state.savedTargets.length}\n\n`;
 
       state.savedTargets.forEach((t, i) => {
+        const locStr = t.showLocation || getTargetShowLocation(t.x, t.y);
         report += `[BLANCO #${i + 1}] ${t.name}\n` +
+          `  - /showlocation: ${locStr}\n` +
           `  - Posición Relativa: X: ${t.x > 0 ? '+' : ''}${t.x}m, Y: ${t.y > 0 ? '+' : ''}${t.y}m\n` +
           `  - Vector desde Nave/Base: Rumbo ${t.azLZ}° [${getCardinal(t.azLZ)}] a ${t.distLZ} metros\n` +
           `  - Distancia P.O.1: ${t.dist1}m (Az. ${t.az1}°)\n` +
@@ -871,14 +1053,18 @@
       state.savedTargets.forEach((t, idx) => {
         html += `
           <div class="bg-slate-950/80 border border-red-500/30 rounded-lg p-2 text-xs mono flex items-center justify-between gap-2 hover:border-red-500/60 transition">
-            <div class="flex items-center gap-2 overflow-hidden">
+            <div class="flex items-center gap-2 overflow-hidden flex-grow">
               <span class="w-5 h-5 rounded-full bg-red-600/40 text-red-200 border border-red-500/50 flex items-center justify-center font-bold text-[10px] shrink-0">T${idx + 1}</span>
-              <div class="truncate">
+              <div class="truncate flex-grow">
                 <div class="text-white font-bold text-[11px] truncate">${t.name}</div>
                 <div class="text-[10px] text-slate-400">Nave: ${t.azLZ}° // ${t.distLZ}m &bull; [X:${t.x > 0 ? '+' : ''}${t.x}m, Y:${t.y > 0 ? '+' : ''}${t.y}m]</div>
+                <div class="text-[9px] text-red-400/90 truncate font-mono select-all">🛰️ ${t.showLocation || getTargetShowLocation(t.x, t.y)}</div>
               </div>
             </div>
             <div class="flex items-center gap-1 shrink-0">
+              <button type="button" onclick="copySavedTargetLoc('${t.id}')" class="px-2 py-0.5 bg-red-950/70 hover:bg-red-900/90 text-red-300 border border-red-500/40 rounded text-[10px] font-bold flex items-center gap-1 transition" title="Copiar /showlocation de este blanco">
+                📋 /showlocation
+              </button>
               <button type="button" onclick="focusSavedTarget('${t.id}')" class="px-2 py-0.5 bg-cyan-950/60 hover:bg-cyan-900/80 text-cyan-300 border border-cyan-500/40 rounded text-[10px] font-bold" title="Cargar azimuts de este objetivo">
                 Enfocar
               </button>
@@ -891,6 +1077,21 @@
       });
       savedTargetsList.innerHTML = html;
     }
+    function copySavedTargetLoc(id) {
+      const tgt = state.savedTargets.find(t => t.id === id);
+      if (!tgt) return;
+      const locText = tgt.showLocation || getTargetShowLocation(tgt.x, tgt.y);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(locText).then(() => {
+          showToast(`🛰️ /showlocation de «${tgt.name}» copiado`);
+        }).catch(() => {
+          prompt('Copia el /showlocation del blanco:', locText);
+        });
+      } else {
+        prompt('Copia el /showlocation del blanco:', locText);
+      }
+    }
+    window.copySavedTargetLoc = copySavedTargetLoc;
     window.deleteSavedTarget = deleteSavedTarget;
     window.focusSavedTarget = focusSavedTarget;
 
@@ -1193,6 +1394,182 @@
       updatePo2FromCartesian(state.po2.x, parseFloat(e.target.value) || 0);
     });
 
+    // =========================================================================
+    // METODOLOGÍAS DE FIJACIÓN DE PUESTOS (POLAR, CARTESIANO, /SHOWLOCATION)
+    // =========================================================================
+    // P.O.1 Elementos de Metodología
+    const btnPo1MethodPolar = document.getElementById('btnPo1MethodPolar');
+    const btnPo1MethodCart = document.getElementById('btnPo1MethodCart');
+    const btnPo1MethodLoc = document.getElementById('btnPo1MethodLoc');
+    const po1SubPolar = document.getElementById('po1SubPolar');
+    const po1SubCart = document.getElementById('po1SubCart');
+    const po1SubLoc = document.getElementById('po1SubLoc');
+
+    const po1LocShip = document.getElementById('po1LocShip');
+    const po1LocPO = document.getElementById('po1LocPO');
+    const btnPastePo1Ship = document.getElementById('btnPastePo1Ship');
+    const btnPastePo1PO = document.getElementById('btnPastePo1PO');
+    const btnApplyPo1Loc = document.getElementById('btnApplyPo1Loc');
+    const po1LocFeedback = document.getElementById('po1LocFeedback');
+
+    function setPo1Method(method) {
+      if (!btnPo1MethodPolar || !btnPo1MethodCart || !btnPo1MethodLoc) return;
+      const allBtns = [btnPo1MethodPolar, btnPo1MethodCart, btnPo1MethodLoc];
+      allBtns.forEach(b => {
+        b.className = 'py-1 px-1 rounded font-bold text-slate-400 hover:text-white transition';
+      });
+      if (po1SubPolar) po1SubPolar.classList.add('hidden');
+      if (po1SubCart) po1SubCart.classList.add('hidden');
+      if (po1SubLoc) po1SubLoc.classList.add('hidden');
+
+      if (method === 'polar') {
+        btnPo1MethodPolar.className = 'py-1 px-1 rounded font-bold bg-emerald-500 text-slate-950 transition';
+        if (po1SubPolar) po1SubPolar.classList.remove('hidden');
+      } else if (method === 'cart') {
+        btnPo1MethodCart.className = 'py-1 px-1 rounded font-bold bg-emerald-500 text-slate-950 transition';
+        if (po1SubCart) po1SubCart.classList.remove('hidden');
+      } else if (method === 'loc') {
+        btnPo1MethodLoc.className = 'py-1 px-1 rounded font-bold bg-emerald-500 text-slate-950 transition';
+        if (po1SubLoc) po1SubLoc.classList.remove('hidden');
+      }
+    }
+
+    if (btnPo1MethodPolar) btnPo1MethodPolar.addEventListener('click', () => setPo1Method('polar'));
+    if (btnPo1MethodCart) btnPo1MethodCart.addEventListener('click', () => setPo1Method('cart'));
+    if (btnPo1MethodLoc) btnPo1MethodLoc.addEventListener('click', () => setPo1Method('loc'));
+
+    // P.O.2 Elementos de Metodología
+    const btnPo2MethodPolar = document.getElementById('btnPo2MethodPolar');
+    const btnPo2MethodCart = document.getElementById('btnPo2MethodCart');
+    const btnPo2MethodLoc = document.getElementById('btnPo2MethodLoc');
+    const po2SubPolar = document.getElementById('po2SubPolar');
+    const po2SubCart = document.getElementById('po2SubCart');
+    const po2SubLoc = document.getElementById('po2SubLoc');
+
+    const po2LocShip = document.getElementById('po2LocShip');
+    const po2LocPO = document.getElementById('po2LocPO');
+    const btnPastePo2Ship = document.getElementById('btnPastePo2Ship');
+    const btnPastePo2PO = document.getElementById('btnPastePo2PO');
+    const btnApplyPo2Loc = document.getElementById('btnApplyPo2Loc');
+    const po2LocFeedback = document.getElementById('po2LocFeedback');
+
+    function setPo2Method(method) {
+      if (!btnPo2MethodPolar || !btnPo2MethodCart || !btnPo2MethodLoc) return;
+      const allBtns = [btnPo2MethodPolar, btnPo2MethodCart, btnPo2MethodLoc];
+      allBtns.forEach(b => {
+        b.className = 'py-1 px-1 rounded font-bold text-slate-400 hover:text-white transition';
+      });
+      if (po2SubPolar) po2SubPolar.classList.add('hidden');
+      if (po2SubCart) po2SubCart.classList.add('hidden');
+      if (po2SubLoc) po2SubLoc.classList.add('hidden');
+
+      if (method === 'polar') {
+        btnPo2MethodPolar.className = 'py-1 px-1 rounded font-bold bg-cyan-500 text-slate-950 transition';
+        if (po2SubPolar) po2SubPolar.classList.remove('hidden');
+      } else if (method === 'cart') {
+        btnPo2MethodCart.className = 'py-1 px-1 rounded font-bold bg-cyan-500 text-slate-950 transition';
+        if (po2SubCart) po2SubCart.classList.remove('hidden');
+      } else if (method === 'loc') {
+        btnPo2MethodLoc.className = 'py-1 px-1 rounded font-bold bg-cyan-500 text-slate-950 transition';
+        if (po2SubLoc) po2SubLoc.classList.remove('hidden');
+      }
+    }
+
+    if (btnPo2MethodPolar) btnPo2MethodPolar.addEventListener('click', () => setPo2Method('polar'));
+    if (btnPo2MethodCart) btnPo2MethodCart.addEventListener('click', () => setPo2Method('cart'));
+    if (btnPo2MethodLoc) btnPo2MethodLoc.addEventListener('click', () => setPo2Method('loc'));
+
+    // Pegado inteligente con sincronización de Nave
+    function handlePasteLocation(inputEl, syncPartnerEl) {
+      if (!inputEl) return;
+      if (navigator.clipboard && navigator.clipboard.readText) {
+        navigator.clipboard.readText().then(text => {
+          if (text && text.trim()) {
+            inputEl.value = text.trim();
+            if (syncPartnerEl) syncPartnerEl.value = text.trim();
+            showToast('Coordenadas /showlocation pegadas');
+          } else {
+            const manual = prompt('Introduce /showlocation (Coordinates: x:... y:... z:...):', inputEl.value || '');
+            if (manual && manual.trim()) {
+              inputEl.value = manual.trim();
+              if (syncPartnerEl) syncPartnerEl.value = manual.trim();
+            }
+          }
+        }).catch(() => {
+          const manual = prompt('Introduce /showlocation (Coordinates: x:... y:... z:...):', inputEl.value || '');
+          if (manual && manual.trim()) {
+            inputEl.value = manual.trim();
+            if (syncPartnerEl) syncPartnerEl.value = manual.trim();
+          }
+        });
+      } else {
+        const manual = prompt('Introduce /showlocation (Coordinates: x:... y:... z:...):', inputEl.value || '');
+        if (manual && manual.trim()) {
+          inputEl.value = manual.trim();
+          if (syncPartnerEl) syncPartnerEl.value = manual.trim();
+        }
+      }
+    }
+
+    if (btnPastePo1Ship) btnPastePo1Ship.addEventListener('click', () => handlePasteLocation(po1LocShip, po2LocShip));
+    if (btnPastePo1PO) btnPastePo1PO.addEventListener('click', () => handlePasteLocation(po1LocPO, null));
+    if (btnPastePo2Ship) btnPastePo2Ship.addEventListener('click', () => handlePasteLocation(po2LocShip, po1LocShip));
+    if (btnPastePo2PO) btnPastePo2PO.addEventListener('click', () => handlePasteLocation(po2LocPO, null));
+
+    // Sincronización manual en evento input de la Nave
+    if (po1LocShip && po2LocShip) {
+      po1LocShip.addEventListener('input', (e) => {
+        po2LocShip.value = e.target.value;
+      });
+      po2LocShip.addEventListener('input', (e) => {
+        po1LocShip.value = e.target.value;
+      });
+    }
+
+    // Aplicar telemetría P.O.1
+    if (btnApplyPo1Loc) {
+      btnApplyPo1Loc.addEventListener('click', () => {
+        const shipParsed = parseShowLocation(po1LocShip.value);
+        const poParsed = parseShowLocation(po1LocPO.value);
+        if (!shipParsed) {
+          alert('Formato no válido en /showlocation de la Nave. Debe incluir "Coordinates: x:... y:... z:...".');
+          return;
+        }
+        if (!poParsed) {
+          alert('Formato no válido en /showlocation de P.O.1. Debe incluir "Coordinates: x:... y:... z:...".');
+          return;
+        }
+        const res = calcFromShowLocation(shipParsed, poParsed);
+        updatePo1FromCartesian(res.dx, res.dy);
+        if (po1LocFeedback) {
+          po1LocFeedback.innerHTML = `✅ <strong>P.O.1 Fijado:</strong> ΔX: ${res.dx > 0 ? '+' : ''}${res.dx}m | ΔY: ${res.dy > 0 ? '+' : ''}${res.dy}m | Alt ΔZ: ${res.dz > 0 ? '+' : ''}${res.dz}m | Dist 3D: ${res.dist3D}m | Az Nave: ${res.azShip}°`;
+        }
+        showToast(`P.O. 1 Alfa fijado por /showlocation (${res.dist3D}m // ${res.azShip}°)`);
+      });
+    }
+
+    // Aplicar telemetría P.O.2
+    if (btnApplyPo2Loc) {
+      btnApplyPo2Loc.addEventListener('click', () => {
+        const shipParsed = parseShowLocation(po2LocShip.value);
+        const poParsed = parseShowLocation(po2LocPO.value);
+        if (!shipParsed) {
+          alert('Formato no válido en /showlocation de la Nave. Debe incluir "Coordinates: x:... y:... z:...".');
+          return;
+        }
+        if (!poParsed) {
+          alert('Formato no válido en /showlocation de P.O.2. Debe incluir "Coordinates: x:... y:... z:...".');
+          return;
+        }
+        const res = calcFromShowLocation(shipParsed, poParsed);
+        updatePo2FromCartesian(res.dx, res.dy);
+        if (po2LocFeedback) {
+          po2LocFeedback.innerHTML = `✅ <strong>P.O.2 Fijado:</strong> ΔX: ${res.dx > 0 ? '+' : ''}${res.dx}m | ΔY: ${res.dy > 0 ? '+' : ''}${res.dy}m | Alt ΔZ: ${res.dz > 0 ? '+' : ''}${res.dz}m | Dist 3D: ${res.dist3D}m | Az Nave: ${res.azShip}°`;
+        }
+        showToast(`P.O. 2 Bravo fijado por /showlocation (${res.dist3D}m // ${res.azShip}°)`);
+      });
+    }
+
     // Guardado de Objetivos
     if (btnSaveTarget) {
       btnSaveTarget.addEventListener('click', saveCurrentTarget);
@@ -1202,6 +1579,27 @@
     }
     if (btnClearTargets) {
       btnClearTargets.addEventListener('click', clearAllSavedTargets);
+    }
+    const btnCopyTargetShowLoc = document.getElementById('btnCopyTargetShowLoc');
+    if (btnCopyTargetShowLoc) {
+      btnCopyTargetShowLoc.addEventListener('click', () => {
+        if (!state.target || !state.target.valid) {
+          alert('Debes tener una solución de blanco activa para copiar su /showlocation.');
+          return;
+        }
+        const tx = Math.round(state.target.x);
+        const ty = Math.round(state.target.y);
+        const loc = getTargetShowLocation(tx, ty);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(loc).then(() => {
+            showToast('🛰️ /showlocation del Blanco copiado');
+          }).catch(() => {
+            prompt('Copia el /showlocation del blanco:', loc);
+          });
+        } else {
+          prompt('Copia el /showlocation del blanco:', loc);
+        }
+      });
     }
 
     function updateScaleIndicator() {
@@ -1299,12 +1697,24 @@
       if (val === 'minlo') {
         state.po1 = { x: -650, y: 400, az: 140 };
         state.po2 = { x: 750, y: 300, az: 220 };
+        if (po1LocShip) po1LocShip.value = 'Coordinates: x:-18930700000.000000 y:-26100580000.000000 z:220000.000000';
+        if (po1LocPO) po1LocPO.value = 'Coordinates: x:-18930700650.000000 y:-26100579600.000000 z:220000.000000';
+        if (po2LocShip) po2LocShip.value = 'Coordinates: x:-18930700000.000000 y:-26100580000.000000 z:220000.000000';
+        if (po2LocPO) po2LocPO.value = 'Coordinates: x:-18930699250.000000 y:-26100579700.000000 z:220000.000000';
       } else if (val === 'cutter') {
         state.po1 = { x: -900, y: 550, az: 135 };
         state.po2 = { x: 500, y: -700, az: 335 };
+        if (po1LocShip) po1LocShip.value = 'Coordinates: x:12845000000.000000 y:-3492000000.000000 z:110000.000000';
+        if (po1LocPO) po1LocPO.value = 'Coordinates: x:12844999100.000000 y:-3491999450.000000 z:110000.000000';
+        if (po2LocShip) po2LocShip.value = 'Coordinates: x:12845000000.000000 y:-3492000000.000000 z:110000.000000';
+        if (po2LocPO) po2LocPO.value = 'Coordinates: x:12845000500.000000 y:-3492000700.000000 z:110000.000000';
       } else if (val === 'kareah') {
         state.po1 = { x: -300, y: 200, az: 120 };
         state.po2 = { x: 350, y: 250, az: 240 };
+        if (po1LocShip) po1LocShip.value = 'Coordinates: x:-18928000000.000000 y:-26105000000.000000 z:180000.000000';
+        if (po1LocPO) po1LocPO.value = 'Coordinates: x:-18928000300.000000 y:-26104999800.000000 z:180000.000000';
+        if (po2LocShip) po2LocShip.value = 'Coordinates: x:-18928000000.000000 y:-26105000000.000000 z:180000.000000';
+        if (po2LocPO) po2LocPO.value = 'Coordinates: x:-18927999650.000000 y:-26104999750.000000 z:180000.000000';
       }
       sliderAz1.value = state.po1.az;
       sliderAz2.value = state.po2.az;
