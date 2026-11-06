@@ -277,7 +277,7 @@
                       📋 Pegar Nave
                     </button>
                   </div>
-                  <input type="text" id="po1LocShip" value="Coordinates: x:-18930700000.000000 y:-26100580000.000000 z:220000.000000" placeholder="Coordinates: x:... y:... z:..." class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 font-mono">
+                  <input type="text" id="po1LocShip" value="Coordinates: x:-18930700000.000000 y:-2610058000.000000 z:223600.000000" placeholder="Coordinates: x:... y:... z:..." class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 font-mono">
                 </div>
 
                 <div>
@@ -287,7 +287,7 @@
                       📋 Pegar P.O.1
                     </button>
                   </div>
-                  <input type="text" id="po1LocPO" value="Coordinates: x:-18930700650.000000 y:-26100579600.000000 z:220000.000000" placeholder="Coordinates: x:... y:... z:..." class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 font-mono">
+                  <input type="text" id="po1LocPO" value="Coordinates: x:-18930699402.875847 y:-2610058367.211623 z:223862.587707" placeholder="Coordinates: x:... y:... z:..." class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 font-mono">
                 </div>
 
                 <div class="flex gap-2 pt-0.5">
@@ -404,7 +404,7 @@
                       📋 Pegar Nave
                     </button>
                   </div>
-                  <input type="text" id="po2LocShip" value="Coordinates: x:-18930700000.000000 y:-26100580000.000000 z:220000.000000" placeholder="Coordinates: x:... y:... z:..." class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 font-mono">
+                  <input type="text" id="po2LocShip" value="Coordinates: x:-18930700000.000000 y:-2610058000.000000 z:223600.000000" placeholder="Coordinates: x:... y:... z:..." class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 font-mono">
                 </div>
 
                 <div>
@@ -414,7 +414,7 @@
                       📋 Pegar P.O.2
                     </button>
                   </div>
-                  <input type="text" id="po2LocPO" value="Coordinates: x:-18930699250.000000 y:-26100579700.000000 z:220000.000000" placeholder="Coordinates: x:... y:... z:..." class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 font-mono">
+                  <input type="text" id="po2LocPO" value="Coordinates: x:-18930700215.276493 y:-2610058754.442619 z:223796.940780" placeholder="Coordinates: x:... y:... z:..." class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-[11px] text-slate-200 font-mono">
                 </div>
 
                 <div class="flex gap-2 pt-0.5">
@@ -667,11 +667,82 @@
     // =========================================================
     // PARSEADOR Y CALCULADORA DE TELEMETRÍA /SHOWLOCATION
     // =========================================================
+    const PLANETARY_BODIES_STANTON = [
+      // Stanton
+      { name: 'Hurston', x: 12850457093, y: 0, z: 0, r: 1000000 },
+      { name: 'Arial', x: 12892673309, y: -31476129, z: 0, r: 344500 },
+      { name: 'Aberdeen', x: 12905757636, y: 40955551, z: 0, r: 274000 },
+      { name: 'Magda', x: 12792686359, y: -74464581, z: 0, r: 340830 },
+      { name: 'Ita', x: 12830194716, y: 114913609, z: 0, r: 325000 },
+      { name: 'Crusader', x: -18962176000, y: -2664960000, z: 0, r: 7450010 },
+      { name: 'Cellin', x: -18987611119, y: -2709009661, z: 0, r: 260000 },
+      { name: 'Daymar', x: -18930539540, y: -2610158765, z: 0, r: 295000 },
+      { name: 'Yela', x: -19022916799, y: -2613996152, z: 0, r: 313000 },
+      { name: 'ArcCorp', x: 18587664740, y: -22151916920, z: 0, r: 800000 },
+      { name: 'Lyria', x: 18703607172, y: -22121650134, z: 0, r: 223000 },
+      { name: 'Wala', x: 18379649310, y: -22000466768, z: 0, r: 283000 },
+      { name: 'microTech', x: 22462085252, y: 37185744965, z: 0, r: 1000000 },
+      { name: 'Calliope', x: 22525801197, y: 37202649251, z: 0, r: 240000 },
+      { name: 'Clio', x: 22447442284, y: 37280469855, z: 0, r: 337170 },
+      { name: 'Euterpe', x: 22436060769, y: 37290366365, z: 0, r: 213000 },
+      // Pyro
+      { name: 'Pyro I', x: 8450000000, y: -12200000000, z: 0, r: 280000 },
+      { name: 'Pyro II (Monox)', x: 19800000000, y: 15400000000, z: 0, r: 520000 },
+      { name: 'Pyro III (Bloom)', x: -38500000000, y: 27100000000, z: 0, r: 610000 },
+      { name: 'Pyro IV', x: 62300000000, y: -45800000000, z: 0, r: 310000 },
+      { name: 'Pyro V', x: 64800000000, y: -48200000000, z: 0, r: 8500000 },
+      { name: 'Ignis', x: 64845000000, y: -48168000000, z: 0, r: 190000 },
+      { name: 'Vatra', x: 64742000000, y: -48159000000, z: 0, r: 220000 },
+      { name: 'Adir', x: 64872000000, y: -48251000000, z: 0, r: 240000 },
+      { name: 'Fairo', x: 64715000000, y: -48262000000, z: 0, r: 200000 },
+      { name: 'Fyr', x: 64898000000, y: -48126000000, z: 0, r: 180000 },
+      { name: 'Vuur', x: 64690000000, y: -48115000000, z: 0, r: 210000 },
+      { name: 'Pyro VI (Terminus)', x: -84200000000, y: -72100000000, z: 0, r: 650000 },
+      // Nyx
+      { name: 'Delamar', x: -10531703478, y: 18241438664, z: 0, r: 75000 },
+      { name: 'Nyx I', x: 14200000000, y: -8500000000, z: 0, r: 420000 },
+      { name: 'Nyx II', x: -28900000000, y: -22400000000, z: 0, r: 680000 },
+      { name: 'Nyx III', x: 55000000000, y: 48000000000, z: 0, r: 3200000 }
+    ];
+
+    function getLocalTangentFrame(loc) {
+      if (!loc) return null;
+      let best = null;
+      let minDist = Infinity;
+      for (const b of PLANETARY_BODIES_STANTON) {
+        const d = Math.hypot(loc.x - b.x, loc.y - b.y, loc.z - b.z);
+        if (d >= b.r * 0.5 && d <= b.r * 2.5 && d < minDist) {
+          minDist = d;
+          best = b;
+        }
+      }
+      if (!best) return null;
+      const rx = loc.x - best.x;
+      const ry = loc.y - best.y;
+      const rz = loc.z - best.z;
+      const rNorm = Math.hypot(rx, ry, rz) || 1;
+      const latRad = Math.asin(Math.max(-1, Math.min(1, rz / rNorm)));
+      const lonRad = Math.atan2(ry, rx);
+      return {
+        body: best,
+        east: { x: -Math.sin(lonRad), y: Math.cos(lonRad), z: 0 },
+        north: { x: -Math.sin(latRad) * Math.cos(lonRad), y: -Math.sin(latRad) * Math.sin(lonRad), z: Math.cos(latRad) },
+        up: { x: Math.cos(latRad) * Math.cos(lonRad), y: Math.cos(latRad) * Math.sin(lonRad), z: Math.sin(latRad) }
+      };
+    }
+
     function getTargetShowLocation(targetX, targetY) {
       const rawShip = (document.getElementById('po1LocShip') && document.getElementById('po1LocShip').value) ||
                       (document.getElementById('po2LocShip') && document.getElementById('po2LocShip').value) || '';
       const shipParsed = parseShowLocation(rawShip);
       if (shipParsed) {
+        const frame = getLocalTangentFrame(shipParsed);
+        if (frame) {
+          const tgtX = shipParsed.x + targetX * frame.east.x + targetY * frame.north.x;
+          const tgtY = shipParsed.y + targetX * frame.east.y + targetY * frame.north.y;
+          const tgtZ = shipParsed.z + targetX * frame.east.z + targetY * frame.north.z;
+          return `Coordinates: x:${tgtX.toFixed(6)} y:${tgtY.toFixed(6)} z:${tgtZ.toFixed(6)}`;
+        }
         const tgtX = shipParsed.x + targetX;
         const tgtY = shipParsed.y + targetY;
         const tgtZ = shipParsed.z;
@@ -698,14 +769,34 @@
       const dy = poLoc.y - shipLoc.y;
       const dz = poLoc.z - shipLoc.z;
       const dist3D = Math.hypot(dx, dy, dz);
+      const frame = getLocalTangentFrame(shipLoc);
+      if (frame) {
+        const dE = dx * frame.east.x + dy * frame.east.y + dz * frame.east.z;
+        const dN = dx * frame.north.x + dy * frame.north.y + dz * frame.north.z;
+        const dU = dx * frame.up.x + dy * frame.up.y + dz * frame.up.z;
+        const dist2D = Math.hypot(dE, dN);
+        const X = Math.round(dE) || 0;
+        const Y = Math.round(dN) || 0;
+        const azShip = (Math.round(Math.atan2(-dE, -dN) * 180 / Math.PI) + 360) % 360;
+        const pitchShip = Math.round(Math.atan2(-dU, dist2D || 1) * 180 / Math.PI) || 0;
+        return {
+          dx: X,
+          dy: Y,
+          dz: Math.round(dU) || 0,
+          dist3D: Math.round(dist3D),
+          dist2D: Math.round(dist2D),
+          azShip,
+          pitchShip
+        };
+      }
       const dist2D = Math.hypot(dx, dy);
-      const X = Math.round(dx);
-      const Y = Math.round(dy);
+      const X = Math.round(dx) || 0;
+      const Y = Math.round(dy) || 0;
       const azShip = (Math.round(Math.atan2(-dx, -dy) * 180 / Math.PI) + 360) % 360;
       return {
         dx: X,
         dy: Y,
-        dz: Math.round(dz),
+        dz: Math.round(dz) || 0,
         dist3D: Math.round(dist3D),
         dist2D: Math.round(dist2D),
         azShip
@@ -1691,30 +1782,48 @@
       }
     });
 
-    // Presets con actualización de azimut a la nave
+    // Presets con actualización de azimut a la nave y coordenadas /showlocation reales sobre el plano tangente local (ENU)
     document.getElementById('presetSelect').addEventListener('change', (e) => {
       const val = e.target.value;
       if (val === 'minlo') {
         state.po1 = { x: -650, y: 400, az: 140 };
         state.po2 = { x: 750, y: 300, az: 220 };
-        if (po1LocShip) po1LocShip.value = 'Coordinates: x:-18930700000.000000 y:-26100580000.000000 z:220000.000000';
-        if (po1LocPO) po1LocPO.value = 'Coordinates: x:-18930700650.000000 y:-26100579600.000000 z:220000.000000';
-        if (po2LocShip) po2LocShip.value = 'Coordinates: x:-18930700000.000000 y:-26100580000.000000 z:220000.000000';
-        if (po2LocPO) po2LocPO.value = 'Coordinates: x:-18930699250.000000 y:-26100579700.000000 z:220000.000000';
+        // Daymar (x: -18930539540, y: -2610158765, z: 0, r: 295000m) -> Superficie a r ≈ 295 km
+        const shipLoc = { x: -18930700000, y: -2610058000, z: 223600 };
+        const f = getLocalTangentFrame(shipLoc);
+        const p1 = { x: shipLoc.x + (-650)*f.east.x + 400*f.north.x, y: shipLoc.y + (-650)*f.east.y + 400*f.north.y, z: shipLoc.z + (-650)*f.east.z + 400*f.north.z };
+        const p2 = { x: shipLoc.x + 750*f.east.x + 300*f.north.x, y: shipLoc.y + 750*f.east.y + 300*f.north.y, z: shipLoc.z + 750*f.east.z + 300*f.north.z };
+        const sStr = `Coordinates: x:${shipLoc.x.toFixed(6)} y:${shipLoc.y.toFixed(6)} z:${shipLoc.z.toFixed(6)}`;
+        if (po1LocShip) po1LocShip.value = sStr;
+        if (po1LocPO) po1LocPO.value = `Coordinates: x:${p1.x.toFixed(6)} y:${p1.y.toFixed(6)} z:${p1.z.toFixed(6)}`;
+        if (po2LocShip) po2LocShip.value = sStr;
+        if (po2LocPO) po2LocPO.value = `Coordinates: x:${p2.x.toFixed(6)} y:${p2.y.toFixed(6)} z:${p2.z.toFixed(6)}`;
       } else if (val === 'cutter') {
         state.po1 = { x: -900, y: 550, az: 135 };
         state.po2 = { x: 500, y: -700, az: 335 };
-        if (po1LocShip) po1LocShip.value = 'Coordinates: x:12845000000.000000 y:-3492000000.000000 z:110000.000000';
-        if (po1LocPO) po1LocPO.value = 'Coordinates: x:12844999100.000000 y:-3491999450.000000 z:110000.000000';
-        if (po2LocShip) po2LocShip.value = 'Coordinates: x:12845000000.000000 y:-3492000000.000000 z:110000.000000';
-        if (po2LocPO) po2LocPO.value = 'Coordinates: x:12845000500.000000 y:-3492000700.000000 z:110000.000000';
+        // Hurston (x: 12850457093, y: 0, z: 0, r: 1000000m) -> Superficie real (punto Hurston S1DC06 / Cutter's Rig)
+        const shipLoc = { x: 12850604156.343859, y: -704080.014932, z: 697379.538349 };
+        const f = getLocalTangentFrame(shipLoc);
+        const p1 = { x: shipLoc.x + (-900)*f.east.x + 550*f.north.x, y: shipLoc.y + (-900)*f.east.y + 550*f.north.y, z: shipLoc.z + (-900)*f.east.z + 550*f.north.z };
+        const p2 = { x: shipLoc.x + 500*f.east.x + (-700)*f.north.x, y: shipLoc.y + 500*f.east.y + (-700)*f.north.y, z: shipLoc.z + 500*f.east.z + (-700)*f.north.z };
+        const sStr = `Coordinates: x:${shipLoc.x.toFixed(6)} y:${shipLoc.y.toFixed(6)} z:${shipLoc.z.toFixed(6)}`;
+        if (po1LocShip) po1LocShip.value = sStr;
+        if (po1LocPO) po1LocPO.value = `Coordinates: x:${p1.x.toFixed(6)} y:${p1.y.toFixed(6)} z:${p1.z.toFixed(6)}`;
+        if (po2LocShip) po2LocShip.value = sStr;
+        if (po2LocPO) po2LocPO.value = `Coordinates: x:${p2.x.toFixed(6)} y:${p2.y.toFixed(6)} z:${p2.z.toFixed(6)}`;
       } else if (val === 'kareah') {
         state.po1 = { x: -300, y: 200, az: 120 };
         state.po2 = { x: 350, y: 250, az: 240 };
-        if (po1LocShip) po1LocShip.value = 'Coordinates: x:-18928000000.000000 y:-26105000000.000000 z:180000.000000';
-        if (po1LocPO) po1LocPO.value = 'Coordinates: x:-18928000300.000000 y:-26104999800.000000 z:180000.000000';
-        if (po2LocShip) po2LocShip.value = 'Coordinates: x:-18928000000.000000 y:-26105000000.000000 z:180000.000000';
-        if (po2LocPO) po2LocPO.value = 'Coordinates: x:-18927999650.000000 y:-26104999750.000000 z:180000.000000';
+        // Cellin / Security Post Kareah (x: -18987611119, y: -2709009661, z: 0, r: 260000m)
+        const shipLoc = { x: -18987599499, y: -2709429500, z: 200000 };
+        const f = getLocalTangentFrame(shipLoc);
+        const p1 = { x: shipLoc.x + (-300)*f.east.x + 200*f.north.x, y: shipLoc.y + (-300)*f.east.y + 200*f.north.y, z: shipLoc.z + (-300)*f.east.z + 200*f.north.z };
+        const p2 = { x: shipLoc.x + 350*f.east.x + 250*f.north.x, y: shipLoc.y + 350*f.east.y + 250*f.north.y, z: shipLoc.z + 350*f.east.z + 250*f.north.z };
+        const sStr = `Coordinates: x:${shipLoc.x.toFixed(6)} y:${shipLoc.y.toFixed(6)} z:${shipLoc.z.toFixed(6)}`;
+        if (po1LocShip) po1LocShip.value = sStr;
+        if (po1LocPO) po1LocPO.value = `Coordinates: x:${p1.x.toFixed(6)} y:${p1.y.toFixed(6)} z:${p1.z.toFixed(6)}`;
+        if (po2LocShip) po2LocShip.value = sStr;
+        if (po2LocPO) po2LocPO.value = `Coordinates: x:${p2.x.toFixed(6)} y:${p2.y.toFixed(6)} z:${p2.z.toFixed(6)}`;
       }
       sliderAz1.value = state.po1.az;
       sliderAz2.value = state.po2.az;
