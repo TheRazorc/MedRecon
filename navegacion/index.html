@@ -2605,7 +2605,8 @@
     const terrainCache = {};
 
     // Base de datos de Intel de Flota (Local Storage)
-    let fleetPois = [
+    // Base de datos de Intel de Flota (con persistencia LocalStorage)
+    const DEFAULT_FLEET_POIS = [
       {
         id: 'poi-1',
         name: 'Filón Ricco Quantainium (46.8% - 5 Rocas)',
@@ -3523,6 +3524,27 @@ container.innerHTML = `
       tbody.innerHTML = html;
     }
 
+    ;
+
+    function loadSavedFleetPois() {
+      try {
+        const raw = localStorage.getItem('ccbe_fleet_pois_v2');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {}
+      return DEFAULT_FLEET_POIS;
+    }
+
+    let fleetPois = loadSavedFleetPois();
+
+    function saveFleetPoisStorage() {
+      try {
+        localStorage.setItem('ccbe_fleet_pois_v2', JSON.stringify(fleetPois));
+      } catch (e) {}
+    }
+
     // Render de Intel de la Flota
     function renderFleetPois() {
       const container = document.getElementById('fleet-poi-list');
@@ -3576,13 +3598,65 @@ container.innerHTML = `
     window.loadPoiRoute = function(id) {
       const poi = fleetPois.find(p => p.id === id);
       if (!poi) return;
+
+      // Si tiene posición fija en superficie de cuerpo celeste, proyectar al segundo actual
+      if (poi.containerName && poi.localX !== undefined && poi.localX !== null) {
+        let targetContainer = null;
+        let targetSystem = null;
+
+        for (const [sysName, sys] of Object.entries(SC_DATA.systems || {})) {
+          if (sys.containers && sys.containers[poi.containerName]) {
+            targetContainer = sys.containers[poi.containerName];
+            targetSystem = sysName;
+            break;
+          }
+        }
+
+        if (targetContainer) {
+          if (targetSystem && currentSystem !== targetSystem) {
+            switchSystem(targetSystem, poi.containerName);
+          }
+
+          const timeOffsetMin = parseFloat(document.getElementById('time-offset-select')?.value || 0);
+          const nowSec = (Date.now() / 1000) - (timeOffsetMin * 60);
+          const timePassed = nowSec - REFERENCE_TIME_SEC;
+          const rotSpeedDegPerSec = targetContainer.rotationSpeed > 0 ? (0.1 * (1 / targetContainer.rotationSpeed)) : 0;
+          const shardOffset = (typeof window !== 'undefined' && window.sessionShardOffset !== undefined) ? window.sessionShardOffset : (parseFloat(typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('sc_shard_offset') : 0) || 0);
+          const rotStateDeg = ((rotSpeedDegPerSec * timePassed) + (targetContainer.rotationAdjust || 0) + shardOffset) % 360;
+          const rotRad = rotStateDeg * Math.PI / 180;
+
+          // Reconstruir unrotX y unrotY en coordenadas del sistema para el segundo actual
+          const unrotX = poi.localX * Math.cos(rotRad) - poi.localY * Math.sin(rotRad);
+          const unrotY = poi.localX * Math.sin(rotRad) + poi.localY * Math.cos(rotRad);
+
+          const gx = (targetContainer.x + unrotX) * 1000;
+          const gy = (targetContainer.y + unrotY) * 1000;
+          const gz = ((targetContainer.z || 0) + (poi.localZ || 0)) * 1000;
+
+          document.getElementById('input-coords').value = `Coordinates: x:${gx.toFixed(6)} y:${gy.toFixed(6)} z:${gz.toFixed(6)}`;
+          if (poi.anchorPoi) {
+            const sel = document.getElementById('anchor-beacon-select');
+            if (sel) sel.value = poi.anchorPoi;
+          }
+          computeCurrent();
+          if (poi.body) switchMapBody(poi.body);
+          return;
+        }
+      }
+
+      // Fallback para POIs sin posición local (espacio abierto o legacy)
       document.getElementById('input-coords').value = poi.coords;
+      if (poi.anchorPoi) {
+        const sel = document.getElementById('anchor-beacon-select');
+        if (sel) sel.value = poi.anchorPoi;
+      }
       computeCurrent();
       if (poi.body) switchMapBody(poi.body);
     };
 
     window.deletePoi = function(id) {
       fleetPois = fleetPois.filter(p => p.id !== id);
+      saveFleetPoisStorage();
       renderFleetPois();
       renderMap();
     };
@@ -4249,10 +4323,22 @@ container.innerHTML = `
         return;
       }
 
-      const analysis = analyzePosition(parsed);
-      const bodyName = (analysis.type === 'body') ? analysis.container.name : 'Espacio Abierto';
-      const lat = (analysis.type === 'body') ? analysis.latDeg : null;
-      const lon = (analysis.type === 'body') ? analysis.lonDeg : null;
+      const timeOffsetMin = parseFloat(document.getElementById('time-offset-select')?.value || 0);
+      const chosenAnchor = document.getElementById('anchor-beacon-select')?.value || '';
+      const analysis = analyzePosition(parsed, { timeOffsetMin, anchorPoi: chosenAnchor });
+
+      const isBody = (analysis.type === 'body');
+      const bodyName = isBody ? analysis.container.name : 'Espacio Abierto';
+      const containerName = isBody ? analysis.container.name : null;
+      const lat = isBody ? analysis.latDeg : null;
+      const lon = isBody ? analysis.lonDeg : null;
+      const localX = isBody ? analysis.localX : null;
+      const localY = isBody ? analysis.localY : null;
+      const localZ = isBody ? analysis.localZ : null;
+      const anchorPoi = (isBody && analysis.closestPoi) ? analysis.closestPoi.name : '';
+      const distDirectKm = (isBody && analysis.closestPoi) ? analysis.closestPoi.distDirectKm : null;
+      const departureBearing = (isBody && analysis.closestPoi) ? analysis.closestPoi.departureBearing : null;
+      const reciprocalBearing = (isBody && analysis.closestPoi) ? analysis.closestPoi.reciprocalBearing : null;
 
       const now = Date.now();
       let expiresAt = null;
@@ -4266,19 +4352,28 @@ container.innerHTML = `
         category: cat,
         pilot,
         body: bodyName,
+        containerName,
+        localX,
+        localY,
+        localZ,
         coords,
-        lat, lon,
+        lat,
+        lon,
+        anchorPoi,
+        distDirectKm,
+        departureBearing,
+        reciprocalBearing,
         createdAt: now,
         expiresAt
       });
 
+      saveFleetPoisStorage();
       renderFleetPois();
       renderMap();
       document.getElementById('save-name').value = '';
-      alert('¡Ubicación registrada con éxito en CCBE Fleet Intel!');
+      alert('¡Ubicación registrada con éxito en CCBE Fleet Intel! (Fijada a la superficie planetaria permanentemente)');
     });
 
-    // Pegar Portapapeles
     document.getElementById('btn-paste').addEventListener('click', async () => {
       let text = '';
       try {
@@ -4399,6 +4494,7 @@ container.innerHTML = `
     document.getElementById('btn-purge').addEventListener('click', () => {
       const now = Date.now();
       fleetPois = fleetPois.filter(p => !p.expiresAt || p.expiresAt > now);
+      saveFleetPoisStorage();
       renderFleetPois();
       renderMap();
       alert('Puntos de interés expirados purgados correctamente.');
