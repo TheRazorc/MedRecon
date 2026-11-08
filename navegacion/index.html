@@ -3680,7 +3680,8 @@ container.innerHTML = `
       }
     }
 
-    function saveFleetPoisStorage() {
+    function saveFleetPoisStorage(pushToCloud = true) {
+      if (pushToCloud) pushCloudPois();
       // 1. Guardar en LocalStorage (compatibilidad inmediata)
       try {
         localStorage.setItem('ccbe_fleet_pois_v2', JSON.stringify(fleetPois));
@@ -3714,7 +3715,53 @@ container.innerHTML = `
     }
 
     let fleetPois = loadSavedFleetPois();
-    openFleetIndexedDB().then(() => syncFromIndexedDB());
+
+    // Sincronización en la Nube con Cloudflare KV (/api/fleet-pois)
+    async function syncCloudPois() {
+      try {
+        const res = await fetch('/api/fleet-pois', { cache: 'no-store' });
+        if (res.ok) {
+          const cloudPois = await res.json();
+          if (Array.isArray(cloudPois) && cloudPois.length > 0) {
+            const map = new Map();
+            cloudPois.forEach(p => { if (p && p.id) map.set(p.id, p); });
+            fleetPois.forEach(p => { if (p && p.id && !map.has(p.id)) map.set(p.id, p); });
+            fleetPois = Array.from(map.values());
+            saveFleetPoisStorage(false);
+            renderFleetPois();
+            updateStorageBadge('☁️ Nube Cloudflare Sincronizada (Permanente)');
+          } else if (fleetPois.length > 0) {
+            pushCloudPois();
+          }
+        }
+      } catch (e) {
+        // En entorno local o sin endpoint activo, se mantiene en IndexedDB
+      }
+    }
+
+    async function pushCloudPois() {
+      try {
+        const res = await fetch('/api/fleet-pois', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(fleetPois)
+        });
+        if (res.ok) {
+          updateStorageBadge('☁️ Nube Cloudflare Sincronizada (Permanente)');
+        }
+      } catch (e) {}
+    }
+
+    function updateStorageBadge(text) {
+      const badge = document.getElementById('storage-status-badge');
+      if (badge) {
+        badge.innerHTML = text;
+        badge.style.color = '#00ffaa';
+        badge.style.borderColor = 'rgba(0,255,170,0.5)';
+      }
+    }
+
+    openFleetIndexedDB().then(() => syncFromIndexedDB()).then(() => syncCloudPois());
 
     // Render de Intel de la Flota
     function renderFleetPois() {
