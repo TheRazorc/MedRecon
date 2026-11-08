@@ -148,8 +148,9 @@
           
           <!-- Tactical HUD Overlay Info -->
           <div class="absolute top-3 left-3 pointer-events-none text-[11px] mono bg-slate-900/80 backdrop-blur border border-slate-800 p-2 rounded-lg space-y-0.5">
-            <div class="text-emerald-400 font-bold">🟢 P.O. 1 (Alfa): <span id="hudPO1">[-650m, +400m]</span></div>
-            <div class="text-cyan-400 font-bold">🔵 P.O. 2 (Bravo): <span id="hudPO2">[+750m, +300m]</span></div>
+            <div class="text-emerald-400 font-bold" id="hudRowPO1">🟢 P.O. 1 (Alfa): <span id="hudPO1">[-650m, +400m]</span></div>
+            <div class="text-cyan-400 font-bold" id="hudRowPO2">🔵 P.O. 2 (Bravo): <span id="hudPO2">[+750m, +300m]</span></div>
+            <div class="text-amber-400 font-bold hidden" id="hudRowPolar">🔭 Telémetro Polar: <span id="hudPolar">1200m a 180°</span></div>
             <div class="text-red-400 font-bold">🔴 HVT TARGET: <span id="hudTarget">Calculando...</span></div>
           </div>
 
@@ -943,13 +944,34 @@
     function updateReadouts() {
       calculateIntersection();
 
-      if (valAz1) valAz1.textContent = `${state.po1.az}°`;
-      if (az1Label) az1Label.textContent = `${state.po1.az}° [${getCardinal(state.po1.az)}]`;
-      if (hudPO1) hudPO1.textContent = `[${Math.round(state.po1.x)}m, ${Math.round(state.po1.y)}m] // Nave: ${state.po1.distShip}m a ${state.po1.azShip}°`;
+      // Alternar visualización del HUD superior izquierdo según el modo activo
+      const hudRowPO1 = document.getElementById('hudRowPO1');
+      const hudRowPO2 = document.getElementById('hudRowPO2');
+      const hudRowPolar = document.getElementById('hudRowPolar');
+      const hudPolar = document.getElementById('hudPolar');
 
-      if (valAz2) valAz2.textContent = `${state.po2.az}°`;
-      if (az2Label) az2Label.textContent = `${state.po2.az}° [${getCardinal(state.po2.az)}]`;
-      if (hudPO2) hudPO2.textContent = `[${Math.round(state.po2.x)}m, ${Math.round(state.po2.y)}m] // Nave: ${state.po2.distShip}m a ${state.po2.azShip}°`;
+      if (state.mode === 'polar') {
+        if (hudRowPO1) hudRowPO1.classList.add('hidden');
+        if (hudRowPO2) hudRowPO2.classList.add('hidden');
+        if (hudRowPolar) {
+          hudRowPolar.classList.remove('hidden');
+          const pDist = parseFloat(document.getElementById('polarDist')?.value) || 1200;
+          const pAz = parseFloat(document.getElementById('polarAz')?.value) || 180;
+          if (hudPolar) hudPolar.textContent = Math.round(pDist) + 'm a ' + pAz + '° [' + getCardinal(pAz) + ']';
+        }
+      } else {
+        if (hudRowPO1) hudRowPO1.classList.remove('hidden');
+        if (hudRowPO2) hudRowPO2.classList.remove('hidden');
+        if (hudRowPolar) hudRowPolar.classList.add('hidden');
+
+        if (valAz1) valAz1.textContent = state.po1.az + '°';
+        if (az1Label) az1Label.textContent = state.po1.az + '° [' + getCardinal(state.po1.az) + ']';
+        if (hudPO1) hudPO1.textContent = '[' + Math.round(state.po1.x) + 'm, ' + Math.round(state.po1.y) + 'm] // Nave: ' + state.po1.distShip + 'm a ' + state.po1.azShip + '°';
+
+        if (valAz2) valAz2.textContent = state.po2.az + '°';
+        if (az2Label) az2Label.textContent = state.po2.az + '° [' + getCardinal(state.po2.az) + ']';
+        if (hudPO2) hudPO2.textContent = '[' + Math.round(state.po2.x) + 'm, ' + Math.round(state.po2.y) + 'm] // Nave: ' + state.po2.distShip + 'm a ' + state.po2.azShip + '°';
+      }
 
       if (state.target.valid) {
         const tx = Math.round(state.target.x);
@@ -974,15 +996,27 @@
         if (hudTarget) hudTarget.textContent = `[${tx}m, ${ty}m] // ${distLZ}m de Nave`;
 
         if (radioTransmissionText) {
-          radioTransmissionText.value = 
-`[MEDRECON INTEL] // HVT FIJADO POR TRIANGULACIÓN
-• Punto Cero / Nave: LZ [0,0]
-• P.O.1 Alfa: Mirando a Nave ${state.po1.distShip}m a ${state.po1.azShip}° (Az. Objetivo: ${state.po1.az}°)
-• P.O.2 Bravo: Mirando a Nave ${state.po2.distShip}m a ${state.po2.azShip}° (Az. Objetivo: ${state.po2.az}°)
-• Blanco Triangulado: X: ${tx > 0 ? '+' : ''}${tx}m, Y: ${ty > 0 ? '+' : ''}${ty}m
-• Vector de Ataque desde Nave: Rumbo ${azLZ}° [${getCardinal(azLZ)}] a ${distLZ} metros
-• Distancias de Visión: ${Math.round(state.target.dist1)}m (P.O.1) // ${Math.round(state.target.dist2)}m (P.O.2)
-• Protocolo: WEAPON HOLD // Confirmar vector de aproximación.`;
+          if (state.mode === 'polar') {
+            const pDist = parseFloat(document.getElementById('polarDist')?.value) || 1200;
+            const pAz = parseFloat(document.getElementById('polarAz')?.value) || 180;
+            radioTransmissionText.value = 
+'[MEDRECON INTEL] // HVT FIJADO POR TELÉMETRO POLAR (1 P.O.)\n' +
+'• Punto Cero / Operador: Nave / LZ Base [0,0]\n' +
+'• Medición Láser: ' + Math.round(pDist) + 'm con Rumbo ' + pAz + '° [' + getCardinal(pAz) + ']\n' +
+'• Blanco Localizado: X: ' + (tx > 0 ? '+' : '') + tx + 'm, Y: ' + (ty > 0 ? '+' : '') + ty + 'm\n' +
+'• Vector de Fuego desde Nave: Rumbo ' + azLZ + '° [' + getCardinal(azLZ) + '] a ' + distLZ + ' metros\n' +
+'• Protocolo: WEAPON HOLD // Blanco fijado por observación directa de 1 operador.';
+          } else {
+            radioTransmissionText.value = 
+'[MEDRECON INTEL] // HVT FIJADO POR TRIANGULACIÓN (2 P.O.)\n' +
+'• Punto Cero / Nave: LZ [0,0]\n' +
+'• P.O.1 Alfa: Mirando a Nave ' + state.po1.distShip + 'm a ' + state.po1.azShip + '° (Az. Objetivo: ' + state.po1.az + '°)\n' +
+'• P.O.2 Bravo: Mirando a Nave ' + state.po2.distShip + 'm a ' + state.po2.azShip + '° (Az. Objetivo: ' + state.po2.az + '°)\n' +
+'• Blanco Triangulado: X: ' + (tx > 0 ? '+' : '') + tx + 'm, Y: ' + (ty > 0 ? '+' : '') + ty + 'm\n' +
+'• Vector de Ataque desde Nave: Rumbo ' + azLZ + '° [' + getCardinal(azLZ) + '] a ' + distLZ + ' metros\n' +
+'• Distancias de Visión: ' + Math.round(state.target.dist1) + 'm (P.O.1) // ' + Math.round(state.target.dist2) + 'm (P.O.2)\n' +
+'• Protocolo: WEAPON HOLD // Confirmar vector de aproximación.';
+          }
         }
       } else {
         if (resCoords) resCoords.textContent = 'FUERA DE CONVERGENCIA';
@@ -1268,86 +1302,126 @@
       }
 
       const lzPix = toPix(0, 0);
-      const p1Pix = toPix(state.po1.x, state.po1.y);
-      const p2Pix = toPix(state.po2.x, state.po2.y);
 
-      // 1. LÍNEAS DE REFERENCIA DESDE LA NAVE A LOS PUESTOS DE OBSERVACIÓN
-      ctx.beginPath();
-      ctx.moveTo(lzPix.x, lzPix.y);
-      ctx.lineTo(p1Pix.x, p1Pix.y);
-      ctx.strokeStyle = 'rgba(16, 185, 129, 0.35)';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([3, 4]);
-      ctx.stroke();
+      // --- MODO 1: AZIMUTS CRUZADOS (2 PUESTOS DE OBSERVACIÓN) ---
+      if (state.mode === 'azimuts') {
+        const p1Pix = toPix(state.po1.x, state.po1.y);
+        const p2Pix = toPix(state.po2.x, state.po2.y);
 
-      ctx.beginPath();
-      ctx.moveTo(lzPix.x, lzPix.y);
-      ctx.lineTo(p2Pix.x, p2Pix.y);
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-      ctx.setLineDash([]);
+        // 1. LÍNEAS DE REFERENCIA DESDE LA NAVE A LOS PUESTOS DE OBSERVACIÓN
+        ctx.beginPath();
+        ctx.moveTo(lzPix.x, lzPix.y);
+        ctx.lineTo(p1Pix.x, p1Pix.y);
+        ctx.strokeStyle = 'rgba(16, 185, 129, 0.35)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 4]);
+        ctx.stroke();
 
-      // Etiquetas de distancia de línea base hacia la nave
-      ctx.font = '9px "JetBrains Mono"';
-      ctx.fillStyle = 'rgba(16, 185, 129, 0.7)';
-      ctx.fillText(state.po1.distShip + 'm', (lzPix.x + p1Pix.x) / 2 + 6, (lzPix.y + p1Pix.y) / 2);
+        ctx.beginPath();
+        ctx.moveTo(lzPix.x, lzPix.y);
+        ctx.lineTo(p2Pix.x, p2Pix.y);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.setLineDash([]);
 
-      ctx.fillStyle = 'rgba(56, 189, 248, 0.7)';
-      ctx.fillText(state.po2.distShip + 'm', (lzPix.x + p2Pix.x) / 2 + 6, (lzPix.y + p2Pix.y) / 2);
+        // Etiquetas de distancia de línea base hacia la nave
+        ctx.font = '9px "JetBrains Mono"';
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.7)';
+        ctx.fillText(state.po1.distShip + 'm', (lzPix.x + p1Pix.x) / 2 + 6, (lzPix.y + p1Pix.y) / 2);
 
-      // 2. RAYO Y MARCADOR DE P.O.1 (ALFA)
-      const rad1 = state.po1.az * Math.PI / 180;
-      const rayLen = 4500;
-      const p1RayEnd = toPix(state.po1.x + rayLen * Math.sin(rad1), state.po1.y + rayLen * Math.cos(rad1));
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.7)';
+        ctx.fillText(state.po2.distShip + 'm', (lzPix.x + p2Pix.x) / 2 + 6, (lzPix.y + p2Pix.y) / 2);
 
-      ctx.beginPath();
-      ctx.moveTo(p1Pix.x, p1Pix.y);
-      ctx.lineTo(p1RayEnd.x, p1RayEnd.y);
-      ctx.strokeStyle = 'rgba(16, 185, 129, 0.7)';
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([6, 4]);
-      ctx.stroke();
-      ctx.setLineDash([]);
+        // 2. RAYO Y MARCADOR DE P.O.1 (ALFA)
+        const rad1 = state.po1.az * Math.PI / 180;
+        const rayLen = 4500;
+        const p1RayEnd = toPix(state.po1.x + rayLen * Math.sin(rad1), state.po1.y + rayLen * Math.cos(rad1));
 
-      ctx.save();
-      ctx.translate(p1Pix.x, p1Pix.y);
-      ctx.rotate(rad1);
-      ctx.fillStyle = '#10b981';
-      ctx.beginPath();
-      ctx.moveTo(0, -9); ctx.lineTo(6, 6); ctx.lineTo(-6, 6); ctx.closePath();
-      ctx.fill();
-      ctx.restore();
+        ctx.beginPath();
+        ctx.moveTo(p1Pix.x, p1Pix.y);
+        ctx.lineTo(p1RayEnd.x, p1RayEnd.y);
+        ctx.strokeStyle = 'rgba(16, 185, 129, 0.7)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
 
-      ctx.fillStyle = '#10b981';
-      ctx.font = 'bold 11px "JetBrains Mono"';
-      ctx.fillText('P.O. 1 Alfa', p1Pix.x + 10, p1Pix.y - 6);
+        ctx.save();
+        ctx.translate(p1Pix.x, p1Pix.y);
+        ctx.rotate(rad1);
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.moveTo(0, -9); ctx.lineTo(6, 6); ctx.lineTo(-6, 6); ctx.closePath();
+        ctx.fill();
+        ctx.restore();
 
-      // 3. RAYO Y MARCADOR DE P.O.2 (BRAVO)
-      const rad2 = state.po2.az * Math.PI / 180;
-      const p2RayEnd = toPix(state.po2.x + rayLen * Math.sin(rad2), state.po2.y + rayLen * Math.cos(rad2));
+        ctx.fillStyle = '#10b981';
+        ctx.font = 'bold 11px "JetBrains Mono"';
+        ctx.fillText('P.O. 1 Alfa', p1Pix.x + 10, p1Pix.y - 6);
 
-      ctx.beginPath();
-      ctx.moveTo(p2Pix.x, p2Pix.y);
-      ctx.lineTo(p2RayEnd.x, p2RayEnd.y);
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.7)';
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([6, 4]);
-      ctx.stroke();
-      ctx.setLineDash([]);
+        // 3. RAYO Y MARCADOR DE P.O.2 (BRAVO)
+        const rad2 = state.po2.az * Math.PI / 180;
+        const p2RayEnd = toPix(state.po2.x + rayLen * Math.sin(rad2), state.po2.y + rayLen * Math.cos(rad2));
 
-      ctx.save();
-      ctx.translate(p2Pix.x, p2Pix.y);
-      ctx.rotate(rad2);
-      ctx.fillStyle = '#38bdf8';
-      ctx.beginPath();
-      ctx.moveTo(0, -9); ctx.lineTo(6, 6); ctx.lineTo(-6, 6); ctx.closePath();
-      ctx.fill();
-      ctx.restore();
+        ctx.beginPath();
+        ctx.moveTo(p2Pix.x, p2Pix.y);
+        ctx.lineTo(p2RayEnd.x, p2RayEnd.y);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.7)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
 
-      ctx.fillStyle = '#38bdf8';
-      ctx.font = 'bold 11px "JetBrains Mono"';
-      ctx.fillText('P.O. 2 Bravo', p2Pix.x + 10, p2Pix.y - 6);
+        ctx.save();
+        ctx.translate(p2Pix.x, p2Pix.y);
+        ctx.rotate(rad2);
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.moveTo(0, -9); ctx.lineTo(6, 6); ctx.lineTo(-6, 6); ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'bold 11px "JetBrains Mono"';
+        ctx.fillText('P.O. 2 Bravo', p2Pix.x + 10, p2Pix.y - 6);
+      } else if (state.mode === 'polar') {
+        // --- MODO 2: POLAR (1 P.O. / TELÉMETRO ÓPTICO) ---
+        // Se ocultan P.O.1 y P.O.2 y se dibuja el vector de puntería directo del telémetro desde la Nave
+        if (state.target.valid) {
+          const tPix = toPix(state.target.x, state.target.y);
+          const pAz = parseFloat(document.getElementById('polarAz')?.value) || 180;
+          const pDist = parseFloat(document.getElementById('polarDist')?.value) || 1200;
+
+          // Rayo telémetro láser (dorado / ámbar)
+          ctx.beginPath();
+          ctx.moveTo(lzPix.x, lzPix.y);
+          ctx.lineTo(tPix.x, tPix.y);
+          ctx.strokeStyle = 'rgba(245, 158, 11, 0.85)';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([6, 4]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Flecha direccional en el punto de impacto del telémetro
+          const pRad = pAz * Math.PI / 180;
+          ctx.save();
+          ctx.translate(tPix.x, tPix.y);
+          ctx.rotate(pRad);
+          ctx.fillStyle = '#f59e0b';
+          ctx.beginPath();
+          ctx.moveTo(0, -10); ctx.lineTo(5, 5); ctx.lineTo(-5, 5); ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+
+          // Etiqueta táctica a mitad del haz láser
+          const midX = (lzPix.x + tPix.x) / 2;
+          const midY = (lzPix.y + tPix.y) / 2;
+          ctx.font = 'bold 10px "JetBrains Mono"';
+          ctx.fillStyle = '#fbbf24';
+          ctx.fillText('🔭 TELÉMETRO: ' + Math.round(pDist) + 'm a ' + pAz + '°', midX + 8, midY - 6);
+        }
+      }
 
       // 4. OBJETIVOS GUARDADOS ANTERIORMENTE
       state.savedTargets.forEach((tgt, idx) => {
