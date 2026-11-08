@@ -1,5 +1,5 @@
 // Endpoint Cloudflare Pages Functions: /api/fleet-pois
-// Persistencia permanente en Cloudflare KV (FLEET_KV)
+// Persistencia permanente en Cloudflare KV (FLEET_KV v1.1)
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
