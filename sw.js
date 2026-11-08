@@ -1,4 +1,4 @@
-const CACHE_NAME = 'medrecon-suite-v28';
+const CACHE_NAME = 'medrecon-suite-v29';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

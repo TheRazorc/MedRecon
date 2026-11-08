@@ -1685,6 +1685,17 @@
                 </tbody>
               </table>
             </div>
+
+            <!-- GUÍA DE APROXIMACIÓN ORBITAL STOICMAKO // CLON VERSEGUIDE -->
+            <div id="stoicmako-guide-box" style="margin-top:14px; display:none; background:rgba(0, 210, 255, 0.04); border:1px solid rgba(0, 210, 255, 0.2); border-radius:6px; padding:14px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid rgba(0, 210, 255, 0.15); padding-bottom:8px;">
+                <div style="font-family:var(--font-mono); font-size:12px; font-weight:bold; color:var(--accent-cyan); display:flex; align-items:center; gap:8px;">
+                  <span>🚀</span> GUÍA DE APROXIMACIÓN ORBITAL STOICMAKO // VERSEGUIDE ROUTER
+                </div>
+                <span class="badge-cat cat-tactical" style="font-size:10px;">VECTORIZACIÓN DE PRECISIÓN</span>
+              </div>
+              <div id="stoicmako-steps-content" style="display:flex; flex-direction:column; gap:8px; font-size:12px;"></div>
+            </div>
           </div>
         </div>
 
@@ -1847,10 +1858,27 @@
         <!-- SUB-SECCIÓN 4: CCBE FLEET INTEL // REGISTRO DE UBICACIONES COMPARTIDAS -->
         <div class="rt-box">
           <div style="font-size:12px; font-weight:bold; color:var(--accent-cyan); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-            <span>📍 CCBE Fleet Intel // Registro de Ubicaciones Compartidas</span>
-            <button class="btn btn-secondary btn-sm" id="btn-purge">
-              <span>🧹</span> Purgar Expirados / Minados
-            </button>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span>📍 CCBE Fleet Intel // Registro de Ubicaciones Compartidas</span>
+              <span id="storage-status-badge" style="font-size:10px; font-weight:bold; padding:2px 8px; border-radius:3px; background:rgba(0,255,170,0.15); border:1px solid rgba(0,255,170,0.4); color:#00ffaa; text-transform:none;">
+                🛡️ Persistencia Inmutable (IndexedDB + Storage)
+              </span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-export-fleet-json" title="Descargar archivo JSON con todas las ubicaciones guardadas">
+                <span>💾</span> Exportar JSON
+              </button>
+              <label class="btn btn-secondary btn-sm" style="margin:0; cursor:pointer;" title="Restaurar ubicaciones desde archivo JSON">
+                <span>📂</span> Importar JSON
+                <input type="file" id="input-import-fleet-json" accept=".json" style="display:none;">
+              </label>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-copy-fleet-json" title="Copiar código JSON al portapapeles para compartir con la escuadra">
+                <span>📋</span> Copiar Portapapeles
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-purge">
+                <span>🧹</span> Purgar Expirados
+              </button>
+            </div>
           </div>
           
           <div class="fleet-form">
@@ -3489,11 +3517,15 @@ container.innerHTML = `
       `;
     }
 
-    // Render de la Matriz Orbital (OMs)
+    // Render de la Matriz Orbital (OMs) + Guía StoicMako (VerseGuide Router)
     function renderOmTable(analysis) {
       const tbody = document.getElementById('om-table-body');
+      const guideBox = document.getElementById('stoicmako-guide-box');
+      const guideContent = document.getElementById('stoicmako-steps-content');
+
       if (!analysis || analysis.type !== 'body') {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">Los marcadores orbitales (OMs) aplican dentro del pozo gravitatorio de una luna o planeta.</td></tr>';
+        if (guideBox) guideBox.style.display = 'none';
         return;
       }
 
@@ -3522,9 +3554,153 @@ container.innerHTML = `
         `;
       }
       tbody.innerHTML = html;
+
+      // Generar Guía Vectorial StoicMako (VerseGuide)
+      if (guideBox && guideContent && analysis.omDistances) {
+        guideBox.style.display = 'block';
+        const bodyName = analysis.body?.name || 'Cuerpo Celeste';
+        const omDistKm = analysis.body?.omRadius || (analysis.body?.radiusKm ? analysis.body.radiusKm * 1.25 : 1250);
+
+        // OM ecuatorial más cercano
+        let bestEqOm = 'OM-3';
+        let minEqDist = Infinity;
+        ['OM-3', 'OM-4', 'OM-5', 'OM-6'].forEach(k => {
+          if (analysis.omDistances[k] && analysis.omDistances[k].distKm < minEqDist) {
+            minEqDist = analysis.omDistances[k].distKm;
+            bestEqOm = k;
+          }
+        });
+
+        // OM polar más alineado
+        const lat = analysis.latDeg !== undefined ? analysis.latDeg : 0;
+        const polarOm = lat >= 0 ? 'OM-1' : 'OM-2';
+        const polarDist = analysis.omDistances[polarOm] ? analysis.omDistances[polarOm].distKm.toFixed(1) : '---';
+
+        // OM lateral de descenso
+        const lon = analysis.lonDeg !== undefined ? analysis.lonDeg : 0;
+        let lateralOm = 'OM-3';
+        if (Math.abs(lon) <= 45) lateralOm = 'OM-5';
+        else if (Math.abs(lon) >= 135) lateralOm = 'OM-6';
+        else if (lon > 45 && lon < 135) lateralOm = 'OM-3';
+        else lateralOm = 'OM-4';
+        const lateralDist = analysis.omDistances[lateralOm] ? analysis.omDistances[lateralOm].distKm.toFixed(1) : '---';
+
+        const steps = [
+          {
+            num: '01',
+            title: `Salto Quantum Orbital hacia ${bodyName}`,
+            desc: `Entra en el pozo gravitatorio de ${bodyName} y mantén órbita alta.`
+          },
+          {
+            num: '02',
+            title: `Salto Quantum a ${bestEqOm}`,
+            desc: `Es el marcador orbital ecuatorial más próximo al meridiano del objetivo (${minEqDist.toFixed(1)} km directos).`
+          },
+          {
+            num: '03',
+            title: `Calibración de Proximidad a ${bestEqOm}`,
+            desc: `Reactiva Quantum para calibrar y vuela en crucero convencional hasta situarte a menos de 100 m de la baliza de ${bestEqOm} (cota orbital: ${omDistKm.toFixed(0)} km del centro).`
+          },
+          {
+            num: '04',
+            title: `Alineación de Latitud hacia ${polarOm}`,
+            desc: `Apunta la proa hacia ${polarOm} (${polarOm === 'OM-1' ? 'Polo Norte' : 'Polo Sur'}). Vuela en línea recta hasta que la distancia a ${polarOm} descienda a la cota angular (${polarDist} km).`
+          },
+          {
+            num: '05',
+            title: `Descenso Vectorial Vertical orientado a ${lateralOm}`,
+            desc: `Orienta la proa hacia ${lateralOm} y desciende verticalmente hacia la superficie hasta 1.000 m de altitud. ${lateralOm} debe quedar a ${lateralDist} km. ¡El objetivo estará directamente bajo tu nave!`
+          }
+        ];
+
+        let sHtml = '';
+        steps.forEach(s => {
+          sHtml += `
+            <div style="background:rgba(18, 29, 47, 0.7); border-left:3px solid var(--accent-cyan); border-radius:4px; padding:8px 12px; display:flex; gap:12px; align-items:flex-start;">
+              <span style="font-family:var(--font-mono); font-size:12px; font-weight:bold; color:var(--accent-cyan); background:rgba(0, 210, 255, 0.1); padding:2px 6px; border-radius:3px;">${s.num}</span>
+              <div style="flex:1;">
+                <div style="font-weight:bold; color:var(--text-main); font-size:12px; margin-bottom:2px;">${s.title}</div>
+                <div style="color:var(--text-muted); font-size:11px; line-height:1.4;">${s.desc}</div>
+              </div>
+            </div>
+          `;
+        });
+        guideContent.innerHTML = sHtml;
+      }
     }
 
     ;
+
+    // --- PERSISTENCIA INMUTABLE MULTICAPA (INDEXEDDB + LOCALSTORAGE + BACKUP JSON) ---
+    const FLEET_DB_NAME = 'MedReconNavDB';
+    const FLEET_STORE_NAME = 'fleet_intel_pois';
+    let dbFleetInstance = null;
+
+    function openFleetIndexedDB() {
+      return new Promise((resolve) => {
+        if (!window.indexedDB) return resolve(null);
+        try {
+          const req = indexedDB.open(FLEET_DB_NAME, 1);
+          req.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(FLEET_STORE_NAME)) {
+              db.createObjectStore(FLEET_STORE_NAME, { keyPath: 'id' });
+            }
+          };
+          req.onsuccess = (e) => {
+            dbFleetInstance = e.target.result;
+            resolve(dbFleetInstance);
+          };
+          req.onerror = () => resolve(null);
+        } catch (e) {
+          resolve(null);
+        }
+      });
+    }
+
+    async function syncFromIndexedDB() {
+      if (!dbFleetInstance) await openFleetIndexedDB();
+      if (!dbFleetInstance) return;
+      try {
+        const tx = dbFleetInstance.transaction(FLEET_STORE_NAME, 'readonly');
+        const store = tx.objectStore(FLEET_STORE_NAME);
+        const req = store.getAll();
+        req.onsuccess = () => {
+          if (Array.isArray(req.result) && req.result.length > 0) {
+            fleetPois = req.result;
+            try { localStorage.setItem('ccbe_fleet_pois_v2', JSON.stringify(fleetPois)); } catch (e) {}
+            renderFleetPois();
+          } else if (fleetPois.length > 0) {
+            // Migrar datos de LocalStorage a IndexedDB si IndexedDB estaba vacío
+            saveFleetPoisStorage();
+          }
+        };
+      } catch (e) {
+        console.warn('Error leyendo IndexedDB:', e);
+      }
+    }
+
+    function saveFleetPoisStorage() {
+      // 1. Guardar en LocalStorage (compatibilidad inmediata)
+      try {
+        localStorage.setItem('ccbe_fleet_pois_v2', JSON.stringify(fleetPois));
+      } catch (e) {}
+
+      // 2. Guardar en IndexedDB (persistencia permanente de largo plazo)
+      if (dbFleetInstance) {
+        try {
+          const tx = dbFleetInstance.transaction(FLEET_STORE_NAME, 'readwrite');
+          const store = tx.objectStore(FLEET_STORE_NAME);
+          store.clear().onsuccess = () => {
+            fleetPois.forEach(poi => {
+              if (poi && poi.id) store.put(poi);
+            });
+          };
+        } catch (e) {
+          console.warn('Error guardando en IndexedDB:', e);
+        }
+      }
+    }
 
     function loadSavedFleetPois() {
       try {
@@ -3538,12 +3714,7 @@ container.innerHTML = `
     }
 
     let fleetPois = loadSavedFleetPois();
-
-    function saveFleetPoisStorage() {
-      try {
-        localStorage.setItem('ccbe_fleet_pois_v2', JSON.stringify(fleetPois));
-      } catch (e) {}
-    }
+    openFleetIndexedDB().then(() => syncFromIndexedDB());
 
     // Render de Intel de la Flota
     function renderFleetPois() {
@@ -4491,6 +4662,60 @@ container.innerHTML = `
     });
 
     // Purgar expirados
+    // Eventos de Gestión y Backup Permanente (Fleet Intel)
+    const btnExportFleet = document.getElementById('btn-export-fleet-json');
+    if (btnExportFleet) {
+      btnExportFleet.addEventListener('click', () => {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fleetPois, null, 2));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", `ccbe_fleet_pois_${new Date().toISOString().slice(0,10)}.json`);
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        dlAnchor.remove();
+        showSystemAlert('💾 Ubicaciones exportadas a archivo JSON de respaldo con éxito.', 'success');
+      });
+    }
+
+    const inputImportFleet = document.getElementById('input-import-fleet-json');
+    if (inputImportFleet) {
+      inputImportFleet.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          try {
+            const imported = JSON.parse(evt.target.result);
+            if (Array.isArray(imported) && imported.length > 0) {
+              fleetPois = imported;
+              saveFleetPoisStorage();
+              renderFleetPois();
+              showSystemAlert(`✅ ${imported.length} ubicaciones restauradas e indexadas permanentemente.`, 'success');
+            } else {
+              showSystemAlert('⚠️ El archivo JSON no contiene un formato válido de ubicaciones.', 'warning');
+            }
+          } catch (err) {
+            showSystemAlert('❌ Error al procesar el archivo JSON: ' + err.message, 'error');
+          }
+        };
+        reader.readAsText(file);
+      });
+    }
+
+    const btnCopyFleet = document.getElementById('btn-copy-fleet-json');
+    if (btnCopyFleet) {
+      btnCopyFleet.addEventListener('click', () => {
+        const jsonStr = JSON.stringify(fleetPois, null, 2);
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(jsonStr).then(() => {
+            showSystemAlert('📋 JSON copiado al portapapeles. Listo para compartir con la escuadra.', 'success');
+          }).catch(() => {
+            showSystemAlert('⚠️ No se pudo acceder automáticamente al portapapeles.', 'warning');
+          });
+        }
+      });
+    }
+
     document.getElementById('btn-purge').addEventListener('click', () => {
       const now = Date.now();
       fleetPois = fleetPois.filter(p => !p.expiresAt || p.expiresAt > now);
